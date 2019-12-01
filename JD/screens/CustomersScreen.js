@@ -112,11 +112,35 @@ export default class CustomersScreen extends React.Component {
         accType: "D",
         productCode: "16",
         availBalance: "16000"
+      },
+      {
+        accNumber: "17",
+        accType: "D",
+        productCode: "17",
+        availBalance: "17000"
+      },
+      {
+        accNumber: "18",
+        accType: "D",
+        productCode: "18",
+        availBalance: "18000"
+      },
+      {
+        accNumber: "19",
+        accType: "D",
+        productCode: "19",
+        availBalance: "19000"
+      },
+      {
+        accNumber: "20",
+        accType: "D",
+        productCode: "20",
+        availBalance: "20000"
       }
     ];
     return (
       <View style={styles.container}>
-        <View>
+        <View style={{ flex: 1 }}>
           <Searchbar
             style={{
               margin: 8
@@ -135,30 +159,44 @@ export default class CustomersScreen extends React.Component {
             }}
           />
         </View>
-        <ScrollView>
-          <DataTable style={{ margin: 8 }}>
-            <DataTable.Header style={{ colors: "#3498db" }}>
-              <DataTable.Title>Account</DataTable.Title>
-              <DataTable.Title>Code</DataTable.Title>
-              <DataTable.Title>Balance</DataTable.Title>
+        <View style={{ flex: 9 }}>
+          <DataTable style={{ paddingLeft: 15, paddingRight: 15 }}>
+            <DataTable.Header>
+              <DataTable.Title style={styles.dataTableText}>
+                Account
+              </DataTable.Title>
+              <DataTable.Title style={styles.dataTableText}>
+                Code
+              </DataTable.Title>
+              <DataTable.Title style={styles.dataTableText}>
+                Balance
+              </DataTable.Title>
             </DataTable.Header>
-            {accounts.map(account => {
-              return (
-                <DataTable.Row
-                  key={account.accNumber} // you need a unique key per item
-                  onPress={() => {
-                    // added to illustrate how you can make the row take the onPress event and do something
-                    console.log(`selected account ${account.accNumber}`);
-                  }}
-                >
-                  <DataTable.Cell>{account.accNumber}</DataTable.Cell>
-                  <DataTable.Cell>{account.productCode}</DataTable.Cell>
-                  <DataTable.Cell>{account.availBalance}</DataTable.Cell>
-                </DataTable.Row>
-              );
-            })}
+            <ScrollView>
+              {accounts.map(account => {
+                return (
+                  <DataTable.Row
+                    key={account.accNumber} // you need a unique key per item
+                    onPress={() => {
+                      // added to illustrate how you can make the row take the onPress event and do something
+                      console.log(`selected account ${account.accNumber}`);
+                    }}
+                  >
+                    <DataTable.Cell style={styles.dataTableText}>
+                      {account.accNumber}
+                    </DataTable.Cell>
+                    <DataTable.Cell style={styles.dataTableText}>
+                      {account.productCode}
+                    </DataTable.Cell>
+                    <DataTable.Cell style={styles.dataTableText}>
+                      {account.availBalance}
+                    </DataTable.Cell>
+                  </DataTable.Row>
+                );
+              })}
+            </ScrollView>
           </DataTable>
-        </ScrollView>
+        </View>
       </View>
     );
   }
@@ -176,5 +214,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff"
+  },
+  dataTableText: {
+    justifyContent: "space-evenly"
+  },
+  picker: {
+    width: 100
   }
 });
