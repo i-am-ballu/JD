@@ -6,7 +6,7 @@ import {
 } from "react-navigation";
 
 import TabBarIcon from "../components/TabBarIcon";
-import HomeScreen from "../screens/HomeScreen";
+import CustomersScreen from "../screens/CustomersScreen";
 import LinksScreen from "../screens/LinksScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 
@@ -15,14 +15,14 @@ const config = Platform.select({
   default: {}
 });
 
-const HomeStack = createStackNavigator(
+const CustomerStack = createStackNavigator(
   {
-    Home: HomeScreen
+    CustomerStack: CustomersScreen
   },
   config
 );
 
-HomeStack.navigationOptions = {
+CustomerStack.navigationOptions = {
   tabBarLabel: "Home",
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
@@ -36,7 +36,7 @@ HomeStack.navigationOptions = {
   )
 };
 
-HomeStack.path = "";
+CustomerStack.path = "";
 
 const LinksStack = createStackNavigator(
   {
@@ -78,7 +78,7 @@ SettingsStack.navigationOptions = {
 SettingsStack.path = "";
 
 const tabNavigator = createBottomTabNavigator({
-  HomeStack,
+  CustomerStack,
   LinksStack,
   SettingsStack
 });
