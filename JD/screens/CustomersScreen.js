@@ -1,20 +1,68 @@
 import * as WebBrowser from "expo-web-browser";
 import React from "react";
-import { StyleSheet, View, Text, ScrollView } from "react-native";
-import { TextInput, Searchbar, DataTable } from "react-native-paper";
+import {
+  StyleSheet,
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity
+} from "react-native";
+import {
+  Searchbar,
+  DataTable,
+  Button,
+  Dialog,
+  Portal
+} from "react-native-paper";
 import { MonoText } from "../components/StyledText";
 
 export default class CustomersScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchBarText: ""
+      searchBarText: "",
+      visible: false,
+      radioSelected: 1
     };
   }
   onChangeText(text) {
     this.setState({ searchBarText: text });
   }
+  _showDialog = () => this.setState({ visible: true });
 
+  _hideDialog = () => this.setState({ visible: false });
+
+  radioClick(id) {
+    this.setState({
+      radioSelected: id
+    });
+    console.log("check id == ", id);
+    this._hideDialog();
+  }
+  renderRadioButtons(accounts) {
+    return accounts.map((val, index) => {
+      return (
+        <TouchableOpacity
+          key={index}
+          onPress={this.radioClick.bind(this, val.accNumber)}
+        >
+          <View style={styles.radioButton}>
+            {val.accNumber == this.state.radioSelected ? (
+              <View style={styles.radioButtonSelected} />
+            ) : null}
+          </View>
+          <Text
+            style={{
+              marginLeft: 80,
+              marginTop: -40
+            }}
+          >
+            {val.accNumber}
+          </Text>
+        </TouchableOpacity>
+      );
+    });
+  }
   render() {
     var accounts = [
       {
@@ -138,8 +186,29 @@ export default class CustomersScreen extends React.Component {
         availBalance: "20000"
       }
     ];
+    const { checked } = this.state;
+    const { visible, close } = this.props;
     return (
       <View style={styles.container}>
+        <View>
+          <Button onPress={this._showDialog}>Show Dialog</Button>
+          <Portal>
+            <Dialog onDismiss={close} visible={this.state.visible}>
+              <Dialog.Title>Choose an option</Dialog.Title>
+              <Dialog.ScrollArea
+                style={{ maxHeight: 450, paddingHorizontal: 0 }}
+              >
+                <ScrollView>
+                  <View>{this.renderRadioButtons(accounts)}</View>
+                </ScrollView>
+              </Dialog.ScrollArea>
+              <Dialog.Actions>
+                <Button onPress={this._hideDialog}>Cancel</Button>
+                <Button onPress={this._hideDialog}>Ok</Button>
+              </Dialog.Actions>
+            </Dialog>
+          </Portal>
+        </View>
         <View style={{ flex: 1 }}>
           <Searchbar
             style={{
@@ -159,9 +228,12 @@ export default class CustomersScreen extends React.Component {
             }}
           />
         </View>
-        <View style={{ flex: 9 }}>
+        <View style={{ flex: 7 }}>
           <DataTable style={{ paddingLeft: 15, paddingRight: 15 }}>
             <DataTable.Header>
+              <DataTable.Title style={styles.dataTableText}>
+                S.No
+              </DataTable.Title>
               <DataTable.Title style={styles.dataTableText}>
                 Account
               </DataTable.Title>
@@ -173,7 +245,7 @@ export default class CustomersScreen extends React.Component {
               </DataTable.Title>
             </DataTable.Header>
             <ScrollView>
-              {accounts.map(account => {
+              {accounts.map((account, index) => {
                 return (
                   <DataTable.Row
                     key={account.accNumber} // you need a unique key per item
@@ -182,6 +254,9 @@ export default class CustomersScreen extends React.Component {
                       console.log(`selected account ${account.accNumber}`);
                     }}
                   >
+                    <DataTable.Cell style={styles.dataTableText}>
+                      {index}
+                    </DataTable.Cell>
                     <DataTable.Cell style={styles.dataTableText}>
                       {account.accNumber}
                     </DataTable.Cell>
@@ -220,5 +295,21 @@ const styles = StyleSheet.create({
   },
   picker: {
     width: 100
+  },
+  radioButton: {
+    height: 24,
+    width: 24,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: "#000",
+    alignItems: "center",
+    justifyContent: "center",
+    margin: 18
+  },
+  radioButtonSelected: {
+    height: 12,
+    width: 12,
+    borderRadius: 6,
+    backgroundColor: "#000"
   }
 });
