@@ -23,7 +23,7 @@ const CustomerStack = createStackNavigator(
 );
 
 CustomerStack.navigationOptions = {
-  tabBarLabel: "Home",
+  tabBarLabel: "Customers",
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
