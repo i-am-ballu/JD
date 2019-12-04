@@ -22,32 +22,211 @@ export default class CustomersScreen extends React.Component {
     this.state = {
       searchBarText: "",
       visible: false,
-      radioSelected: 1
+      initialSelectedLocation: 1,
+      accounts: [
+        {
+          accNumber: "1",
+          accType: "D",
+          productCode: "1",
+          availBalance: "1000"
+        },
+        {
+          accNumber: "2",
+          accType: "D",
+          productCode: "2",
+          availBalance: "2000"
+        },
+        {
+          accNumber: "3",
+          accType: "D",
+          productCode: "3",
+          availBalance: "3000"
+        },
+        {
+          accNumber: "4",
+          accType: "D",
+          productCode: "4",
+          availBalance: "4000"
+        },
+        {
+          accNumber: "5",
+          accType: "D",
+          productCode: "5",
+          availBalance: "5000"
+        },
+        {
+          accNumber: "6",
+          accType: "D",
+          productCode: "6",
+          availBalance: "6000"
+        },
+        {
+          accNumber: "7",
+          accType: "D",
+          productCode: "7",
+          availBalance: "7000"
+        },
+        {
+          accNumber: "8",
+          accType: "D",
+          productCode: "8",
+          availBalance: "8000"
+        },
+        {
+          accNumber: "9",
+          accType: "D",
+          productCode: "9",
+          availBalance: "9000"
+        },
+        {
+          accNumber: "10",
+          accType: "D",
+          productCode: "10",
+          availBalance: "10000"
+        },
+        {
+          accNumber: "11",
+          accType: "D",
+          productCode: "11",
+          availBalance: "11000"
+        },
+        {
+          accNumber: "12",
+          accType: "D",
+          productCode: "12",
+          availBalance: "12000"
+        },
+        {
+          accNumber: "13",
+          accType: "D",
+          productCode: "13",
+          availBalance: "13000"
+        },
+        {
+          accNumber: "14",
+          accType: "D",
+          productCode: "14",
+          availBalance: "14000"
+        },
+        {
+          accNumber: "15",
+          accType: "D",
+          productCode: "15",
+          availBalance: "15000"
+        },
+        {
+          accNumber: "16",
+          accType: "D",
+          productCode: "16",
+          availBalance: "16000"
+        },
+        {
+          accNumber: "17",
+          accType: "D",
+          productCode: "17",
+          availBalance: "17000"
+        },
+        {
+          accNumber: "18",
+          accType: "D",
+          productCode: "18",
+          availBalance: "18000"
+        },
+        {
+          accNumber: "19",
+          accType: "D",
+          productCode: "19",
+          availBalance: "19000"
+        },
+        {
+          accNumber: "20",
+          accType: "D",
+          productCode: "20",
+          availBalance: "20000"
+        }
+      ],
+      accountInfo: []
     };
+    this.getCustomersAsync();
   }
+
+  componentDidMount() {
+    this.state.accountInfo = this.state.accounts;
+    console.log("accountInfo", this.state.accountInfo);
+  }
+
+  componentWillMount() {
+    this.state.accountInfo = this.state.accounts;
+    console.log("accountInfo", this.state.accountInfo);
+  }
+
+  getCustomersAsync() {
+    let data = {
+      method: "POST",
+      body: JSON.stringify({
+        customerId: 10
+      }),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      }
+    };
+    return fetch("https://jddev.herokuapp.com/customers/getcustomerbyid", data)
+      .then(response => {
+        console.log("res", response.data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
   onChangeText(text) {
+    //for update the view when we search
+    if (text != "") {
+      this.state.accounts.filter(item => {
+        if (item.accNumber === text) {
+          this.setState({
+            accountInfo: [item]
+          });
+        }
+      });
+    } else {
+      this.state.accountInfo = this.state.accounts;
+    }
     this.setState({ searchBarText: text });
   }
+
   _showDialog = () => this.setState({ visible: true });
 
   _hideDialog = () => this.setState({ visible: false });
 
-  radioClick(id) {
+  selectSingleLocation(id) {
     this.setState({
-      radioSelected: id
+      initialSelectedLocation: id
     });
-    console.log("check id == ", id);
+    console.log("select location id == ", id);
+    if (id != "") {
+      this.state.accounts.filter(item => {
+        if (item.accNumber === id) {
+          this.setState({
+            accountInfo: [item]
+          });
+        }
+      });
+    } else {
+      this.state.accountInfo = this.state.accounts;
+    }
     this._hideDialog();
   }
-  renderRadioButtons(accounts) {
-    return accounts.map((val, index) => {
+  renderAllLocationsAsRadioButtons(accounts) {
+    return this.state.accounts.map((val, index) => {
       return (
         <TouchableOpacity
           key={index}
-          onPress={this.radioClick.bind(this, val.accNumber)}
+          onPress={this.selectSingleLocation.bind(this, val.accNumber)}
         >
           <View style={styles.radioButton}>
-            {val.accNumber == this.state.radioSelected ? (
+            {val.accNumber == this.state.initialSelectedLocation ? (
               <View style={styles.radioButtonSelected} />
             ) : null}
           </View>
@@ -64,134 +243,22 @@ export default class CustomersScreen extends React.Component {
     });
   }
   render() {
-    var accounts = [
-      {
-        accNumber: "1",
-        accType: "D",
-        productCode: "1",
-        availBalance: "1000"
-      },
-      {
-        accNumber: "2",
-        accType: "D",
-        productCode: "2",
-        availBalance: "2000"
-      },
-      {
-        accNumber: "3",
-        accType: "D",
-        productCode: "3",
-        availBalance: "3000"
-      },
-      {
-        accNumber: "4",
-        accType: "D",
-        productCode: "4",
-        availBalance: "4000"
-      },
-      {
-        accNumber: "5",
-        accType: "D",
-        productCode: "5",
-        availBalance: "5000"
-      },
-      {
-        accNumber: "6",
-        accType: "D",
-        productCode: "6",
-        availBalance: "6000"
-      },
-      {
-        accNumber: "7",
-        accType: "D",
-        productCode: "7",
-        availBalance: "7000"
-      },
-      {
-        accNumber: "8",
-        accType: "D",
-        productCode: "8",
-        availBalance: "8000"
-      },
-      {
-        accNumber: "9",
-        accType: "D",
-        productCode: "9",
-        availBalance: "9000"
-      },
-      {
-        accNumber: "10",
-        accType: "D",
-        productCode: "10",
-        availBalance: "10000"
-      },
-      {
-        accNumber: "11",
-        accType: "D",
-        productCode: "11",
-        availBalance: "11000"
-      },
-      {
-        accNumber: "12",
-        accType: "D",
-        productCode: "12",
-        availBalance: "12000"
-      },
-      {
-        accNumber: "13",
-        accType: "D",
-        productCode: "13",
-        availBalance: "13000"
-      },
-      {
-        accNumber: "14",
-        accType: "D",
-        productCode: "14",
-        availBalance: "14000"
-      },
-      {
-        accNumber: "15",
-        accType: "D",
-        productCode: "15",
-        availBalance: "15000"
-      },
-      {
-        accNumber: "16",
-        accType: "D",
-        productCode: "16",
-        availBalance: "16000"
-      },
-      {
-        accNumber: "17",
-        accType: "D",
-        productCode: "17",
-        availBalance: "17000"
-      },
-      {
-        accNumber: "18",
-        accType: "D",
-        productCode: "18",
-        availBalance: "18000"
-      },
-      {
-        accNumber: "19",
-        accType: "D",
-        productCode: "19",
-        availBalance: "19000"
-      },
-      {
-        accNumber: "20",
-        accType: "D",
-        productCode: "20",
-        availBalance: "20000"
-      }
-    ];
     const { checked } = this.state;
     const { visible, close } = this.props;
     return (
       <View style={styles.container}>
-        <View>
-          <Button onPress={this._showDialog}>Show Dialog</Button>
+        <View style={{ flex: 1 }}>
+          <View style={{ paddingLeft: 8, paddingTop: 5, paddingRight: 8 }}>
+            <Button
+              style={{
+                borderWidth: 1,
+                borderColor: "#ddd"
+              }}
+              onPress={this._showDialog}
+            >
+              Select City
+            </Button>
+          </View>
           <Portal>
             <Dialog onDismiss={close} visible={this.state.visible}>
               <Dialog.Title>Choose an option</Dialog.Title>
@@ -199,12 +266,13 @@ export default class CustomersScreen extends React.Component {
                 style={{ maxHeight: 450, paddingHorizontal: 0 }}
               >
                 <ScrollView>
-                  <View>{this.renderRadioButtons(accounts)}</View>
+                  <View style={{ marginLeft: 20 }}>
+                    {this.renderAllLocationsAsRadioButtons(this.state.accounts)}
+                  </View>
                 </ScrollView>
               </Dialog.ScrollArea>
-              <Dialog.Actions>
+              <Dialog.Actions style={{ justifyContent: "center" }}>
                 <Button onPress={this._hideDialog}>Cancel</Button>
-                <Button onPress={this._hideDialog}>Ok</Button>
               </Dialog.Actions>
             </Dialog>
           </Portal>
@@ -212,7 +280,8 @@ export default class CustomersScreen extends React.Component {
         <View style={{ flex: 1 }}>
           <Searchbar
             style={{
-              margin: 8
+              margin: 8,
+              marginTop: -2
             }}
             Type="flat"
             onChangeText={text => this.onChangeText(text)}
@@ -224,14 +293,20 @@ export default class CustomersScreen extends React.Component {
                 background: "transparent",
                 placeholder: "#3498db",
                 text: "#3498db"
-              }
+              },
+              fontSize: 10
             }}
           />
         </View>
         <View style={{ flex: 7 }}>
           <DataTable style={{ paddingLeft: 15, paddingRight: 15 }}>
             <DataTable.Header>
-              <DataTable.Title style={styles.dataTableText}>
+              <DataTable.Title
+                style={{
+                  justifyContent: styles.dataTableText.justifyContent,
+                  fontStyle: styles.dataTableTitle.fontStyle
+                }}
+              >
                 S.No
               </DataTable.Title>
               <DataTable.Title style={styles.dataTableText}>
@@ -245,7 +320,7 @@ export default class CustomersScreen extends React.Component {
               </DataTable.Title>
             </DataTable.Header>
             <ScrollView>
-              {accounts.map((account, index) => {
+              {this.state.accountInfo.map((account, index) => {
                 return (
                   <DataTable.Row
                     key={account.accNumber} // you need a unique key per item
@@ -292,6 +367,9 @@ const styles = StyleSheet.create({
   },
   dataTableText: {
     justifyContent: "space-evenly"
+  },
+  dataTableTitle: {
+    fontStyle: "italic"
   },
   picker: {
     width: 100
