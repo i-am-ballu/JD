@@ -248,11 +248,21 @@ export default class CustomersScreen extends React.Component {
     return (
       <View style={styles.container}>
         <View style={{ flex: 1 }}>
-          <View style={{ paddingLeft: 8, paddingTop: 5, paddingRight: 8 }}>
+          <View
+            style={{
+              paddingLeft: 8,
+              paddingTop: 6,
+              paddingBottom: 5,
+              paddingRight: 8
+            }}
+          >
             <Button
               style={{
                 borderWidth: 1,
-                borderColor: "#ddd"
+                borderColor: "#e2e2e2",
+                borderRadius: 3,
+                height: 48,
+                paddingTop: 5
               }}
               onPress={this._showDialog}
             >
@@ -281,42 +291,43 @@ export default class CustomersScreen extends React.Component {
           <Searchbar
             style={{
               margin: 8,
-              marginTop: -2
+              elevation: 1
             }}
             Type="flat"
             onChangeText={text => this.onChangeText(text)}
             value={this.state.searchBarText}
-            placeholder="Search by orderId."
             theme={{
               colors: {
                 underlineColor: "transparent",
                 background: "transparent",
                 placeholder: "#3498db",
                 text: "#3498db"
-              },
-              fontSize: 10
+              }
             }}
+            placeholder="SEARCH"
+            inputStyle={{ fontSize: 15 }}
           />
         </View>
         <View style={{ flex: 7 }}>
-          <DataTable style={{ paddingLeft: 15, paddingRight: 15 }}>
+          <DataTable
+            style={{
+              paddingTop: 10,
+              paddingLeft: 15,
+              paddingRight: 15
+            }}
+          >
             <DataTable.Header>
-              <DataTable.Title
-                style={{
-                  justifyContent: styles.dataTableText.justifyContent,
-                  fontStyle: styles.dataTableTitle.fontStyle
-                }}
-              >
-                S.No
+              <DataTable.Title style={styles.dataTableText}>
+                <Text style={styles.dataTableTitle}>S.No</Text>
               </DataTable.Title>
               <DataTable.Title style={styles.dataTableText}>
-                Account
+                <Text style={styles.dataTableTitle}>Account</Text>
               </DataTable.Title>
               <DataTable.Title style={styles.dataTableText}>
-                Code
+                <Text style={styles.dataTableTitle}>Code</Text>
               </DataTable.Title>
               <DataTable.Title style={styles.dataTableText}>
-                Balance
+                <Text style={styles.dataTableTitle}>Balance</Text>
               </DataTable.Title>
             </DataTable.Header>
             <ScrollView>
@@ -358,6 +369,10 @@ CustomersScreen.navigationOptions = {
   headerStyle: {
     backgroundColor: "#1287A5",
     fontSize: 40
+  },
+  headerTitleStyle: {
+    textAlign: "center",
+    flex: 1
   }
 };
 const styles = StyleSheet.create({
@@ -369,7 +384,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly"
   },
   dataTableTitle: {
-    fontStyle: "italic"
+    fontSize: 15
   },
   picker: {
     width: 100
