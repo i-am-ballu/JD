@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Text, ScrollView } from "react-native";
+import { StyleSheet, View, Text, ScrollView, Platform } from "react-native";
 import { Searchbar, DataTable, Button } from "react-native-paper";
 
 export default class TransactionScreen extends React.Component {
@@ -200,35 +200,30 @@ export default class TransactionScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={{ flex: 1 }}>
-          <Searchbar
-            style={{
-              margin: 8,
-              elevation: 1
-            }}
-            Type="flat"
-            onChangeText={text => this.onChangeText(text)}
-            value={this.state.searchBarText}
-            theme={{
-              colors: {
-                underlineColor: "transparent",
-                background: "transparent",
-                placeholder: "#3498db",
-                text: "#3498db"
-              }
-            }}
-            placeholder="SEARCH"
-            inputStyle={{ fontSize: 15 }}
-          />
+        <View style={{ flex: Platform.OS === "ios" ? 0.5 : 0.8 }}>
+          <View style={styles.paddingLeftTopRight}>
+            <Searchbar
+              style={{
+                elevation: 1
+              }}
+              Type="flat"
+              onChangeText={text => this.onChangeText(text)}
+              value={this.state.searchBarText}
+              theme={{
+                colors: {
+                  underlineColor: "transparent",
+                  background: "transparent",
+                  placeholder: "#3498db",
+                  text: "#3498db"
+                }
+              }}
+              placeholder="SEARCH"
+              inputStyle={{ fontSize: 15 }}
+            />
+          </View>
         </View>
         <View style={{ flex: 7 }}>
-          <DataTable
-            style={{
-              paddingTop: 10,
-              paddingLeft: 15,
-              paddingRight: 15
-            }}
-          >
+          <DataTable style={styles.paddingLeftTopRight}>
             <DataTable.Header>
               <DataTable.Title style={styles.dataTableText}>
                 <Text style={styles.dataTableTitle}>Code</Text>
@@ -320,5 +315,10 @@ const styles = StyleSheet.create({
     width: 12,
     borderRadius: 6,
     backgroundColor: "#000"
+  },
+  paddingLeftTopRight: {
+    paddingLeft: 5,
+    paddingTop: 5,
+    paddingRight: 5
   }
 });
