@@ -5,7 +5,8 @@ import {
   View,
   Text,
   ScrollView,
-  TouchableOpacity
+  TouchableOpacity,
+  Platform
 } from "react-native";
 import {
   Searchbar,
@@ -246,16 +247,13 @@ export default class CustomersScreen extends React.Component {
     const { checked } = this.state;
     const { visible, close } = this.props;
     return (
-      <View style={styles.container}>
-        <View style={{ flex: 1 }}>
-          <View
-            style={{
-              paddingLeft: 8,
-              paddingTop: 6,
-              paddingBottom: 5,
-              paddingRight: 8
-            }}
-          >
+      <View style={{ flex: 1 }}>
+        <View
+          style={{
+            flex: Platform.OS === "ios" ? 0.5 : 0.8
+          }}
+        >
+          <View style={styles.paddingLeftTopRight}>
             <Button
               style={{
                 borderWidth: 1,
@@ -287,76 +285,81 @@ export default class CustomersScreen extends React.Component {
             </Dialog>
           </Portal>
         </View>
-        <View style={{ flex: 1 }}>
-          <Searchbar
-            style={{
-              margin: 8,
-              elevation: 1
-            }}
-            Type="flat"
-            onChangeText={text => this.onChangeText(text)}
-            value={this.state.searchBarText}
-            theme={{
-              colors: {
-                underlineColor: "transparent",
-                background: "transparent",
-                placeholder: "#3498db",
-                text: "#3498db"
-              }
-            }}
-            placeholder="SEARCH"
-            inputStyle={{ fontSize: 15 }}
-          />
+        <View
+          style={{
+            flex: Platform.OS === "ios" ? 0.5 : 0.8
+          }}
+        >
+          <View style={styles.paddingLeftTopRight}>
+            <Searchbar
+              style={{
+                elevation: 1
+              }}
+              Type="flat"
+              onChangeText={text => this.onChangeText(text)}
+              value={this.state.searchBarText}
+              theme={{
+                colors: {
+                  underlineColor: "transparent",
+                  background: "transparent",
+                  placeholder: "#3498db",
+                  text: "#3498db"
+                }
+              }}
+              placeholder="SEARCH"
+              inputStyle={{ fontSize: 15 }}
+            />
+          </View>
         </View>
-        <View style={{ flex: 7 }}>
-          <DataTable
-            style={{
-              paddingTop: 10,
-              paddingLeft: 15,
-              paddingRight: 15
-            }}
-          >
-            <DataTable.Header>
-              <DataTable.Title style={styles.dataTableText}>
-                <Text style={styles.dataTableTitle}>S.No</Text>
-              </DataTable.Title>
-              <DataTable.Title style={styles.dataTableText}>
-                <Text style={styles.dataTableTitle}>Account</Text>
-              </DataTable.Title>
-              <DataTable.Title style={styles.dataTableText}>
-                <Text style={styles.dataTableTitle}>Code</Text>
-              </DataTable.Title>
-              <DataTable.Title style={styles.dataTableText}>
-                <Text style={styles.dataTableTitle}>Balance</Text>
-              </DataTable.Title>
-            </DataTable.Header>
-            <ScrollView>
-              {this.state.accountInfo.map((account, index) => {
-                return (
-                  <DataTable.Row
-                    key={account.accNumber} // you need a unique key per item
-                    onPress={() => {
-                      // added to illustrate how you can make the row take the onPress event and do something
-                      console.log(`selected account ${account.accNumber}`);
-                    }}
-                  >
-                    <DataTable.Cell style={styles.dataTableText}>
-                      {index}
-                    </DataTable.Cell>
-                    <DataTable.Cell style={styles.dataTableText}>
-                      {account.accNumber}
-                    </DataTable.Cell>
-                    <DataTable.Cell style={styles.dataTableText}>
-                      {account.productCode}
-                    </DataTable.Cell>
-                    <DataTable.Cell style={styles.dataTableText}>
-                      {account.availBalance}
-                    </DataTable.Cell>
-                  </DataTable.Row>
-                );
-              })}
-            </ScrollView>
-          </DataTable>
+        <View
+          style={{
+            flex: Platform.OS === "ios" ? 5.6 : 5.2
+          }}
+        >
+          <View>
+            <DataTable style={styles.paddingLeftTopRight}>
+              <DataTable.Header>
+                <DataTable.Title style={styles.dataTableText}>
+                  <Text style={styles.dataTableTitle}>S.No</Text>
+                </DataTable.Title>
+                <DataTable.Title style={styles.dataTableText}>
+                  <Text style={styles.dataTableTitle}>Account</Text>
+                </DataTable.Title>
+                <DataTable.Title style={styles.dataTableText}>
+                  <Text style={styles.dataTableTitle}>Code</Text>
+                </DataTable.Title>
+                <DataTable.Title style={styles.dataTableText}>
+                  <Text style={styles.dataTableTitle}>Balance</Text>
+                </DataTable.Title>
+              </DataTable.Header>
+              <ScrollView>
+                {this.state.accountInfo.map((account, index) => {
+                  return (
+                    <DataTable.Row
+                      key={account.accNumber} // you need a unique key per item
+                      onPress={() => {
+                        // added to illustrate how you can make the row take the onPress event and do something
+                        console.log(`selected account ${account.accNumber}`);
+                      }}
+                    >
+                      <DataTable.Cell style={styles.dataTableText}>
+                        {index}
+                      </DataTable.Cell>
+                      <DataTable.Cell style={styles.dataTableText}>
+                        {account.accNumber}
+                      </DataTable.Cell>
+                      <DataTable.Cell style={styles.dataTableText}>
+                        {account.productCode}
+                      </DataTable.Cell>
+                      <DataTable.Cell style={styles.dataTableText}>
+                        {account.availBalance}
+                      </DataTable.Cell>
+                    </DataTable.Row>
+                  );
+                })}
+              </ScrollView>
+            </DataTable>
+          </View>
         </View>
       </View>
     );
@@ -404,5 +407,10 @@ const styles = StyleSheet.create({
     width: 12,
     borderRadius: 6,
     backgroundColor: "#000"
+  },
+  paddingLeftTopRight: {
+    paddingLeft: 5,
+    paddingTop: 5,
+    paddingRight: 5
   }
 });
