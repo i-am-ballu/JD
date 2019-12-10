@@ -6,17 +6,56 @@ import {
   Text,
   KeyboardAvoidingView,
   ScrollView,
-  StyleSheet
+  StyleSheet,
+  form
 } from "react-native";
 import { WorldAlignment } from "expo/build/AR";
+import ReactDOM from "react-dom";
+
+function validate(name, password) {
+  // we are going to store errors for all fields
+  // in a signle array
+  const errors = [];
+
+  if (name.length === 0) {
+    errors.push("Name can't be empty");
+  }
+  if (password.length === 0) {
+    errors.push("Password can't be empty");
+  }
+
+  return errors;
+}
 
 export default class LoginScreen extends Component {
   constructor(props) {
     super(props);
     let user = { Name: "Balram", Last: "patidar" };
     let res = AsyncStorage.setItem("user", JSON.stringify(user));
+    this.state = {
+      userName: "",
+      password: "",
+
+      errors: []
+    };
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+  //function for handle the submitted form
+  handleSubmit(e) {
+    e.preventDefault();
+    const { userName, password } = this.state;
+    //for get the validation message
+    const errors = validate(userName, password);
+    if (errors.length > 0) {
+      this.setState({ errors });
+      return;
+    } else {
+      this.setState({ errors });
+      return;
+    }
   }
   render() {
+    const { errors } = this.state;
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding">
         <View style={styles.wrapper}>
@@ -30,6 +69,13 @@ export default class LoginScreen extends Component {
             <Text style={styles.loginHeader}>JD</Text>
           </View>
           <View style={{ flex: 2 }}>
+            <View style={{ marginLeft: 10 }}>
+              {errors.map(error => (
+                <Text key={error} style={{ color: "red" }}>
+                  Error: {error}
+                </Text>
+              ))}
+            </View>
             <View style={styles.paddingLeftTopRight}>
               <TextInput
                 style={{
@@ -48,6 +94,7 @@ export default class LoginScreen extends Component {
                 placeholder="Username/Mobile"
                 inputStyle={{ fontSize: 15 }}
                 underlineColor={Colors.white}
+                onChangeText={text => this.setState({ userName: text })}
               />
             </View>
             <View style={styles.paddingLeftTopRight}>
@@ -68,10 +115,11 @@ export default class LoginScreen extends Component {
                 placeholder="Password"
                 inputStyle={{ fontSize: 15 }}
                 underlineColor={Colors.white}
+                onChangeText={text => this.setState({ password: text })}
               />
             </View>
           </View>
-          <View style={{ flex: 2 }}>
+          <View style={{ flex: 1 }}>
             <View style={styles.loginButton}>
               <Button
                 style={{
@@ -81,12 +129,13 @@ export default class LoginScreen extends Component {
                   height: 48,
                   paddingTop: 5
                 }}
-                onPress={this._showDialog}
+                onPress={this.handleSubmit}
               >
                 Login
               </Button>
             </View>
           </View>
+          {/* </form> */}
         </View>
       </KeyboardAvoidingView>
     );
