@@ -24,175 +24,60 @@ export default class CustomersScreen extends React.Component {
       searchBarText: "",
       visible: false,
       initialSelectedLocation: 1,
-      accounts: [
-        {
-          accNumber: "1",
-          accType: "D",
-          productCode: "1",
-          availBalance: "1000"
-        },
-        {
-          accNumber: "2",
-          accType: "D",
-          productCode: "2",
-          availBalance: "2000"
-        },
-        {
-          accNumber: "3",
-          accType: "D",
-          productCode: "3",
-          availBalance: "3000"
-        },
-        {
-          accNumber: "4",
-          accType: "D",
-          productCode: "4",
-          availBalance: "4000"
-        },
-        {
-          accNumber: "5",
-          accType: "D",
-          productCode: "5",
-          availBalance: "5000"
-        },
-        {
-          accNumber: "6",
-          accType: "D",
-          productCode: "6",
-          availBalance: "6000"
-        },
-        {
-          accNumber: "7",
-          accType: "D",
-          productCode: "7",
-          availBalance: "7000"
-        },
-        {
-          accNumber: "8",
-          accType: "D",
-          productCode: "8",
-          availBalance: "8000"
-        },
-        {
-          accNumber: "9",
-          accType: "D",
-          productCode: "9",
-          availBalance: "9000"
-        },
-        {
-          accNumber: "10",
-          accType: "D",
-          productCode: "10",
-          availBalance: "10000"
-        },
-        {
-          accNumber: "11",
-          accType: "D",
-          productCode: "11",
-          availBalance: "11000"
-        },
-        {
-          accNumber: "12",
-          accType: "D",
-          productCode: "12",
-          availBalance: "12000"
-        },
-        {
-          accNumber: "13",
-          accType: "D",
-          productCode: "13",
-          availBalance: "13000"
-        },
-        {
-          accNumber: "14",
-          accType: "D",
-          productCode: "14",
-          availBalance: "14000"
-        },
-        {
-          accNumber: "15",
-          accType: "D",
-          productCode: "15",
-          availBalance: "15000"
-        },
-        {
-          accNumber: "16",
-          accType: "D",
-          productCode: "16",
-          availBalance: "16000"
-        },
-        {
-          accNumber: "17",
-          accType: "D",
-          productCode: "17",
-          availBalance: "17000"
-        },
-        {
-          accNumber: "18",
-          accType: "D",
-          productCode: "18",
-          availBalance: "18000"
-        },
-        {
-          accNumber: "19",
-          accType: "D",
-          productCode: "19",
-          availBalance: "19000"
-        },
-        {
-          accNumber: "20",
-          accType: "D",
-          productCode: "20",
-          availBalance: "20000"
-        }
-      ],
-      accountInfo: []
+      customersListOfDetails: [],
+      customerArray: []
     };
-    this.getCustomersAsync();
   }
 
   componentDidMount() {
-    this.state.accountInfo = this.state.accounts;
-    console.log("accountInfo", this.state.accountInfo);
+    this.getCustomersAsync();
+    // console.log("accountInfo", this.state.customersListOfDetails);
   }
 
   componentWillMount() {
-    this.state.accountInfo = this.state.accounts;
-    console.log("accountInfo", this.state.accountInfo);
+    // this.state.customersListOfDetails = this.state.customerArray;
+    // console.log("accountInfo", this.state.customerArray);
   }
-
-  getCustomersAsync() {
-    let data = {
-      method: "POST",
-      body: JSON.stringify({
-        customerId: 10
-      }),
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
+  async getCustomersAsync() {
+    try {
+      const response = await fetch(
+        "https://jddev.herokuapp.com/customers/getAllCustomer",
+        {
+          method: "Get",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsIlJvbGUiOiJBZG1pbiIsImlhdCI6MTU3NjAzMzM2Mn0.lZu4YIkGhWtiRFj78_4N_jcs-sZkroA75O1SuEv0d-s"
+          }
+        }
+      );
+      const json = await response.json();
+      if (json) {
+        this.setState({
+          customersListOfDetails: json.result,
+          customerArray: json.result
+        });
+      } else {
+        console.log("Error nikhil");
       }
-    };
-    return fetch("https://jddev.herokuapp.com/customers/getcustomerbyid", data)
-      .then(response => {
-        console.log("res", response.data);
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    } catch (error) {
+      console.log("Error catch", error);
+    }
   }
 
   onChangeText(text) {
     //for update the view when we search
     if (text != "") {
-      this.state.accounts.filter(item => {
-        if (item.accNumber === text) {
+      this.state.customerArray.filter(item => {
+        if (item.CustomerId == text) {
           this.setState({
-            accountInfo: [item]
+            customersListOfDetails: [item]
           });
         }
       });
     } else {
-      this.state.accountInfo = this.state.accounts;
+      this.state.customersListOfDetails = this.state.customerArray;
     }
     this.setState({ searchBarText: text });
   }
@@ -201,33 +86,42 @@ export default class CustomersScreen extends React.Component {
 
   _hideDialog = () => this.setState({ visible: false });
 
-  selectSingleLocation(id) {
+  selectSingleLocation(Address, CustomerId) {
     this.setState({
-      initialSelectedLocation: id
+      initialSelectedLocation: CustomerId
     });
-    console.log("select location id == ", id);
-    if (id != "") {
-      this.state.accounts.filter(item => {
-        if (item.accNumber === id) {
-          this.setState({
-            accountInfo: [item]
-          });
+    if (Address != "") {
+      const newCustomersArray = [];
+      this.state.customerArray.map(item => {
+        if (item.Address === Address) {
+          newCustomersArray.push(item);
+          this.state.customersListOfDetails = newCustomersArray;
         }
       });
     } else {
-      this.state.accountInfo = this.state.accounts;
+      this.state.customersListOfDetails = this.state.customerArray;
     }
     this._hideDialog();
   }
-  renderAllLocationsAsRadioButtons(accounts) {
-    return this.state.accounts.map((val, index) => {
+  renderAllLocationsAsRadioButtons(customerArray) {
+    const newArray = [];
+    customerArray.forEach(obj => {
+      if (!newArray.some(o => o.Address === obj.Address)) {
+        newArray.push({ ...obj });
+      }
+    });
+    return newArray.map((val, index) => {
       return (
         <TouchableOpacity
           key={index}
-          onPress={this.selectSingleLocation.bind(this, val.accNumber)}
+          onPress={this.selectSingleLocation.bind(
+            this,
+            val.Address,
+            val.CustomerId
+          )}
         >
           <View style={styles.radioButton}>
-            {val.accNumber == this.state.initialSelectedLocation ? (
+            {val.CustomerId == this.state.initialSelectedLocation ? (
               <View style={styles.radioButtonSelected} />
             ) : null}
           </View>
@@ -237,7 +131,7 @@ export default class CustomersScreen extends React.Component {
               marginTop: -40
             }}
           >
-            {val.accNumber}
+            {val.Address}
           </Text>
         </TouchableOpacity>
       );
@@ -274,8 +168,10 @@ export default class CustomersScreen extends React.Component {
                 style={{ maxHeight: 450, paddingHorizontal: 0 }}
               >
                 <ScrollView>
-                  <View style={{ marginLeft: 20 }}>
-                    {this.renderAllLocationsAsRadioButtons(this.state.accounts)}
+                  <View style={{ marginLeft: 20, paddingBottom: 20 }}>
+                    {this.renderAllLocationsAsRadioButtons(
+                      this.state.customerArray
+                    )}
                   </View>
                 </ScrollView>
               </Dialog.ScrollArea>
@@ -320,39 +216,27 @@ export default class CustomersScreen extends React.Component {
             <DataTable style={styles.paddingLeftTopRight}>
               <DataTable.Header>
                 <DataTable.Title style={styles.dataTableText}>
-                  <Text style={styles.dataTableTitle}>S.No</Text>
-                </DataTable.Title>
-                <DataTable.Title style={styles.dataTableText}>
-                  <Text style={styles.dataTableTitle}>Account</Text>
-                </DataTable.Title>
-                <DataTable.Title style={styles.dataTableText}>
                   <Text style={styles.dataTableTitle}>Code</Text>
                 </DataTable.Title>
                 <DataTable.Title style={styles.dataTableText}>
-                  <Text style={styles.dataTableTitle}>Balance</Text>
+                  <Text style={styles.dataTableTitle}>Name</Text>
                 </DataTable.Title>
               </DataTable.Header>
               <ScrollView>
-                {this.state.accountInfo.map((account, index) => {
+                {this.state.customersListOfDetails.map((customer, index) => {
                   return (
                     <DataTable.Row
-                      key={account.accNumber} // you need a unique key per item
+                      key={customer.CustomerId} // you need a unique key per item
                       onPress={() => {
                         // added to illustrate how you can make the row take the onPress event and do something
-                        console.log(`selected account ${account.accNumber}`);
+                        console.log(`selected custmer ${customer.CustomerId}`);
                       }}
                     >
                       <DataTable.Cell style={styles.dataTableText}>
-                        {index}
+                        {customer.CustomerId}
                       </DataTable.Cell>
                       <DataTable.Cell style={styles.dataTableText}>
-                        {account.accNumber}
-                      </DataTable.Cell>
-                      <DataTable.Cell style={styles.dataTableText}>
-                        {account.productCode}
-                      </DataTable.Cell>
-                      <DataTable.Cell style={styles.dataTableText}>
-                        {account.availBalance}
+                        {customer.Name}
                       </DataTable.Cell>
                     </DataTable.Row>
                   );
@@ -384,7 +268,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff"
   },
   dataTableText: {
-    justifyContent: "space-evenly"
+    // justifyContent: "space-evenly",
+    paddingLeft: 10,
+    paddingRight: 10
   },
   dataTableTitle: {
     fontSize: 15
