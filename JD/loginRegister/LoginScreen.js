@@ -57,25 +57,25 @@ export default class LoginScreen extends Component {
   render() {
     const { errors } = this.state;
     return (
-      <KeyboardAvoidingView style={styles.container} behavior="padding">
-        <View style={styles.wrapper}>
+      <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, backgroundColor: Colors.white }}>
           <View
             style={{
-              flex: 1,
+              flex: 5,
               alignItems: "center",
               justifyContent: "center"
             }}
           >
-            <Text style={styles.loginHeader}>JD</Text>
+            <Text style={styles.loginHeader}>Jain Digital</Text>
           </View>
-          <View style={{ flex: 2 }}>
-            <View style={{ marginLeft: 10 }}>
-              {errors.map(error => (
-                <Text key={error} style={{ color: "red" }}>
-                  Error: {error}
-                </Text>
-              ))}
-            </View>
+          <View style={{ flex: 1, marginLeft: 10 }}>
+            {errors.map(error => (
+              <Text key={error} style={{ color: "red" }}>
+                Error: {error}
+              </Text>
+            ))}
+          </View>
+          <View style={{ flex: 5 }}>
             <View style={styles.paddingLeftTopRight}>
               <TextInput
                 style={{
@@ -84,16 +84,16 @@ export default class LoginScreen extends Component {
                 Type="flat"
                 theme={{
                   colors: {
-                    primary: Colors.white,
+                    primary: Colors.lightBlueA700,
                     underlineColor: "transparent",
                     background: "transparent",
-                    placeholder: Colors.whitesmoke,
-                    text: Colors.white
+                    placeholder: Colors.grey500,
+                    text: Colors.grey700
                   }
                 }}
                 placeholder="Username/Mobile"
                 inputStyle={{ fontSize: 15 }}
-                underlineColor={Colors.white}
+                underlineColor={Colors.grey400}
                 onChangeText={text => this.setState({ userName: text })}
               />
             </View>
@@ -105,47 +105,57 @@ export default class LoginScreen extends Component {
                 Type="flat"
                 theme={{
                   colors: {
-                    primary: Colors.white,
+                    primary: Colors.lightBlueA700,
                     underlineColor: "transparent",
                     background: "transparent",
-                    placeholder: Colors.whitesmoke,
-                    text: Colors.white
+                    placeholder: Colors.grey500,
+                    text: Colors.grey700
                   }
                 }}
                 placeholder="Password"
                 inputStyle={{ fontSize: 15 }}
-                underlineColor={Colors.white}
+                underlineColor={Colors.grey400}
                 onChangeText={text => this.setState({ password: text })}
               />
             </View>
           </View>
-          <View style={{ flex: 1 }}>
-            <View style={styles.loginButton}>
-              <Button
-                style={{
-                  borderWidth: 1,
-                  borderColor: Colors.white,
-                  borderRadius: 3,
-                  height: 48,
-                  paddingTop: 5
-                }}
-                onPress={this.handleSubmit}
-              >
-                Login
-              </Button>
-            </View>
+          <View
+            style={{
+              flex: 2.5,
+              alignItems: "center"
+            }}
+          >
+            <Button
+              mode="contained"
+              style={{ backgroundColor: Colors.lightBlueA200 }}
+              contentStyle={{
+                height: 44
+              }}
+              labelStyle={{
+                fontSize: 18,
+                color: Colors.white
+              }}
+              onPress={this.handleSubmit}
+            >
+              Login
+            </Button>
           </View>
-          {/* </form> */}
         </View>
-      </KeyboardAvoidingView>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: Colors.white,
+            alignItems: "center"
+          }}
+        >
+          <Text>Imgae with logo</Text>
+        </View>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  loginButton: {
-    padding: 150
-  },
   container: {
     flex: 1
   },
@@ -167,12 +177,13 @@ const styles = StyleSheet.create({
   },
   loginHeader: {
     fontSize: 28,
-    color: Colors.white,
-    fontWeight: "300"
+    color: Colors.black,
+    fontWeight: "300",
+    marginTop: 80
   },
   paddingLeftTopRight: {
-    paddingLeft: 5,
-    paddingTop: 5,
-    paddingRight: 5
+    paddingLeft: 10,
+    paddingTop: 10,
+    paddingRight: 10
   }
 });
