@@ -35,11 +35,12 @@ export default class LoginScreen extends Component {
     this.state = {
       userName: "",
       password: "",
-
+      isLoading: false,
       errors: []
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+
   //function for handle the submitted form
   handleSubmit(e) {
     e.preventDefault();
@@ -51,9 +52,37 @@ export default class LoginScreen extends Component {
       return;
     } else {
       this.setState({ errors });
+      this.getCustomersAsync(userName, password);
       return;
     }
   }
+  async getCustomersAsync(userName, password) {
+    console.log(userName);
+    console.log(password);
+    this.setState({ isLoading: true });
+    try {
+      const response = await fetch("https://jddev.herokuapp.com/login", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: userName,
+          password: password
+        })
+      });
+      if (response) {
+        // const json = await response.json();
+        console.log("response", response.json());
+      } else {
+        console.log("Error nikhil");
+      }
+    } catch (error) {
+      console.log("Error catch", error);
+    }
+  }
+
   render() {
     const { errors } = this.state;
     return (
