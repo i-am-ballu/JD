@@ -146,7 +146,7 @@ export default class CustomersScreen extends React.Component {
     return (
       <View style={{ flex: 1 }}>
         <View style={{ flex: 1, padding: 5 }}>
-          <View style={{ flex: 1, marginBottom: -18 }}>
+          <View style={{ flex: 1 }}>
             <Button
               mode="contained"
               style={{
