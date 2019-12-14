@@ -39,7 +39,8 @@ class LoadingScreen extends Component {
   }
 
   goToAuth() {
-    this.props.navigation.navigate("LoginScreen");
+    // this.props.navigation.navigate("LoginScreen");
+    this.props.navigation.navigate("PinScreen");
   }
 }
 
