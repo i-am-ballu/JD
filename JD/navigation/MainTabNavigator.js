@@ -10,6 +10,7 @@ import CustomersScreen from "../screens/CustomersScreen";
 import TransactionScreen from "../screens/TransactionScreen";
 import LinksScreen from "../screens/LinksScreen";
 import SettingsScreen from "../screens/SettingsScreen";
+import ProfileScreen from "../screens/ProfileScreen";
 
 const config = Platform.select({
   web: { headerMode: "screen" },
@@ -60,6 +61,22 @@ TransactionStack.navigationOptions = {
 };
 TransactionStack.path = "";
 
+const ProfileStack = createStackNavigator(
+  {
+    Profile: ProfileScreen
+  },
+  config
+);
+ProfileStack.navigationOptions = {
+  tabBarLabel: "Profile",
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === "ios" ? "ios-link" : "md-link"}
+    />
+  )
+};
+
 const LinksStack = createStackNavigator(
   {
     Links: LinksScreen
@@ -103,7 +120,8 @@ const tabNavigator = createBottomTabNavigator({
   CustomerStack,
   TransactionStack,
   LinksStack,
-  SettingsStack
+  SettingsStack,
+  ProfileStack
 });
 
 tabNavigator.path = "";
