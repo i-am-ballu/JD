@@ -7,8 +7,10 @@ import {
 
 import TabBarIcon from "../components/TabBarIcon";
 import CustomersScreen from "../screens/CustomersScreen";
+import TransactionScreen from "../screens/TransactionScreen";
 import LinksScreen from "../screens/LinksScreen";
 import SettingsScreen from "../screens/SettingsScreen";
+import ProfileScreen from "../screens/ProfileScreen";
 
 const config = Platform.select({
   web: { headerMode: "screen" },
@@ -37,6 +39,43 @@ CustomerStack.navigationOptions = {
 };
 
 CustomerStack.path = "";
+
+const TransactionStack = createStackNavigator(
+  {
+    TransactionStack: TransactionScreen
+  },
+  config
+);
+TransactionStack.navigationOptions = {
+  tabBarLabel: "Transaction",
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={
+        Platform.OS === "ios"
+          ? `ios-information-circle${focused ? "" : "-outline"}`
+          : "md-checkmark-circle"
+      }
+    />
+  )
+};
+TransactionStack.path = "";
+
+const ProfileStack = createStackNavigator(
+  {
+    Profile: ProfileScreen
+  },
+  config
+);
+ProfileStack.navigationOptions = {
+  tabBarLabel: "Profile",
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === "ios" ? "ios-link" : "md-link"}
+    />
+  )
+};
 
 const LinksStack = createStackNavigator(
   {
@@ -79,8 +118,10 @@ SettingsStack.path = "";
 
 const tabNavigator = createBottomTabNavigator({
   CustomerStack,
+  TransactionStack,
   LinksStack,
-  SettingsStack
+  SettingsStack,
+  ProfileStack
 });
 
 tabNavigator.path = "";
