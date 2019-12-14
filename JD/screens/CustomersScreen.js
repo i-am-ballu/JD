@@ -13,7 +13,8 @@ import {
   DataTable,
   Button,
   Dialog,
-  Portal
+  Portal,
+  Colors
 } from "react-native-paper";
 import { MonoText } from "../components/StyledText";
 
@@ -25,7 +26,8 @@ export default class CustomersScreen extends React.Component {
       visible: false,
       initialSelectedLocation: 1,
       customersListOfDetails: [],
-      customerArray: []
+      customerArray: [],
+      placeholderForSelectCity: "select city"
     };
   }
 
@@ -88,7 +90,8 @@ export default class CustomersScreen extends React.Component {
 
   selectSingleLocation(Address, CustomerId) {
     this.setState({
-      initialSelectedLocation: CustomerId
+      initialSelectedLocation: CustomerId,
+      placeholderForSelectCity: Address
     });
     if (Address != "") {
       const newCustomersArray = [];
@@ -142,51 +145,45 @@ export default class CustomersScreen extends React.Component {
     const { visible, close } = this.props;
     return (
       <View style={{ flex: 1 }}>
-        <View
-          style={{
-            flex: Platform.OS === "ios" ? 0.5 : 0.8
-          }}
-        >
-          <View style={styles.paddingLeftTopRight}>
+        <View style={{ flex: 1, padding: 5 }}>
+          <View style={{ flex: 1, marginBottom: -18 }}>
             <Button
+              mode="contained"
               style={{
-                borderWidth: 1,
-                borderColor: "#e2e2e2",
-                borderRadius: 3,
-                height: 48,
-                paddingTop: 5
+                backgroundColor: Colors.white
+              }}
+              contentStyle={{
+                height: 44
+              }}
+              labelStyle={{
+                fontSize: 18,
+                color: "#5c5c5c"
               }}
               onPress={this._showDialog}
             >
-              Select City
+              {this.state.placeholderForSelectCity}
             </Button>
+            <Portal>
+              <Dialog onDismiss={close} visible={this.state.visible}>
+                <Dialog.Title>Choose an option</Dialog.Title>
+                <Dialog.ScrollArea
+                  style={{ maxHeight: 450, paddingHorizontal: 0 }}
+                >
+                  <ScrollView>
+                    <View style={{ marginLeft: 20, paddingBottom: 20 }}>
+                      {this.renderAllLocationsAsRadioButtons(
+                        this.state.customerArray
+                      )}
+                    </View>
+                  </ScrollView>
+                </Dialog.ScrollArea>
+                <Dialog.Actions style={{ justifyContent: "center" }}>
+                  <Button onPress={this._hideDialog}>Cancel</Button>
+                </Dialog.Actions>
+              </Dialog>
+            </Portal>
           </View>
-          <Portal>
-            <Dialog onDismiss={close} visible={this.state.visible}>
-              <Dialog.Title>Choose an option</Dialog.Title>
-              <Dialog.ScrollArea
-                style={{ maxHeight: 450, paddingHorizontal: 0 }}
-              >
-                <ScrollView>
-                  <View style={{ marginLeft: 20, paddingBottom: 20 }}>
-                    {this.renderAllLocationsAsRadioButtons(
-                      this.state.customerArray
-                    )}
-                  </View>
-                </ScrollView>
-              </Dialog.ScrollArea>
-              <Dialog.Actions style={{ justifyContent: "center" }}>
-                <Button onPress={this._hideDialog}>Cancel</Button>
-              </Dialog.Actions>
-            </Dialog>
-          </Portal>
-        </View>
-        <View
-          style={{
-            flex: Platform.OS === "ios" ? 0.5 : 0.8
-          }}
-        >
-          <View style={styles.paddingLeftTopRight}>
+          <View style={{ flex: 1 }}>
             <Searchbar
               style={{
                 elevation: 1
@@ -206,14 +203,8 @@ export default class CustomersScreen extends React.Component {
               inputStyle={{ fontSize: 15 }}
             />
           </View>
-        </View>
-        <View
-          style={{
-            flex: Platform.OS === "ios" ? 5.6 : 5.2
-          }}
-        >
-          <View>
-            <DataTable style={styles.paddingLeftTopRight}>
+          <View style={{ flex: 8 }}>
+            <DataTable>
               <DataTable.Header>
                 <DataTable.Title style={styles.dataTableText}>
                   <Text style={styles.dataTableTitle}>Code</Text>
@@ -263,10 +254,6 @@ CustomersScreen.navigationOptions = {
   }
 };
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff"
-  },
   dataTableText: {
     // justifyContent: "space-evenly",
     paddingLeft: 10,
@@ -274,9 +261,6 @@ const styles = StyleSheet.create({
   },
   dataTableTitle: {
     fontSize: 15
-  },
-  picker: {
-    width: 100
   },
   radioButton: {
     height: 24,
@@ -293,10 +277,5 @@ const styles = StyleSheet.create({
     width: 12,
     borderRadius: 6,
     backgroundColor: "#000"
-  },
-  paddingLeftTopRight: {
-    paddingLeft: 5,
-    paddingTop: 5,
-    paddingRight: 5
   }
 });
