@@ -7,6 +7,7 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   StyleSheet,
+  ActivityIndicator,
   form
 } from "react-native";
 import { WorldAlignment } from "expo/build/AR";
@@ -77,9 +78,11 @@ export default class LoginScreen extends Component {
         AsyncStorage.setItem("user_x_token", JSON.stringify(json["x-token"]));
         this.props.navigation.navigate("MainTabNavigator");
       } else {
+        this.setState({ isLoading: false });
         console.log("Error nikhil");
       }
     } catch (error) {
+      this.setState({ isLoading: false });
       console.log("Error catch", error);
     }
   }
@@ -88,6 +91,25 @@ export default class LoginScreen extends Component {
     const { errors } = this.state;
     return (
       <View style={{ flex: 1 }}>
+        {this.state.isLoading ? (
+          <View
+            style={{
+              position: "absolute",
+              left: 0,
+              right: 0,
+              top: 0,
+              bottom: 0,
+              alignItems: "center",
+              justifyContent: "center"
+            }}
+          >
+            <ActivityIndicator
+              size="large"
+              color="white"
+              style={{ width: 90, height: 90, backgroundColor: "black" }}
+            />
+          </View>
+        ) : null}
         <View style={{ flex: 1, backgroundColor: Colors.white }}>
           <View
             style={{

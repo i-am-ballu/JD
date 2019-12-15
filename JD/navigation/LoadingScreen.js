@@ -25,7 +25,7 @@ class LoadingScreen extends Component {
   async checkIfLoggedInOrLogOut() {
     // AsyncStorage.removeItem("user_x_token");
     const user_x_token = JSON.parse(await AsyncStorage.getItem("user_x_token"));
-    if (user_x_token) {
+    if (user_x_token != null) {
       //navigate to home screen
       this.goToHome(user_x_token);
     } else {

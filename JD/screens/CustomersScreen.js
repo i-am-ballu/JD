@@ -6,7 +6,8 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  Platform
+  Platform,
+  ActivityIndicator
 } from "react-native";
 import {
   Searchbar,
@@ -27,7 +28,8 @@ export default class CustomersScreen extends React.Component {
       initialSelectedLocation: 1,
       customersListOfDetails: [],
       customerArray: [],
-      placeholderForSelectCity: "select city"
+      placeholderForSelectCity: "select city",
+      isLoading: false
     };
   }
 
