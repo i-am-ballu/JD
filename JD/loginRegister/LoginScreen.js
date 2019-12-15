@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { WorldAlignment } from "expo/build/AR";
 import ReactDOM from "react-dom";
+import Loader from "../loader/LoaderScreen";
 
 function validate(name, password) {
   // we are going to store errors for all fields
@@ -60,7 +61,9 @@ export default class LoginScreen extends Component {
   async getCustomersAsync(userName, password) {
     console.log(userName);
     console.log(password);
-    this.setState({ isLoading: true });
+    this.setState({
+      isLoading: true
+    });
     try {
       const response = await fetch("https://jddev.herokuapp.com/login", {
         method: "POST",
@@ -91,25 +94,7 @@ export default class LoginScreen extends Component {
     const { errors } = this.state;
     return (
       <View style={{ flex: 1 }}>
-        {this.state.isLoading ? (
-          <View
-            style={{
-              position: "absolute",
-              left: 0,
-              right: 0,
-              top: 0,
-              bottom: 0,
-              alignItems: "center",
-              justifyContent: "center"
-            }}
-          >
-            <ActivityIndicator
-              size="large"
-              color="white"
-              style={{ width: 90, height: 90, backgroundColor: "black" }}
-            />
-          </View>
-        ) : null}
+        <Loader loading={this.state.isLoading} />
         <View style={{ flex: 1, backgroundColor: Colors.white }}>
           <View
             style={{

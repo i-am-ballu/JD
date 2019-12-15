@@ -18,6 +18,7 @@ import {
   Colors
 } from "react-native-paper";
 import { MonoText } from "../components/StyledText";
+import Loader from "../loader/LoaderScreen";
 
 export default class CustomersScreen extends React.Component {
   constructor(props) {
@@ -44,6 +45,9 @@ export default class CustomersScreen extends React.Component {
   }
   async getCustomersAsync() {
     try {
+      this.setState({
+        isLoading: true
+      });
       const response = await fetch(
         "https://jddev.herokuapp.com/customers/getAllCustomer",
         {
@@ -60,12 +64,15 @@ export default class CustomersScreen extends React.Component {
       if (json) {
         this.setState({
           customersListOfDetails: json.result,
-          customerArray: json.result
+          customerArray: json.result,
+          isLoading: false
         });
       } else {
         console.log("Error nikhil");
+        this.setState({ isLoading: false });
       }
     } catch (error) {
+      this.setState({ isLoading: false });
       console.log("Error catch", error);
     }
   }
@@ -147,6 +154,7 @@ export default class CustomersScreen extends React.Component {
     const { visible, close } = this.props;
     return (
       <View style={{ flex: 1 }}>
+        <Loader loading={this.state.isLoading} />
         <View style={{ flex: 1, padding: 5 }}>
           <View style={{ flex: 2 }}>
             <View style={{ flex: 1 }}>
