@@ -146,62 +146,64 @@ export default class CustomersScreen extends React.Component {
     return (
       <View style={{ flex: 1 }}>
         <View style={{ flex: 1, padding: 5 }}>
-          <View style={{ flex: 1 }}>
-            <Button
-              mode="contained"
-              style={{
-                backgroundColor: Colors.white
-              }}
-              contentStyle={{
-                height: 44
-              }}
-              labelStyle={{
-                fontSize: 18,
-                color: "#5c5c5c"
-              }}
-              onPress={this._showDialog}
-            >
-              {this.state.placeholderForSelectCity}
-            </Button>
-            <Portal>
-              <Dialog onDismiss={close} visible={this.state.visible}>
-                <Dialog.Title>Choose an option</Dialog.Title>
-                <Dialog.ScrollArea
-                  style={{ maxHeight: 450, paddingHorizontal: 0 }}
-                >
-                  <ScrollView>
-                    <View style={{ marginLeft: 20, paddingBottom: 20 }}>
-                      {this.renderAllLocationsAsRadioButtons(
-                        this.state.customerArray
-                      )}
-                    </View>
-                  </ScrollView>
-                </Dialog.ScrollArea>
-                <Dialog.Actions style={{ justifyContent: "center" }}>
-                  <Button onPress={this._hideDialog}>Cancel</Button>
-                </Dialog.Actions>
-              </Dialog>
-            </Portal>
-          </View>
-          <View style={{ flex: 1 }}>
-            <Searchbar
-              style={{
-                elevation: 1
-              }}
-              Type="flat"
-              onChangeText={text => this.onChangeText(text)}
-              value={this.state.searchBarText}
-              theme={{
-                colors: {
-                  underlineColor: "transparent",
-                  background: "transparent",
-                  placeholder: "#3498db",
-                  text: "#3498db"
-                }
-              }}
-              placeholder="SEARCH"
-              inputStyle={{ fontSize: 15 }}
-            />
+          <View style={{ flex: 2 }}>
+            <View style={{ flex: 1 }}>
+              <Button
+                mode="contained"
+                style={{
+                  backgroundColor: Colors.white
+                }}
+                contentStyle={{
+                  height: 44
+                }}
+                labelStyle={{
+                  fontSize: 18,
+                  color: "#5c5c5c"
+                }}
+                onPress={this._showDialog}
+              >
+                {this.state.placeholderForSelectCity}
+              </Button>
+              <Portal>
+                <Dialog onDismiss={close} visible={this.state.visible}>
+                  <Dialog.Title>Choose an option</Dialog.Title>
+                  <Dialog.ScrollArea
+                    style={{ maxHeight: 450, paddingHorizontal: 0 }}
+                  >
+                    <ScrollView>
+                      <View style={{ marginLeft: 20, paddingBottom: 20 }}>
+                        {this.renderAllLocationsAsRadioButtons(
+                          this.state.customerArray
+                        )}
+                      </View>
+                    </ScrollView>
+                  </Dialog.ScrollArea>
+                  <Dialog.Actions style={{ justifyContent: "center" }}>
+                    <Button onPress={this._hideDialog}>Cancel</Button>
+                  </Dialog.Actions>
+                </Dialog>
+              </Portal>
+            </View>
+            <View style={{ flex: 1 }}>
+              <Searchbar
+                style={{
+                  elevation: 1
+                }}
+                Type="flat"
+                onChangeText={text => this.onChangeText(text)}
+                value={this.state.searchBarText}
+                theme={{
+                  colors: {
+                    underlineColor: "transparent",
+                    background: "transparent",
+                    placeholder: "#3498db",
+                    text: "#3498db"
+                  }
+                }}
+                placeholder="SEARCH"
+                inputStyle={{ fontSize: 15 }}
+              />
+            </View>
           </View>
           <View style={{ flex: 8 }}>
             <DataTable>

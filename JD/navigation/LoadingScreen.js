@@ -23,19 +23,19 @@ class LoadingScreen extends Component {
   }
 
   async checkIfLoggedInOrLogOut() {
-    // AsyncStorage.removeItem("user");
-    const user = JSON.parse(await AsyncStorage.getItem("user"));
-    if (user !== null) {
+    // AsyncStorage.removeItem("user_x_token");
+    const user_x_token = JSON.parse(await AsyncStorage.getItem("user_x_token"));
+    if (user_x_token) {
       //navigate to home screen
-      this.goToHome(user);
+      this.goToHome(user_x_token);
     } else {
       //navigate to login screen
       this.goToAuth();
     }
   }
 
-  goToHome(user) {
-    this.props.navigation.navigate("MainTabNavigator", { user });
+  goToHome(user_x_token) {
+    this.props.navigation.navigate("MainTabNavigator", { user_x_token });
   }
 
   goToAuth() {

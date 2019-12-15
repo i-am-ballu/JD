@@ -30,8 +30,8 @@ function validate(name, password) {
 export default class LoginScreen extends Component {
   constructor(props) {
     super(props);
-    let user = { Name: "Balram", Last: "patidar" };
-    let res = AsyncStorage.setItem("user", JSON.stringify(user));
+    // let user = { Name: "Balram", Last: "patidar" };
+    // let res = AsyncStorage.setItem("user", JSON.stringify(user));
     this.state = {
       userName: "",
       password: "",
@@ -68,13 +68,14 @@ export default class LoginScreen extends Component {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          email: userName,
-          password: password
+          Username: userName,
+          Password: password
         })
       });
       if (response) {
-        // const json = await response.json();
-        console.log("response", response.json());
+        const json = await response.json();
+        AsyncStorage.setItem("user_x_token", JSON.stringify(json["x-token"]));
+        this.props.navigation.navigate("MainTabNavigator");
       } else {
         console.log("Error nikhil");
       }
