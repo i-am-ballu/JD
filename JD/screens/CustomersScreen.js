@@ -19,6 +19,7 @@ import {
 } from "react-native-paper";
 import { MonoText } from "../components/StyledText";
 import Loader from "../loader/LoaderScreen";
+import { userService } from "../services/userService";
 
 export default class CustomersScreen extends React.Component {
   constructor(props) {
@@ -30,7 +31,7 @@ export default class CustomersScreen extends React.Component {
       customersListOfDetails: [],
       customerArray: [],
       placeholderForSelectCity: "select city",
-      isLoading: false
+      isLoading: true
     };
   }
 
@@ -44,37 +45,19 @@ export default class CustomersScreen extends React.Component {
     // console.log("accountInfo", this.state.customerArray);
   }
   async getCustomersAsync() {
-    try {
-      this.setState({
-        isLoading: true
-      });
-      const response = await fetch(
-        "https://jddev.herokuapp.com/customers/getAllCustomer",
-        {
-          method: "Get",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsIlJvbGUiOiJBZG1pbiIsImlhdCI6MTU3NjAzMzM2Mn0.lZu4YIkGhWtiRFj78_4N_jcs-sZkroA75O1SuEv0d-s"
-          }
-        }
-      );
-      const json = await response.json();
-      if (json) {
+    userService.getAllCustomers().then(
+      data => {
         this.setState({
-          customersListOfDetails: json.result,
-          customerArray: json.result,
+          customersListOfDetails: data.result,
+          customerArray: data.result,
           isLoading: false
         });
-      } else {
-        console.log("Error nikhil");
-        this.setState({ isLoading: false });
+      },
+
+      error => {
+        console.log("error === ", error);
       }
-    } catch (error) {
-      this.setState({ isLoading: false });
-      console.log("Error catch", error);
-    }
+    );
   }
 
   onChangeText(text) {
