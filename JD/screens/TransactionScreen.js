@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, View, Text, ScrollView, Platform } from "react-native";
 import { Searchbar, DataTable, Button } from "react-native-paper";
+import { userService } from "../services/userService";
 
 export default class TransactionScreen extends React.Component {
   constructor(props) {
@@ -8,192 +9,46 @@ export default class TransactionScreen extends React.Component {
     this.state = {
       searchBarText: "",
       visible: false,
-      initialSelectedLocation: 1,
-      accounts: [
-        {
-          accNumber: "1",
-          accType: "D",
-          productCode: "1",
-          availBalance: "1000",
-          date: "1-12-2019"
-        },
-        {
-          accNumber: "2",
-          accType: "D",
-          productCode: "2",
-          availBalance: "2000",
-          date: "2-12-2019"
-        },
-        {
-          accNumber: "3",
-          accType: "D",
-          productCode: "3",
-          availBalance: "3000",
-          date: "3-12-2019"
-        },
-        {
-          accNumber: "4",
-          accType: "D",
-          productCode: "4",
-          availBalance: "4000",
-          date: "4-12-2019"
-        },
-        {
-          accNumber: "5",
-          accType: "D",
-          productCode: "5",
-          availBalance: "5000",
-          date: "5-12-2019"
-        },
-        {
-          accNumber: "6",
-          accType: "D",
-          productCode: "6",
-          availBalance: "6000",
-          date: "6-12-2019"
-        },
-        {
-          accNumber: "7",
-          accType: "D",
-          productCode: "7",
-          availBalance: "7000",
-          date: "7-12-2019"
-        },
-        {
-          accNumber: "8",
-          accType: "D",
-          productCode: "8",
-          availBalance: "8000",
-          date: "8-12-2019"
-        },
-        {
-          accNumber: "9",
-          accType: "D",
-          productCode: "9",
-          availBalance: "9000",
-          date: "9-12-2019"
-        },
-        {
-          accNumber: "10",
-          accType: "D",
-          productCode: "10",
-          availBalance: "10000",
-          date: "10-12-2019"
-        },
-        {
-          accNumber: "11",
-          accType: "D",
-          productCode: "11",
-          availBalance: "11000",
-          date: "11-12-2019"
-        },
-        {
-          accNumber: "12",
-          accType: "D",
-          productCode: "12",
-          availBalance: "12000",
-          date: "12-12-2019"
-        },
-        {
-          accNumber: "13",
-          accType: "D",
-          productCode: "13",
-          availBalance: "13000",
-          date: "13-12-2019"
-        },
-        {
-          accNumber: "14",
-          accType: "D",
-          productCode: "14",
-          availBalance: "14000",
-          date: "14-12-2019"
-        },
-        {
-          accNumber: "15",
-          accType: "D",
-          productCode: "15",
-          availBalance: "15000",
-          date: "15-12-2019"
-        },
-        {
-          accNumber: "16",
-          accType: "D",
-          productCode: "16",
-          availBalance: "16000",
-          date: "16-12-2019"
-        },
-        {
-          accNumber: "17",
-          accType: "D",
-          productCode: "17",
-          availBalance: "17000"
-        },
-        {
-          accNumber: "18",
-          accType: "D",
-          productCode: "18",
-          availBalance: "18000"
-        },
-        {
-          accNumber: "19",
-          accType: "D",
-          productCode: "19",
-          availBalance: "19000"
-        },
-        {
-          accNumber: "20",
-          accType: "D",
-          productCode: "20",
-          availBalance: "20000"
-        }
-      ],
-      accountInfo: []
+      customersListOfDetails: [],
+      customerArray: [],
+      isLoading: true
     };
-    this.getCustomersAsync();
   }
 
   componentDidMount() {
-    this.state.accountInfo = this.state.accounts;
-    console.log("accountInfo", this.state.accountInfo);
+    this.getCustomersAsync();
   }
 
-  componentWillMount() {
-    this.state.accountInfo = this.state.accounts;
-    console.log("accountInfo", this.state.accountInfo);
-  }
+  componentWillMount() {}
 
   getCustomersAsync() {
-    let data = {
-      method: "POST",
-      body: JSON.stringify({
-        customerId: 10
-      }),
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
+    userService.getAllRecords().then(
+      data => {
+        this.setState({
+          customersListOfDetails: data.result,
+          customerArray: data.result,
+          isLoading: false
+        });
+      },
+
+      error => {
+        console.log("error === ", error);
       }
-    };
-    return fetch("https://jddev.herokuapp.com/customers/getcustomerbyid", data)
-      .then(response => {
-        console.log("res", response.data);
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    );
   }
 
   onChangeText(text) {
     //for update the view when we search
     if (text != "") {
-      this.state.accounts.filter(item => {
-        if (item.accNumber === text) {
+      this.state.customerArray.filter(item => {
+        if (item.CustomerId === text) {
           this.setState({
-            accountInfo: [item]
+            customersListOfDetails: [item]
           });
         }
       });
     } else {
-      this.state.accountInfo = this.state.accounts;
+      this.state.customersListOfDetails = this.state.customerArray;
     }
     this.setState({ searchBarText: text });
   }
@@ -239,7 +94,7 @@ export default class TransactionScreen extends React.Component {
               </DataTable.Title>
             </DataTable.Header>
             <ScrollView>
-              {this.state.accountInfo.map((account, index) => {
+              {this.state.customersListOfDetails.map((account, index) => {
                 return (
                   <DataTable.Row
                     key={account.accNumber} // you need a unique key per item

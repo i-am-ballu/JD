@@ -1,5 +1,6 @@
 export const userService = {
-  getAllCustomers
+  getAllCustomers,
+  getAllRecords
 };
 
 function getAllCustomers() {
@@ -10,6 +11,17 @@ function getAllCustomers() {
 
   return fetch(
     `https://jddev.herokuapp.com/customers/getAllCustomer`,
+    requestOptions
+  ).then(handleResponse);
+}
+
+function getAllRecords() {
+  const requestOptions = {
+    method: "GET",
+    headers: authHeader()
+  };
+  return fetch(
+    `https://jddev.herokuapp.com/record/getAllRecords`,
     requestOptions
   ).then(handleResponse);
 }
