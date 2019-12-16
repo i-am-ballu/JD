@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, View, Text, ScrollView, Platform } from "react-native";
 import { Searchbar, DataTable, Button } from "react-native-paper";
 import { userService } from "../services/userService";
+import Moment from "moment";
 
 export default class TransactionScreen extends React.Component {
   constructor(props) {
@@ -41,7 +42,7 @@ export default class TransactionScreen extends React.Component {
     //for update the view when we search
     if (text != "") {
       this.state.customerArray.filter(item => {
-        if (item.CustomerId === text) {
+        if (item.CustomerId == text) {
           this.setState({
             customersListOfDetails: [item]
           });
@@ -94,19 +95,19 @@ export default class TransactionScreen extends React.Component {
               </DataTable.Title>
             </DataTable.Header>
             <ScrollView>
-              {this.state.customersListOfDetails.map((account, index) => {
+              {this.state.customersListOfDetails.map((customer, index) => {
                 return (
                   <DataTable.Row
-                    key={account.accNumber} // you need a unique key per item
+                    key={customer.CustomerId} // you need a unique key per item
                   >
                     <DataTable.Cell style={styles.dataTableText}>
-                      {index}
+                      {customer.CustomerId}
                     </DataTable.Cell>
                     <DataTable.Cell style={styles.dataTableText}>
-                      {account.date}
+                      {Moment(customer.CreatedDate).format("DD/MM/YYYY")}
                     </DataTable.Cell>
                     <DataTable.Cell style={styles.dataTableText}>
-                      {account.availBalance}
+                      {customer.Amount}
                     </DataTable.Cell>
                     <View style={styles.dataTableText}>
                       <Button
@@ -114,7 +115,9 @@ export default class TransactionScreen extends React.Component {
                         style={{ width: 10 }}
                         onPress={() => {
                           // added to illustrate how you can make the row take the onPress event and do something
-                          console.log(`selected account ${account.accNumber}`);
+                          console.log(
+                            `selected account ${customer.CustomerId}`
+                          );
                         }}
                       ></Button>
                     </View>
