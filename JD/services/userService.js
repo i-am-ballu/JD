@@ -1,6 +1,8 @@
 export const userService = {
   getAllCustomers,
-  getAllRecords
+  getAllRecords,
+  getAllAreaList,
+  getCustomerByAreaId
 };
 
 function getAllCustomers() {
@@ -25,8 +27,31 @@ function getAllRecords() {
     requestOptions
   ).then(handleResponse);
 }
+
+function getAllAreaList(id) {
+  const requestOptions = {
+    method: "GET",
+    headers: authHeader()
+  };
+  return fetch("https://jddev.herokuapp.com/area/" + id, requestOptions).then(
+    handleResponse
+  );
+}
+
+function getCustomerByAreaId(areaId, Address) {
+  const requestOptions = {
+    method: "GET",
+    headers: authHeader()
+  };
+  return fetch(
+    "https://jddev.herokuapp.com/customers/" + areaId + "/" + Address,
+    requestOptions
+  ).then(handleResponse);
+}
 // for handle the response as try and catch but not use try and catch
 function handleResponse(response) {
+  console.log(response.ok);
+
   return response.text().then(text => {
     const data = text && JSON.parse(text);
     if (!response.ok) {

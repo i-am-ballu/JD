@@ -31,12 +31,13 @@ export default class CustomersScreen extends React.Component {
       customersListOfDetails: [],
       customerArray: [],
       placeholderForSelectCity: "select city",
-      isLoading: true
+      isLoading: true,
+      allAreaList: []
     };
+    this.getAreaList();
   }
-
   componentDidMount() {
-    this.getCustomersAsync();
+    // this.getCustomersAsync();
     // console.log("accountInfo", this.state.customersListOfDetails);
   }
 
@@ -44,6 +45,37 @@ export default class CustomersScreen extends React.Component {
     // this.state.customersListOfDetails = this.state.customerArray;
     // console.log("accountInfo", this.state.customerArray);
   }
+
+  async getAreaList() {
+    let areaId = "10";
+    userService.getAllAreaList(areaId).then(
+      data => {
+        console.log(data);
+        this.setState({ allAreaList: data });
+        let Address = data[0].Address;
+        console.log(Address);
+        this.setState({
+          placeholderForSelectCity: Address
+        });
+        userService.getCustomerByAreaId(areaId, Address).then(
+          data => {
+            this.setState({
+              customersListOfDetails: data,
+              customerArray: data,
+              isLoading: false
+            });
+          },
+          error => {
+            console.log(error);
+          }
+        );
+      },
+      error => {
+        console.log(error);
+      }
+    );
+  }
+
   async getCustomersAsync() {
     userService.getAllCustomers().then(
       data => {
@@ -82,38 +114,56 @@ export default class CustomersScreen extends React.Component {
 
   selectSingleLocation(Address, CustomerId) {
     this.setState({
+      isLoading: true
+    });
+    console.log("Address", Address);
+    console.log("CustomerId", CustomerId);
+    let areaId = 10;
+    userService.getCustomerByAreaId(areaId, Address).then(
+      data => {
+        console.log("data", data);
+        this.setState({
+          customersListOfDetails: data,
+          customerArray: data,
+          isLoading: false
+        });
+      },
+      error => {
+        console.log("error", error);
+      }
+    );
+
+    this.setState({
       initialSelectedLocation: CustomerId,
       placeholderForSelectCity: Address
     });
-    if (Address != "") {
-      const newCustomersArray = [];
-      this.state.customerArray.map(item => {
-        if (item.Address === Address) {
-          newCustomersArray.push(item);
-          this.state.customersListOfDetails = newCustomersArray;
-        }
-      });
-    } else {
-      this.state.customersListOfDetails = this.state.customerArray;
-    }
+    // if (Address != "") {
+    //   const newCustomersArray = [];
+    //   this.state.customerArray.map(item => {
+    //     if (item.Address === Address) {
+    //       newCustomersArray.push(item);
+    //       this.state.customersListOfDetails = newCustomersArray;
+    //     }
+    //   });
+    // } else {
+    //   this.state.customersListOfDetails = this.state.customerArray;
+    // }
     this._hideDialog();
   }
   renderAllLocationsAsRadioButtons(customerArray) {
-    const newArray = [];
-    customerArray.forEach(obj => {
-      if (!newArray.some(o => o.Address === obj.Address)) {
-        newArray.push({ ...obj });
-      }
-    });
-    return newArray.map((val, index) => {
+    // const newArray = [];
+    // customerArray.forEach(obj => {
+    //   if (!newArray.some(o => o.Address === obj.Address)) {
+    //     newArray.push({ ...obj });
+    //   }
+    // });
+    return this.state.allAreaList.map((val, index) => {
+      console.log("val", val);
+
       return (
         <TouchableOpacity
           key={index}
-          onPress={this.selectSingleLocation.bind(
-            this,
-            val.Address,
-            val.CustomerId
-          )}
+          onPress={this.selectSingleLocation.bind(this, val.Address, index)}
         >
           <View style={styles.radioButton}>
             {val.CustomerId == this.state.initialSelectedLocation ? (

@@ -25,6 +25,8 @@ export default class TransactionScreen extends React.Component {
   getCustomersAsync() {
     userService.getAllRecords().then(
       data => {
+        console.log(data);
+
         this.setState({
           customersListOfDetails: data.result,
           customerArray: data.result,
