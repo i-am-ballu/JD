@@ -20,6 +20,7 @@ import {
 import { MonoText } from "../components/StyledText";
 import Loader from "../loader/LoaderScreen";
 import { userService } from "../services/userService";
+import { StackNavigator } from "react-navigation";
 
 export default class CustomersScreen extends React.Component {
   constructor(props) {
@@ -185,6 +186,7 @@ export default class CustomersScreen extends React.Component {
   render() {
     const { checked } = this.state;
     const { visible, close } = this.props;
+    const { navigate } = this.props.navigation;
     return (
       <View style={{ flex: 1 }}>
         <Loader loading={this.state.isLoading} />
@@ -263,10 +265,14 @@ export default class CustomersScreen extends React.Component {
                   return (
                     <DataTable.Row
                       key={customer.CustomerId} // you need a unique key per item
-                      onPress={() => {
-                        // added to illustrate how you can make the row take the onPress event and do something
-                        console.log(`selected custmer ${customer.CustomerId}`);
-                      }}
+                      onPress={() =>
+                        this.props.navigation.navigate(
+                          "CustomerDetailsScreen",
+                          {
+                            text: customer
+                          }
+                        )
+                      }
                     >
                       <DataTable.Cell style={styles.dataTableText}>
                         {customer.CustomerId}
