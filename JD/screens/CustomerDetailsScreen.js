@@ -26,7 +26,8 @@ export default class CustomersScreen extends React.Component {
     this.state = {
       customerDetailArray: [],
       isLoading: true,
-      visible: false
+      visible: false,
+      initialSelectedLocation: 1
     };
     const customerDetail = this.props.navigation.getParam(
       "text",
@@ -57,9 +58,21 @@ export default class CustomersScreen extends React.Component {
   }
   _showDialog = () => this.setState({ visible: true });
   _hideDialog = () => this.setState({ visible: false });
+  selectSingleLocation(CustomerId) {
+    console.log("CustomerId", CustomerId);
+
+    this.setState({
+      initialSelectedLocation: CustomerId
+    });
+  }
   render() {
     const { visible, close } = this.props;
     const { checked } = this.state;
+    const tuitions = [
+      { value: "ValueA", key: "KeyA", name: "Name A", id: 1 },
+      { value: "ValueB", key: "KeyB", name: "Name B", id: 2 },
+      { value: "ValueC", key: "KeyC", name: "Name C", id: 3 }
+    ];
     return (
       <View style={{ flex: 1 }}>
         <Loader loading={this.state.isLoading} />
@@ -158,54 +171,25 @@ export default class CustomersScreen extends React.Component {
               >
                 <ScrollView>
                   <View style={{ marginLeft: 20, paddingBottom: 20 }}>
-                    <List.Section>
-                      <List.Subheader>Customers Details</List.Subheader>
-                      <List.Item
-                        style={{ marginLeft: 10, marginRight: 20 }}
-                        title="SONY HAPPY INDIA PACK(37Rs)"
-                        right={() => (
-                          <RadioButton
-                            value="first"
-                            status={
-                              checked === "first" ? "checked" : "unchecked"
-                            }
-                            onPress={() => {
-                              this.setState({ checked: "first" });
-                            }}
-                          />
-                        )}
-                      />
-                      <List.Item
-                        style={{ marginLeft: 10, marginRight: 20 }}
-                        title="ZEE WALA PACK(46Rs)"
-                        right={() => (
-                          <RadioButton
-                            value="first"
-                            status={
-                              checked === "second" ? "checked" : "unchecked"
-                            }
-                            onPress={() => {
-                              this.setState({ checked: "second" });
-                            }}
-                          />
-                        )}
-                      />
-                      <List.Item
-                        style={{ marginLeft: 10, marginRight: 20 }}
-                        title="COLOR WALA PACK(46Rs)"
-                        right={() => (
-                          <RadioButton
-                            value="first"
-                            status={
-                              checked === "third" ? "checked" : "unchecked"
-                            }
-                            onPress={() => {
-                              this.setState({ checked: "third" });
-                            }}
-                          />
-                        )}
-                      />
-                    </List.Section>
+                    {tuitions.map((item, index) => (
+                      <TouchableOpacity
+                        key={index}
+                        onPress={this.selectSingleLocation.bind(this, item.id)}
+                      >
+                        <Text style={{ alignItems: "flex-start" }}>
+                          {item.name}
+                        </Text>
+                        <View
+                          style={{ alignItems: "flex-end", marginTop: -35 }}
+                        >
+                          <View style={styles.radioButton}>
+                            {item.id == this.state.initialSelectedLocation ? (
+                              <View style={styles.radioButtonSelected} />
+                            ) : null}
+                          </View>
+                        </View>
+                      </TouchableOpacity>
+                    ))}
                   </View>
                 </ScrollView>
               </Dialog.ScrollArea>
@@ -233,4 +217,21 @@ CustomersScreen.navigationOptions = {
     flex: 1
   }
 };
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  radioButton: {
+    height: 24,
+    width: 24,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: "#000",
+    alignItems: "center",
+    justifyContent: "center",
+    margin: 18
+  },
+  radioButtonSelected: {
+    height: 12,
+    width: 12,
+    borderRadius: 6,
+    backgroundColor: "#000"
+  }
+});
