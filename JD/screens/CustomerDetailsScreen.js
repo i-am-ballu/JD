@@ -59,6 +59,7 @@ export default class CustomersScreen extends React.Component {
   _hideDialog = () => this.setState({ visible: false });
   render() {
     const { visible, close } = this.props;
+    const { checked } = this.state;
     return (
       <View style={{ flex: 1 }}>
         <Loader loading={this.state.isLoading} />
@@ -157,20 +158,54 @@ export default class CustomersScreen extends React.Component {
               >
                 <ScrollView>
                   <View style={{ marginLeft: 20, paddingBottom: 20 }}>
-                    <Text>Hello</Text>
-                    <RadioButton.Group
-                      onValueChange={value => this.setState({ value })}
-                      value={this.state.value}
-                    >
-                      <View>
-                        <Text>First</Text>
-                        <RadioButton value="first" />
-                      </View>
-                      <View>
-                        <Text>Second</Text>
-                        <RadioButton value="second" />
-                      </View>
-                    </RadioButton.Group>
+                    <List.Section>
+                      <List.Subheader>Customers Details</List.Subheader>
+                      <List.Item
+                        style={{ marginLeft: 10, marginRight: 20 }}
+                        title="SONY HAPPY INDIA PACK(37Rs)"
+                        right={() => (
+                          <RadioButton
+                            value="first"
+                            status={
+                              checked === "first" ? "checked" : "unchecked"
+                            }
+                            onPress={() => {
+                              this.setState({ checked: "first" });
+                            }}
+                          />
+                        )}
+                      />
+                      <List.Item
+                        style={{ marginLeft: 10, marginRight: 20 }}
+                        title="ZEE WALA PACK(46Rs)"
+                        right={() => (
+                          <RadioButton
+                            value="first"
+                            status={
+                              checked === "second" ? "checked" : "unchecked"
+                            }
+                            onPress={() => {
+                              this.setState({ checked: "second" });
+                            }}
+                          />
+                        )}
+                      />
+                      <List.Item
+                        style={{ marginLeft: 10, marginRight: 20 }}
+                        title="COLOR WALA PACK(46Rs)"
+                        right={() => (
+                          <RadioButton
+                            value="first"
+                            status={
+                              checked === "third" ? "checked" : "unchecked"
+                            }
+                            onPress={() => {
+                              this.setState({ checked: "third" });
+                            }}
+                          />
+                        )}
+                      />
+                    </List.Section>
                   </View>
                 </ScrollView>
               </Dialog.ScrollArea>
