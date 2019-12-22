@@ -4,9 +4,19 @@ import {
   View,
   Text,
   ScrollView,
-  TouchableOpacity
+  TouchableOpacity,
+  FlatList,
+  TouchableHighlight
 } from "react-native";
-import { DataTable, Colors, ListItem } from "react-native-paper";
+import {
+  DataTable,
+  Colors,
+  List,
+  Button,
+  Dialog,
+  Portal,
+  RadioButton
+} from "react-native-paper";
 import Loader from "../loader/LoaderScreen";
 import { userService } from "../services/userService";
 
@@ -15,7 +25,8 @@ export default class CustomersScreen extends React.Component {
     super(props);
     this.state = {
       customerDetailArray: [],
-      isLoading: true
+      isLoading: true,
+      visible: false
     };
     const customerDetail = this.props.navigation.getParam(
       "text",
@@ -25,6 +36,15 @@ export default class CustomersScreen extends React.Component {
     this.state.customerDetailArray.push(customerDetail);
     console.log("customerDetailArray", this.state.customerDetailArray);
     this.state.isLoading = false;
+    this.state.customerDetailArray = [
+      {
+        Code: 1,
+        Address: "Limbodhi",
+        SBTNo: 10,
+        CardNo: 90,
+        MoblieNo: 999
+      }
+    ];
   }
   componentDidMount() {
     // this.getCustomersAsync();
@@ -35,28 +55,130 @@ export default class CustomersScreen extends React.Component {
     // this.state.customersListOfDetails = this.state.customerArray;
     // console.log("accountInfo", this.state.customerArray);
   }
-
+  _showDialog = () => this.setState({ visible: true });
+  _hideDialog = () => this.setState({ visible: false });
   render() {
+    const { visible, close } = this.props;
     return (
       <View style={{ flex: 1 }}>
         <Loader loading={this.state.isLoading} />
-        <View style={{ flex: 0.5 }}></View>
+        <View style={{ flex: 0.1 }}></View>
         <View
           style={{
             flex: 1,
-            backgroundColor: Colors.brown200
+            backgroundColor: Colors.white
           }}
         >
-          <View>
-            {this.state.customerDetailArray.map(x => (
-              <Text
-                key={x.Id}
-                style={{ fontSize: 16, lineHeight: 30, textAlign: "center" }}
+          {this.state.customerDetailArray.map((item, index) => {
+            return (
+              <List.Section>
+                <List.Subheader>Customers Details</List.Subheader>
+                <List.Item
+                  style={{ marginLeft: 10 }}
+                  title={item.Code}
+                  left={() => (
+                    <View>
+                      <Text style={{ marginTop: 6 }}>
+                        Code <Text> : </Text>{" "}
+                      </Text>
+                    </View>
+                  )}
+                />
+                <List.Item
+                  title={item.SBTNo}
+                  style={{ marginLeft: 10 }}
+                  left={() => (
+                    <View>
+                      <Text style={{ marginTop: 6 }}>
+                        STBNo <Text> : </Text>{" "}
+                      </Text>
+                    </View>
+                  )}
+                />
+                <List.Item
+                  title={item.CardNo}
+                  style={{ marginLeft: 10 }}
+                  left={() => (
+                    <View>
+                      <Text style={{ marginTop: 6 }}>
+                        CardNo <Text> : </Text>{" "}
+                      </Text>
+                    </View>
+                  )}
+                />
+                <List.Item
+                  title={item.Address}
+                  style={{ marginLeft: 10 }}
+                  left={() => (
+                    <View>
+                      <Text style={{ marginTop: 6 }}>
+                        Address <Text> : </Text>{" "}
+                      </Text>
+                    </View>
+                  )}
+                />
+                <List.Item
+                  title={item.MoblieNo}
+                  style={{ marginLeft: 10 }}
+                  left={() => (
+                    <View>
+                      <Text style={{ marginTop: 6 }}>
+                        MoblieNo <Text> : </Text>{" "}
+                      </Text>
+                    </View>
+                  )}
+                />
+              </List.Section>
+            );
+          })}
+        </View>
+        <View style={{ flex: 1 }}>
+          <Button
+            mode="contained"
+            style={{
+              backgroundColor: Colors.white
+            }}
+            contentStyle={{
+              height: 44
+            }}
+            labelStyle={{
+              fontSize: 18,
+              color: "#5c5c5c"
+            }}
+            onPress={this._showDialog}
+          >
+            Add Record
+          </Button>
+          <Portal>
+            <Dialog onDismiss={close} visible={this.state.visible}>
+              <Dialog.Title>Choose an option</Dialog.Title>
+              <Dialog.ScrollArea
+                style={{ maxHeight: 450, paddingHorizontal: 0 }}
               >
-                {x.Address}
-              </Text>
-            ))}
-          </View>
+                <ScrollView>
+                  <View style={{ marginLeft: 20, paddingBottom: 20 }}>
+                    <Text>Hello</Text>
+                    <RadioButton.Group
+                      onValueChange={value => this.setState({ value })}
+                      value={this.state.value}
+                    >
+                      <View>
+                        <Text>First</Text>
+                        <RadioButton value="first" />
+                      </View>
+                      <View>
+                        <Text>Second</Text>
+                        <RadioButton value="second" />
+                      </View>
+                    </RadioButton.Group>
+                  </View>
+                </ScrollView>
+              </Dialog.ScrollArea>
+              <Dialog.Actions style={{ justifyContent: "center" }}>
+                <Button onPress={this._hideDialog}>Cancel</Button>
+              </Dialog.Actions>
+            </Dialog>
+          </Portal>
         </View>
         <View style={{ flex: 1, backgroundColor: Colors.brown400 }}></View>
       </View>
@@ -76,29 +198,4 @@ CustomersScreen.navigationOptions = {
     flex: 1
   }
 };
-const styles = StyleSheet.create({
-  dataTableText: {
-    // justifyContent: "space-evenly",
-    paddingLeft: 10,
-    paddingRight: 10
-  },
-  dataTableTitle: {
-    fontSize: 15
-  },
-  radioButton: {
-    height: 24,
-    width: 24,
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: "#000",
-    alignItems: "center",
-    justifyContent: "center",
-    margin: 18
-  },
-  radioButtonSelected: {
-    height: 12,
-    width: 12,
-    borderRadius: 6,
-    backgroundColor: "#000"
-  }
-});
+const styles = StyleSheet.create({});
