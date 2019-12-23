@@ -1,24 +1,7 @@
 import React from "react";
-import {
-  StyleSheet,
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  FlatList,
-  TouchableHighlight
-} from "react-native";
-import {
-  DataTable,
-  Colors,
-  List,
-  Button,
-  Dialog,
-  Portal,
-  RadioButton
-} from "react-native-paper";
+import { StyleSheet, View, Text } from "react-native";
+import { Colors, Button, Dialog, Portal, Checkbox } from "react-native-paper";
 import Loader from "../loader/LoaderScreen";
-import { userService } from "../services/userService";
 
 export default class CustomersScreen extends React.Component {
   constructor(props) {
@@ -26,8 +9,7 @@ export default class CustomersScreen extends React.Component {
     this.state = {
       customerDetailArray: [],
       isLoading: true,
-      visible: false,
-      initialSelectedLocation: 1
+      checked: false
     };
     const customerDetail = this.props.navigation.getParam(
       "text",
@@ -46,6 +28,7 @@ export default class CustomersScreen extends React.Component {
         MoblieNo: 999
       }
     ];
+    this.handleChange = this.handleChange.bind(this);
   }
   componentDidMount() {
     // this.getCustomersAsync();
@@ -58,94 +41,54 @@ export default class CustomersScreen extends React.Component {
   }
   _showDialog = () => this.setState({ visible: true });
   _hideDialog = () => this.setState({ visible: false });
-  selectSingleLocation(CustomerId) {
-    console.log("CustomerId", CustomerId);
+  handleChange(e, item) {
+    console.log(e);
+    console.log(item);
 
-    this.setState({
-      initialSelectedLocation: CustomerId
-    });
+    // const item = e.target.name;
+    // const isChecked = e.target.checked;
+    // this.setState(prevState => ({
+    // checkedItems: prevState.checkedItems.set(item, isChecked)
+    // }));
   }
   render() {
     const { visible, close } = this.props;
-    const { checked } = this.state;
-    const tuitions = [
-      { value: "ValueA", key: "KeyA", name: "Name A", id: 1 },
-      { value: "ValueB", key: "KeyB", name: "Name B", id: 2 },
-      { value: "ValueC", key: "KeyC", name: "Name C", id: 3 }
+    const checkboxes = [
+      {
+        id: 1,
+        name: "check-box-1",
+        key: "checkBox1",
+        label: "Check Box 1",
+        status: false
+      },
+      {
+        id: 2,
+        name: "check-box-2",
+        key: "checkBox2",
+        label: "Check Box 2",
+        status: false
+      },
+      {
+        id: 3,
+        name: "check-box-3",
+        key: "checkBox3",
+        label: "Check Box 3",
+        status: false
+      },
+      {
+        id: 4,
+        name: "check-box-4",
+        key: "checkBox4",
+        label: "Check Box 4",
+        status: false
+      }
     ];
+    const { checked } = this.state;
     return (
       <View style={{ flex: 1 }}>
         <Loader loading={this.state.isLoading} />
-        <View style={{ flex: 0.1 }}></View>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: Colors.white
-          }}
-        >
-          {this.state.customerDetailArray.map((item, index) => {
-            return (
-              <List.Section>
-                <List.Subheader>Customers Details</List.Subheader>
-                <List.Item
-                  style={{ marginLeft: 10 }}
-                  title={item.Code}
-                  left={() => (
-                    <View>
-                      <Text style={{ marginTop: 6 }}>
-                        Code <Text> : </Text>{" "}
-                      </Text>
-                    </View>
-                  )}
-                />
-                <List.Item
-                  title={item.SBTNo}
-                  style={{ marginLeft: 10 }}
-                  left={() => (
-                    <View>
-                      <Text style={{ marginTop: 6 }}>
-                        STBNo <Text> : </Text>{" "}
-                      </Text>
-                    </View>
-                  )}
-                />
-                <List.Item
-                  title={item.CardNo}
-                  style={{ marginLeft: 10 }}
-                  left={() => (
-                    <View>
-                      <Text style={{ marginTop: 6 }}>
-                        CardNo <Text> : </Text>{" "}
-                      </Text>
-                    </View>
-                  )}
-                />
-                <List.Item
-                  title={item.Address}
-                  style={{ marginLeft: 10 }}
-                  left={() => (
-                    <View>
-                      <Text style={{ marginTop: 6 }}>
-                        Address <Text> : </Text>{" "}
-                      </Text>
-                    </View>
-                  )}
-                />
-                <List.Item
-                  title={item.MoblieNo}
-                  style={{ marginLeft: 10 }}
-                  left={() => (
-                    <View>
-                      <Text style={{ marginTop: 6 }}>
-                        MoblieNo <Text> : </Text>{" "}
-                      </Text>
-                    </View>
-                  )}
-                />
-              </List.Section>
-            );
-          })}
-        </View>
+        <View style={{ flex: 1 }}></View>
+
         <View style={{ flex: 1 }}>
           <Button
             mode="contained"
@@ -169,29 +112,17 @@ export default class CustomersScreen extends React.Component {
               <Dialog.ScrollArea
                 style={{ maxHeight: 450, paddingHorizontal: 0 }}
               >
-                <ScrollView>
-                  <View style={{ marginLeft: 20, paddingBottom: 20 }}>
-                    {tuitions.map((item, index) => (
-                      <TouchableOpacity
-                        key={index}
-                        onPress={this.selectSingleLocation.bind(this, item.id)}
-                      >
-                        <Text style={{ alignItems: "flex-start" }}>
-                          {item.name}
-                        </Text>
-                        <View
-                          style={{ alignItems: "flex-end", marginTop: -35 }}
-                        >
-                          <View style={styles.radioButton}>
-                            {item.id == this.state.initialSelectedLocation ? (
-                              <View style={styles.radioButtonSelected} />
-                            ) : null}
-                          </View>
-                        </View>
-                      </TouchableOpacity>
-                    ))}
+                {checkboxes.map((item, index) => (
+                  <View key={item.key}>
+                    <Text>{item.name}</Text>
+                    <Checkbox
+                      status={checked ? "checked" : "unchecked"}
+                      onPress={status => {
+                        this.handleChange(status, item);
+                      }}
+                    />
                   </View>
-                </ScrollView>
+                ))}
               </Dialog.ScrollArea>
               <Dialog.Actions style={{ justifyContent: "center" }}>
                 <Button onPress={this._hideDialog}>Cancel</Button>
