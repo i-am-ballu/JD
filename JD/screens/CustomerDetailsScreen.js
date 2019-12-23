@@ -1,6 +1,14 @@
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
-import { Colors, Button, Dialog, Portal, Checkbox } from "react-native-paper";
+import {
+  Colors,
+  Button,
+  Dialog,
+  Portal,
+  Checkbox,
+  TextInput,
+  List
+} from "react-native-paper";
 import Loader from "../loader/LoaderScreen";
 
 export default class CustomersScreen extends React.Component {
@@ -87,14 +95,42 @@ export default class CustomersScreen extends React.Component {
     return (
       <View style={{ flex: 1 }}>
         <Loader loading={this.state.isLoading} />
-        <View style={{ flex: 1 }}></View>
+        <View
+          style={{
+            flex: 1,
+            marginTop: 10
+          }}
+        >
+          <List.Section>
+            <List.Subheader>Some title</List.Subheader>
+            <List.Item
+              title="First Item"
+              left={() => <List.Icon icon="folder" />}
+            />
+            <List.Item
+              title="Second Item"
+              left={() => <List.Icon color="#000" icon="folder" />}
+            />
+            <List.Item
+              title="Second Item"
+              left={() => <List.Icon color="#000" icon="folder" />}
+            />
+            <List.Item
+              title="Second Item"
+              left={() => <List.Icon color="#000" icon="folder" />}
+            />
+          </List.Section>
+        </View>
 
-        <View style={{ flex: 1 }}>
+        <View
+          style={{
+            flex: 0.5,
+            alignItems: "center"
+          }}
+        >
           <Button
             mode="contained"
-            style={{
-              backgroundColor: Colors.white
-            }}
+            style={{ backgroundColor: Colors.lightBlueA200 }}
             contentStyle={{
               height: 44
             }}
@@ -130,7 +166,15 @@ export default class CustomersScreen extends React.Component {
             </Dialog>
           </Portal>
         </View>
-        <View style={{ flex: 1, backgroundColor: Colors.brown400 }}></View>
+        <View
+          style={{
+            flex: 0.5,
+            backgroundColor: Colors.white,
+            alignItems: "center"
+          }}
+        >
+          <Text>Imgae with logo</Text>
+        </View>
       </View>
     );
   }

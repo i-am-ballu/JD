@@ -11,6 +11,7 @@ import TransactionScreen from "../screens/TransactionScreen";
 import LinksScreen from "../screens/LinksScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import CustomerDetailsScreen from "../screens/CustomerDetailsScreen";
 
 const config = Platform.select({
   web: { headerMode: "screen" },
@@ -19,7 +20,8 @@ const config = Platform.select({
 
 const CustomerStack = createStackNavigator(
   {
-    CustomerStack: CustomersScreen
+    CustomerStack: CustomersScreen,
+    CustomerDetail: CustomerDetailsScreen
   },
   config
 );
