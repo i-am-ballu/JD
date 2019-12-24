@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, ScrollView } from "react-native";
 import {
   Colors,
   Button,
@@ -8,7 +8,8 @@ import {
   Checkbox,
   TextInput,
   List,
-  Divider
+  Divider,
+  DataTable
 } from "react-native-paper";
 import Loader from "../loader/LoaderScreen";
 
@@ -97,7 +98,7 @@ export default class CustomersScreen extends React.Component {
         <Loader loading={this.state.isLoading} />
         <View
           style={{
-            flex: 1,
+            flex: 3,
             marginTop: 10
           }}
         >
@@ -168,12 +169,50 @@ export default class CustomersScreen extends React.Component {
         </View>
         <View
           style={{
-            flex: 0.5,
+            flex: 5,
             backgroundColor: Colors.white,
             alignItems: "center"
           }}
         >
-          <Text>Imgae with logo</Text>
+          <List.Subheader>Transactions</List.Subheader>
+          <DataTable>
+            <DataTable.Header>
+              <DataTable.Title style={styles.dataTableText}>
+                <Text style={styles.dataTableTitle}>Code</Text>
+              </DataTable.Title>
+              <DataTable.Title style={styles.dataTableText}>
+                <Text style={styles.dataTableTitle}>Name</Text>
+              </DataTable.Title>
+              <DataTable.Title style={styles.dataTableText}>
+                <Text style={styles.dataTableTitle}>key</Text>
+              </DataTable.Title>
+              <DataTable.Title style={styles.dataTableText}>
+                <Text style={styles.dataTableTitle}>Lable</Text>
+              </DataTable.Title>
+            </DataTable.Header>
+            <ScrollView>
+              {checkboxes.map((customer, index) => {
+                return (
+                  <DataTable.Row
+                    key={customer.id} // you need a unique key per item
+                  >
+                    <DataTable.Cell style={styles.dataTableText}>
+                      {customer.id}
+                    </DataTable.Cell>
+                    <DataTable.Cell style={styles.dataTableText}>
+                      {customer.name}
+                    </DataTable.Cell>
+                    <DataTable.Cell style={styles.dataTableText}>
+                      {customer.key}
+                    </DataTable.Cell>
+                    <DataTable.Cell style={styles.dataTableText}>
+                      {customer.label}
+                    </DataTable.Cell>
+                  </DataTable.Row>
+                );
+              })}
+            </ScrollView>
+          </DataTable>
         </View>
       </View>
     );
@@ -208,5 +247,13 @@ const styles = StyleSheet.create({
     width: 12,
     borderRadius: 6,
     backgroundColor: "#000"
+  },
+  dataTableText: {
+    // justifyContent: "space-evenly",
+    paddingLeft: 10,
+    paddingRight: 10
+  },
+  dataTableTitle: {
+    fontSize: 15
   }
 });
