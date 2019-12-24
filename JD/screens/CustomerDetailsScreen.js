@@ -7,7 +7,8 @@ import {
   Portal,
   Checkbox,
   TextInput,
-  List
+  List,
+  Divider
 } from "react-native-paper";
 import Loader from "../loader/LoaderScreen";
 
@@ -15,7 +16,6 @@ export default class CustomersScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      customerDetailArray: [],
       isLoading: true,
       checked: false
     };
@@ -24,18 +24,18 @@ export default class CustomersScreen extends React.Component {
       "nothing sent"
     );
     console.log("customerDetail", customerDetail);
-    this.state.customerDetailArray.push(customerDetail);
-    console.log("customerDetailArray", this.state.customerDetailArray);
+    customerDetailKeys = Object.keys(customerDetail);
+
+    this.state.result = Object.keys(customerDetail).map(function(key) {
+      return {
+        key,
+        value: customerDetail[key]
+      };
+    });
+    this.state.result = this.state.result.filter(function(item) {
+      return item.key != "Id" && item.key != "Name" && item.key != "AgentId";
+    });
     this.state.isLoading = false;
-    this.state.customerDetailArray = [
-      {
-        Code: 1,
-        Address: "Limbodhi",
-        SBTNo: 10,
-        CardNo: 90,
-        MoblieNo: 999
-      }
-    ];
     this.handleChange = this.handleChange.bind(this);
   }
   componentDidMount() {
@@ -102,23 +102,23 @@ export default class CustomersScreen extends React.Component {
           }}
         >
           <List.Section>
-            <List.Subheader>Some title</List.Subheader>
-            <List.Item
-              title="First Item"
-              left={() => <List.Icon icon="folder" />}
-            />
-            <List.Item
-              title="Second Item"
-              left={() => <List.Icon color="#000" icon="folder" />}
-            />
-            <List.Item
-              title="Second Item"
-              left={() => <List.Icon color="#000" icon="folder" />}
-            />
-            <List.Item
-              title="Second Item"
-              left={() => <List.Icon color="#000" icon="folder" />}
-            />
+            {this.state.result.map(function(item, index) {
+              return (
+                <View key={index}>
+                  <List.Item
+                    title={item.value}
+                    left={props => (
+                      <Text
+                        style={{ marginTop: 7, marginLeft: 10, fontSize: 18 }}
+                      >
+                        {item.key == "CustomerId" ? "Code" : item.key} :{" "}
+                      </Text>
+                    )}
+                  />
+                  <Divider />
+                </View>
+              );
+            })}
           </List.Section>
         </View>
 

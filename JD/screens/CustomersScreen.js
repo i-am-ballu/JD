@@ -266,12 +266,9 @@ export default class CustomersScreen extends React.Component {
                     <DataTable.Row
                       key={customer.CustomerId} // you need a unique key per item
                       onPress={() =>
-                        this.props.navigation.navigate(
-                          "CustomerDetailsScreen",
-                          {
-                            text: customer
-                          }
-                        )
+                        this.props.navigation.navigate("CustomerDetail", {
+                          text: customer
+                        })
                       }
                     >
                       <DataTable.Cell style={styles.dataTableText}>
