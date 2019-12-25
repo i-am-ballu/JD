@@ -4,6 +4,7 @@ export const userService = {
   getAllAreaList,
   getCustomerByAreaId,
   getPackageList,
+  addTransaction,
   // for customer details screen
   getCustomerDetailsTransaction
 };
@@ -53,13 +54,13 @@ function getCustomerByAreaId(areaId, Address) {
 }
 
 // for customer details screen
-function getCustomerDetailsTransaction(areaId, Address) {
+function getCustomerDetailsTransaction(Id) {
   const requestOptions = {
     method: "GET",
     headers: authHeader()
   };
   return fetch(
-    "https://jddev.herokuapp.com/transaction/44",
+    "https://jddev.herokuapp.com/transaction/" + Id,
     requestOptions
   ).then(handleResponse);
 }
@@ -73,6 +74,19 @@ function getPackageList() {
   return fetch("https://jddev.herokuapp.com/package", requestOptions).then(
     handleResponse
   );
+}
+
+// for create transaction for customer
+function addTransaction(rec) {
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader(),
+    body: JSON.stringify(rec)
+  };
+  return fetch(
+    "http://localhost:3000/transaction/addTransaction",
+    requestOptions
+  ).then(handleResponse);
 }
 
 // for handle the response as try and catch but not use try and catch

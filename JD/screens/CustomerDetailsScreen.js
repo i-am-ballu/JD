@@ -17,35 +17,37 @@ import { userService } from "../services/userService";
 export default class CustomersScreen extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      isLoading: true,
-      packageList: [],
-      customersTransactionList: []
-    };
     const customerDetail = this.props.navigation.getParam(
       "text",
       "nothing sent"
     );
-    customerDetailKeys = Object.keys(customerDetail);
+    this.state = {
+      isLoading: true,
+      packageList: [],
+      customerCopy: customerDetail,
+      customersTransactionList: [],
+      total: 0
+    };
 
-    this.state.result = Object.keys(customerDetail).map(function(key) {
+    customerDetailKeys = Object.keys(customerDetail);
+    this.state.customer = Object.keys(customerDetail).map(function(key) {
       return {
         key,
         value: customerDetail[key]
       };
     });
-    this.state.result = this.state.result.filter(function(item) {
+    this.state.customer = this.state.customer.filter(function(item) {
       return item.key != "Id" && item.key != "Name" && item.key != "AgentId";
     });
     this.state.isLoading = false;
   }
 
   componentDidMount() {
-    this.getCustomersAsync();
+    this.getCustomerDetailsTransaction();
   }
 
-  getCustomersAsync() {
-    userService.getCustomerDetailsTransaction().then(
+  getCustomerDetailsTransaction() {
+    userService.getCustomerDetailsTransaction(this.state.customerCopy.Id).then(
       data => {
         this.setState({
           customersTransactionList: data,
@@ -80,6 +82,13 @@ export default class CustomersScreen extends React.Component {
     plist.forEach(item => {
       if (item.SNo == SNo) {
         item.IsChecked = !item.IsChecked;
+        let s = this.state.total;
+        if (item.IsChecked) {
+          s = s + item.PackageAmount;
+        } else {
+          s = s - item.PackageAmount;
+        }
+        this.setState({ total: s });
       }
     });
     this.setState({ packageList: plist });
@@ -127,6 +136,7 @@ export default class CustomersScreen extends React.Component {
           <Dialog.Actions
             style={{ justifyContent: "center", backgroundColor: "white" }}
           >
+            <Text>Total: {this.state.total} &nbsp;</Text>
             <Button onPress={this._hideDialog}>Apply</Button>
           </Dialog.Actions>
         </Dialog>
@@ -188,7 +198,49 @@ export default class CustomersScreen extends React.Component {
     this.getPackageAsync();
   };
 
-  _hideDialog = () => this.setState({ visible: false });
+  _hideDialog = () => {
+    this.setState({ isLoading: true });
+    // Apply button
+    let recordObject = {};
+    console.log(this.state.customerCopy);
+    console.log(this.state.customerCopy.Id);
+    console.log(this.state.customerCopy["Id"]);
+
+    let packageListString = "";
+    let length = this.state.packageList.length - 1;
+    console.log(length);
+
+    this.state.packageList.forEach((i, index) => {
+      if (i.IsChecked) {
+        packageListString += i.PackageName;
+        packageListString += ", ";
+      }
+    });
+    recordObject.CreatedDate = new Date();
+    recordObject.UpdatedDate = new Date();
+    recordObject.Month = monthNames[new Date().getMonth()];
+    recordObject.Year = new Date().getFullYear();
+    recordObject.CreatedById = 10;
+    recordObject.CreatedByName = "Admin";
+    recordObject.Amount = this.state.total;
+    recordObject.PackageList = packageListString;
+    recordObject.CustomerId = this.state.customerCopy.Id;
+    recordObject.Status = 0;
+    recordObject.Renew = 0;
+    recordObject.AddRenew = 0;
+    userService.addTransaction(recordObject).then(
+      data => {
+        this.setState({
+          isLoading: false,
+          visible: false
+        });
+        this.getCustomerDetailsTransaction();
+      },
+      error => {
+        console.log("error === ", error);
+      }
+    );
+  };
 
   render() {
     return (
@@ -201,7 +253,7 @@ export default class CustomersScreen extends React.Component {
           }}
         >
           <List.Section>
-            {this.state.result.map(function(item, index) {
+            {this.state.customer.map(function(item, index) {
               return (
                 <View key={index}>
                   <List.Item
@@ -296,3 +348,18 @@ const styles = StyleSheet.create({
     fontSize: 15
   }
 });
+
+const monthNames = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December"
+];
