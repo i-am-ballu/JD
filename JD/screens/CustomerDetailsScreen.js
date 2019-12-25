@@ -12,13 +12,15 @@ import {
   DataTable
 } from "react-native-paper";
 import Loader from "../loader/LoaderScreen";
+import { userService } from "../services/userService";
 
 export default class CustomersScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       isLoading: true,
-      checked: false
+      checked: false,
+      customersListOfDetails: []
     };
     const customerDetail = this.props.navigation.getParam(
       "text",
@@ -40,6 +42,7 @@ export default class CustomersScreen extends React.Component {
     this.handleChange = this.handleChange.bind(this);
   }
   componentDidMount() {
+    this.getCustomersAsync();
     // this.getCustomersAsync();
     // console.log("accountInfo", this.state.customersListOfDetails);
   }
@@ -47,6 +50,23 @@ export default class CustomersScreen extends React.Component {
   componentWillMount() {
     // this.state.customersListOfDetails = this.state.customerArray;
     // console.log("accountInfo", this.state.customerArray);
+  }
+  getCustomersAsync() {
+    userService.getAllRecords().then(
+      data => {
+        console.log(data);
+
+        this.setState({
+          customersListOfDetails: data.result,
+          customerArray: data.result,
+          isLoading: false
+        });
+      },
+
+      error => {
+        console.log("error === ", error);
+      }
+    );
   }
   _showDialog = () => this.setState({ visible: true });
   _hideDialog = () => this.setState({ visible: false });
@@ -191,7 +211,7 @@ export default class CustomersScreen extends React.Component {
               </DataTable.Title>
             </DataTable.Header>
             <ScrollView>
-              {checkboxes.map((customer, index) => {
+              {this.state.customersListOfDetails.map((customer, index) => {
                 return (
                   <DataTable.Row
                     key={customer.id} // you need a unique key per item
