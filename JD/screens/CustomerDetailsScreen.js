@@ -5,8 +5,8 @@ import {
   Button,
   Dialog,
   Portal,
-  Checkbox,
   TextInput,
+  Checkbox,
   List,
   Divider,
   DataTable
@@ -20,13 +20,14 @@ export default class CustomersScreen extends React.Component {
     this.state = {
       isLoading: true,
       checked: false,
+      packageList: packageListConstant,
       customersTransactionList: []
     };
     const customerDetail = this.props.navigation.getParam(
       "text",
       "nothing sent"
     );
-    console.log("customerDetail", customerDetail);
+    // console.log("customerDetail", customerDetail);
     customerDetailKeys = Object.keys(customerDetail);
 
     this.state.result = Object.keys(customerDetail).map(function(key) {
@@ -54,16 +55,10 @@ export default class CustomersScreen extends React.Component {
   getCustomersAsync() {
     userService.getCustomerDetailsTransaction().then(
       data => {
-        console.log("Transcattion", data);
-
         this.setState({
           customersTransactionList: data,
           isLoading: false
         });
-        console.log(
-          "customersListOfDetails",
-          this.state.customersTransactionList
-        );
       },
 
       error => {
@@ -72,23 +67,51 @@ export default class CustomersScreen extends React.Component {
     );
   }
 
+  SelectDeselectPackage(SNo) {
+    let plist = this.state.packageList;
+    plist.forEach(item => {
+      if (item.SNo == SNo) {
+        item.IsChecked = !item.IsChecked;
+      }
+    });
+    this.setState({ packageList: plist });
+  }
+
   getPackageContainer() {
+    const checked = true;
     return (
       <Portal>
         <Dialog onDismiss={this.close} visible={this.state.visible}>
-          <Dialog.Title>Choose an option</Dialog.Title>
+          <Dialog.Title
+            style={{ justifyContent: "center", textAlign: "center" }}
+          >
+            Package
+          </Dialog.Title>
           <Dialog.ScrollArea style={{ maxHeight: 450, paddingHorizontal: 0 }}>
-            {packageList.map((item, index) => (
-              <View key={item.SNo}>
-                <Text>{item.PackageName}</Text>
-                <Checkbox
-                  status={this.checked ? "checked" : "unchecked"}
-                  onPress={status => {
-                    this.handleChange(status, item);
+            <DataTable>
+              <DataTable.Header>
+                <DataTable.Title>Name</DataTable.Title>
+                <DataTable.Title numeric>Amount</DataTable.Title>
+                <DataTable.Title numeric></DataTable.Title>
+              </DataTable.Header>
+
+              {this.state.packageList.map((item, index) => (
+                <DataTable.Row
+                  key={item.SNo}
+                  onPress={() => {
+                    this.SelectDeselectPackage(item.SNo);
                   }}
-                />
-              </View>
-            ))}
+                >
+                  <DataTable.Cell>{item.PackageName}</DataTable.Cell>
+                  <DataTable.Cell></DataTable.Cell>
+                  <DataTable.Cell numeric>{item.PackageAmount}</DataTable.Cell>
+                  <DataTable.Cell numeric></DataTable.Cell>
+                  <Checkbox
+                    status={item.IsChecked == true ? "checked" : "unchecked"}
+                  />
+                </DataTable.Row>
+              ))}
+            </DataTable>
           </Dialog.ScrollArea>
           <Dialog.Actions style={{ justifyContent: "center" }}>
             <Button onPress={this._hideDialog}>Cancel</Button>
@@ -100,9 +123,8 @@ export default class CustomersScreen extends React.Component {
   _showDialog = () => this.setState({ visible: true });
   _hideDialog = () => this.setState({ visible: false });
   handleChange(e, item) {
-    console.log(e);
-    console.log(item);
-
+    // console.log(e);
+    // console.log(item);
     // const item = e.target.name;
     // const isChecked = e.target.checked;
     // this.setState(prevState => ({
@@ -264,7 +286,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const packageList = [
+const packageListConstant = [
   {
     SNo: 1,
     PackageId: 999,
@@ -308,7 +330,7 @@ const packageList = [
     PackageAmount: 46,
     PackageChannel: 23,
     IsCheckedDisable: false,
-    IsChecked: false
+    IsChecked: true
   },
   {
     SNo: 6,

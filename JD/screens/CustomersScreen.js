@@ -51,10 +51,10 @@ export default class CustomersScreen extends React.Component {
     let areaId = "10";
     userService.getAllAreaList(areaId).then(
       data => {
-        console.log(data);
+        // console.log(data);
         this.setState({ allAreaList: data });
         let Address = data[0].Address;
-        console.log(Address);
+        // console.log(Address);
         this.setState({
           placeholderForSelectCity: Address
         });
@@ -117,12 +117,12 @@ export default class CustomersScreen extends React.Component {
     this.setState({
       isLoading: true
     });
-    console.log("Address", Address);
-    console.log("CustomerId", CustomerId);
+    // console.log("Address", Address);
+    // console.log("CustomerId", CustomerId);
     let areaId = 10;
     userService.getCustomerByAreaId(areaId, Address).then(
       data => {
-        console.log("data", data);
+        // console.log("data", data);
         this.setState({
           customersListOfDetails: data,
           customerArray: data,
@@ -159,7 +159,7 @@ export default class CustomersScreen extends React.Component {
     //   }
     // });
     return this.state.allAreaList.map((val, index) => {
-      console.log("val", val);
+      // console.log("val", val);
 
       return (
         <TouchableOpacity
