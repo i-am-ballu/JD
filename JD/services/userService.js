@@ -84,7 +84,7 @@ function addTransaction(rec) {
     body: JSON.stringify(rec)
   };
   return fetch(
-    "http://localhost:3000/transaction/addTransaction",
+    "https://jddev.herokuapp.com/transaction/addTransaction",
     requestOptions
   ).then(handleResponse);
 }
