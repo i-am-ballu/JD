@@ -3,6 +3,7 @@ export const userService = {
   getAllRecords,
   getAllAreaList,
   getCustomerByAreaId,
+  getPackageList,
   // for customer details screen
   getCustomerDetailsTransaction
 };
@@ -61,6 +62,17 @@ function getCustomerDetailsTransaction(areaId, Address) {
     "https://jddev.herokuapp.com/transaction/44",
     requestOptions
   ).then(handleResponse);
+}
+
+// for packageList under customer details
+function getPackageList() {
+  const requestOptions = {
+    method: "GET",
+    headers: authHeader()
+  };
+  return fetch("https://jddev.herokuapp.com/package", requestOptions).then(
+    handleResponse
+  );
 }
 
 // for handle the response as try and catch but not use try and catch
