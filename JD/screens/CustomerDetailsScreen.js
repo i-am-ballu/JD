@@ -20,7 +20,7 @@ export default class CustomersScreen extends React.Component {
     this.state = {
       isLoading: true,
       checked: false,
-      customersListOfDetails: []
+      customersTransactionList: []
     };
     const customerDetail = this.props.navigation.getParam(
       "text",
@@ -52,15 +52,18 @@ export default class CustomersScreen extends React.Component {
     // console.log("accountInfo", this.state.customerArray);
   }
   getCustomersAsync() {
-    userService.getAllRecords().then(
+    userService.getCustomerDetailsTransaction().then(
       data => {
-        console.log(data);
+        console.log("Transcattion", data);
 
         this.setState({
-          customersListOfDetails: data.result,
-          customerArray: data.result,
+          customersTransactionList: data,
           isLoading: false
         });
+        console.log(
+          "customersListOfDetails",
+          this.state.customersTransactionList
+        );
       },
 
       error => {
@@ -173,39 +176,47 @@ export default class CustomersScreen extends React.Component {
           <DataTable>
             <DataTable.Header>
               <DataTable.Title style={styles.dataTableText}>
-                <Text style={styles.dataTableTitle}>Code</Text>
+                <Text style={styles.dataTableTitle}>Month</Text>
               </DataTable.Title>
               <DataTable.Title style={styles.dataTableText}>
-                <Text style={styles.dataTableTitle}>Name</Text>
+                <Text style={styles.dataTableTitle}>Amount</Text>
               </DataTable.Title>
               <DataTable.Title style={styles.dataTableText}>
-                <Text style={styles.dataTableTitle}>key</Text>
+                <Text style={styles.dataTableTitle}>Date</Text>
               </DataTable.Title>
               <DataTable.Title style={styles.dataTableText}>
-                <Text style={styles.dataTableTitle}>Lable</Text>
+                <Text style={styles.dataTableTitle}>Added By</Text>
+              </DataTable.Title>
+              <DataTable.Title style={styles.dataTableText}>
+                <Text style={styles.dataTableTitle}>status</Text>
               </DataTable.Title>
             </DataTable.Header>
             <ScrollView>
-              {this.state.customersListOfDetails.map((customer, index) => {
-                return (
-                  <DataTable.Row
-                    key={customer.id} // you need a unique key per item
-                  >
-                    <DataTable.Cell style={styles.dataTableText}>
-                      {customer.id}
-                    </DataTable.Cell>
-                    <DataTable.Cell style={styles.dataTableText}>
-                      {customer.name}
-                    </DataTable.Cell>
-                    <DataTable.Cell style={styles.dataTableText}>
-                      {customer.key}
-                    </DataTable.Cell>
-                    <DataTable.Cell style={styles.dataTableText}>
-                      {customer.label}
-                    </DataTable.Cell>
-                  </DataTable.Row>
-                );
-              })}
+              {this.state.customersTransactionList.map(
+                (transactions, index) => {
+                  return (
+                    <DataTable.Row
+                      key={index} // you need a unique key per item
+                    >
+                      <DataTable.Cell style={styles.dataTableText}>
+                        {transactions.UpdatedDate}
+                      </DataTable.Cell>
+                      <DataTable.Cell style={styles.dataTableText}>
+                        {transactions.Amount}
+                      </DataTable.Cell>
+                      <DataTable.Cell style={styles.dataTableText}>
+                        {transactions.CreatedDate}
+                      </DataTable.Cell>
+                      <DataTable.Cell style={styles.dataTableText}>
+                        {transactions.CreatedByName}
+                      </DataTable.Cell>
+                      <DataTable.Cell style={styles.dataTableText}>
+                        {transactions.Status}
+                      </DataTable.Cell>
+                    </DataTable.Row>
+                  );
+                }
+              )}
             </ScrollView>
           </DataTable>
         </View>
