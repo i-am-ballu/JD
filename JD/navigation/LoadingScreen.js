@@ -30,7 +30,8 @@ class LoadingScreen extends Component {
       this.goToHome(user_x_token);
     } else {
       //navigate to login screen
-      this.goToAuth();
+      // this.goToAuth();
+      this.goToHome(user_x_token);
     }
   }
 

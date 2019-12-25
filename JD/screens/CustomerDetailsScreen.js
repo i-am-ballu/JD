@@ -68,6 +68,32 @@ export default class CustomersScreen extends React.Component {
       }
     );
   }
+
+  getPackageContainer() {
+    return (
+      <Portal>
+        <Dialog onDismiss={this.close} visible={this.state.visible}>
+          <Dialog.Title>Choose an option</Dialog.Title>
+          <Dialog.ScrollArea style={{ maxHeight: 450, paddingHorizontal: 0 }}>
+            {packageList.map((item, index) => (
+              <View key={item.SNo}>
+                <Text>{item.PackageName}</Text>
+                <Checkbox
+                  status={this.checked ? "checked" : "unchecked"}
+                  onPress={status => {
+                    this.handleChange(status, item);
+                  }}
+                />
+              </View>
+            ))}
+          </Dialog.ScrollArea>
+          <Dialog.Actions style={{ justifyContent: "center" }}>
+            <Button onPress={this._hideDialog}>Cancel</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+    );
+  }
   _showDialog = () => this.setState({ visible: true });
   _hideDialog = () => this.setState({ visible: false });
   handleChange(e, item) {
@@ -82,36 +108,7 @@ export default class CustomersScreen extends React.Component {
   }
   render() {
     const { visible, close } = this.props;
-    const checkboxes = [
-      {
-        id: 1,
-        name: "check-box-1",
-        key: "checkBox1",
-        label: "Check Box 1",
-        status: false
-      },
-      {
-        id: 2,
-        name: "check-box-2",
-        key: "checkBox2",
-        label: "Check Box 2",
-        status: false
-      },
-      {
-        id: 3,
-        name: "check-box-3",
-        key: "checkBox3",
-        label: "Check Box 3",
-        status: false
-      },
-      {
-        id: 4,
-        name: "check-box-4",
-        key: "checkBox4",
-        label: "Check Box 4",
-        status: false
-      }
-    ];
+
     const { checked } = this.state;
     return (
       <View style={{ flex: 1 }}>
@@ -163,29 +160,7 @@ export default class CustomersScreen extends React.Component {
           >
             Add Record
           </Button>
-          <Portal>
-            <Dialog onDismiss={close} visible={this.state.visible}>
-              <Dialog.Title>Choose an option</Dialog.Title>
-              <Dialog.ScrollArea
-                style={{ maxHeight: 450, paddingHorizontal: 0 }}
-              >
-                {checkboxes.map((item, index) => (
-                  <View key={item.key}>
-                    <Text>{item.name}</Text>
-                    <Checkbox
-                      status={checked ? "checked" : "unchecked"}
-                      onPress={status => {
-                        this.handleChange(status, item);
-                      }}
-                    />
-                  </View>
-                ))}
-              </Dialog.ScrollArea>
-              <Dialog.Actions style={{ justifyContent: "center" }}>
-                <Button onPress={this._hideDialog}>Cancel</Button>
-              </Dialog.Actions>
-            </Dialog>
-          </Portal>
+          {this.getPackageContainer()}
         </View>
         <View
           style={{
@@ -277,3 +252,60 @@ const styles = StyleSheet.create({
     fontSize: 15
   }
 });
+
+const packageList = [
+  {
+    SNo: 1,
+    PackageId: 999,
+    PackageName: "BASE PACK 130",
+    PackageAmount: 150,
+    PackageChannel: 175,
+    IsCheckedDisable: false,
+    IsChecked: false
+  },
+  {
+    SNo: 2,
+    PackageId: 998,
+    PackageName: "GOLDAN PACK",
+    PackageAmount: 150,
+    PackageChannel: 81,
+    IsCheckedDisable: false,
+    IsChecked: false
+  },
+  {
+    SNo: 3,
+    PackageId: 993,
+    PackageName: "STAR VALU PACK",
+    PackageAmount: 58,
+    PackageChannel: 12,
+    IsCheckedDisable: false,
+    IsChecked: false
+  },
+  {
+    SNo: 4,
+    PackageId: 992,
+    PackageName: "SONY HAPPY INDIA PACK",
+    PackageAmount: 37,
+    PackageChannel: 8,
+    IsCheckedDisable: false,
+    IsChecked: false
+  },
+  {
+    SNo: 5,
+    PackageId: 990,
+    PackageName: "ZEE WALA PACK ",
+    PackageAmount: 46,
+    PackageChannel: 23,
+    IsCheckedDisable: false,
+    IsChecked: false
+  },
+  {
+    SNo: 6,
+    PackageId: 991,
+    PackageName: "COLORS WALA PACK",
+    PackageAmount: 30,
+    PackageChannel: 22,
+    IsCheckedDisable: false,
+    IsChecked: false
+  }
+];
