@@ -7,10 +7,12 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   StyleSheet,
+  ActivityIndicator,
   form
 } from "react-native";
 import { WorldAlignment } from "expo/build/AR";
 import ReactDOM from "react-dom";
+import Loader from "../loader/LoaderScreen";
 
 function validate(name, password) {
   // we are going to store errors for all fields
@@ -30,8 +32,8 @@ function validate(name, password) {
 export default class LoginScreen extends Component {
   constructor(props) {
     super(props);
-    let user = { Name: "Balram", Last: "patidar" };
-    let res = AsyncStorage.setItem("user", JSON.stringify(user));
+    // let user = { Name: "Balram", Last: "patidar" };
+    // let res = AsyncStorage.setItem("user", JSON.stringify(user));
     this.state = {
       userName: "",
       password: "",
@@ -59,7 +61,9 @@ export default class LoginScreen extends Component {
   async getCustomersAsync(userName, password) {
     console.log(userName);
     console.log(password);
-    this.setState({ isLoading: true });
+    this.setState({
+      isLoading: true
+    });
     try {
       const response = await fetch("https://jddev.herokuapp.com/login", {
         method: "POST",
@@ -68,17 +72,20 @@ export default class LoginScreen extends Component {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          email: userName,
-          password: password
+          Username: userName,
+          Password: password
         })
       });
       if (response) {
-        // const json = await response.json();
-        console.log("response", response.json());
+        const json = await response.json();
+        AsyncStorage.setItem("user_x_token", JSON.stringify(json["x-token"]));
+        this.props.navigation.navigate("MainTabNavigator");
       } else {
+        this.setState({ isLoading: false });
         console.log("Error nikhil");
       }
     } catch (error) {
+      this.setState({ isLoading: false });
       console.log("Error catch", error);
     }
   }
@@ -87,6 +94,7 @@ export default class LoginScreen extends Component {
     const { errors } = this.state;
     return (
       <View style={{ flex: 1 }}>
+        <Loader loading={this.state.isLoading} />
         <View style={{ flex: 1, backgroundColor: Colors.white }}>
           <View
             style={{

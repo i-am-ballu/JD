@@ -58,13 +58,13 @@ export default class PinScreen extends Component {
           <View
             style={{
               flex: 6,
-              marginBottom: -60,
+              marginBottom: -50,
               alignItems: "center",
               justifyContent: "center"
             }}
           >
             <Avatar.Image
-              size={180}
+              size={100}
               source={require("../assets/images/temp.jpg")}
             />
           </View>
@@ -77,7 +77,8 @@ export default class PinScreen extends Component {
             <View style={styles.paddingLeftTopRight}>
               <TextInput
                 style={{
-                  elevation: 1
+                  elevation: 1,
+                  height: 50
                 }}
                 Type="flat"
                 theme={{

@@ -6,7 +6,8 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  Platform
+  Platform,
+  ActivityIndicator
 } from "react-native";
 import {
   Searchbar,
@@ -17,6 +18,9 @@ import {
   Colors
 } from "react-native-paper";
 import { MonoText } from "../components/StyledText";
+import Loader from "../loader/LoaderScreen";
+import { userService } from "../services/userService";
+import { StackNavigator } from "react-navigation";
 
 export default class CustomersScreen extends React.Component {
   constructor(props) {
@@ -27,12 +31,14 @@ export default class CustomersScreen extends React.Component {
       initialSelectedLocation: 1,
       customersListOfDetails: [],
       customerArray: [],
-      placeholderForSelectCity: "select city"
+      placeholderForSelectCity: "select city",
+      isLoading: true,
+      allAreaList: []
     };
+    this.getAreaList();
   }
-
   componentDidMount() {
-    this.getCustomersAsync();
+    // this.getCustomersAsync();
     // console.log("accountInfo", this.state.customersListOfDetails);
   }
 
@@ -40,32 +46,51 @@ export default class CustomersScreen extends React.Component {
     // this.state.customersListOfDetails = this.state.customerArray;
     // console.log("accountInfo", this.state.customerArray);
   }
-  async getCustomersAsync() {
-    try {
-      const response = await fetch(
-        "https://jddev.herokuapp.com/customers/getAllCustomer",
-        {
-          method: "Get",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsIlJvbGUiOiJBZG1pbiIsImlhdCI6MTU3NjAzMzM2Mn0.lZu4YIkGhWtiRFj78_4N_jcs-sZkroA75O1SuEv0d-s"
-          }
-        }
-      );
-      const json = await response.json();
-      if (json) {
+
+  async getAreaList() {
+    let areaId = "10";
+    userService.getAllAreaList(areaId).then(
+      data => {
+        // console.log(data);
+        this.setState({ allAreaList: data });
+        let Address = data[0].Address;
+        // console.log(Address);
         this.setState({
-          customersListOfDetails: json.result,
-          customerArray: json.result
+          placeholderForSelectCity: Address
         });
-      } else {
-        console.log("Error nikhil");
+        userService.getCustomerByAreaId(areaId, Address).then(
+          data => {
+            this.setState({
+              customersListOfDetails: data,
+              customerArray: data,
+              isLoading: false
+            });
+          },
+          error => {
+            console.log(error);
+          }
+        );
+      },
+      error => {
+        console.log(error);
       }
-    } catch (error) {
-      console.log("Error catch", error);
-    }
+    );
+  }
+
+  async getCustomersAsync() {
+    userService.getAllCustomers().then(
+      data => {
+        this.setState({
+          customersListOfDetails: data.result,
+          customerArray: data.result,
+          isLoading: false
+        });
+      },
+
+      error => {
+        console.log("error === ", error);
+      }
+    );
   }
 
   onChangeText(text) {
@@ -90,38 +115,56 @@ export default class CustomersScreen extends React.Component {
 
   selectSingleLocation(Address, CustomerId) {
     this.setState({
+      isLoading: true
+    });
+    // console.log("Address", Address);
+    // console.log("CustomerId", CustomerId);
+    let areaId = 10;
+    userService.getCustomerByAreaId(areaId, Address).then(
+      data => {
+        // console.log("data", data);
+        this.setState({
+          customersListOfDetails: data,
+          customerArray: data,
+          isLoading: false
+        });
+      },
+      error => {
+        console.log("error", error);
+      }
+    );
+
+    this.setState({
       initialSelectedLocation: CustomerId,
       placeholderForSelectCity: Address
     });
-    if (Address != "") {
-      const newCustomersArray = [];
-      this.state.customerArray.map(item => {
-        if (item.Address === Address) {
-          newCustomersArray.push(item);
-          this.state.customersListOfDetails = newCustomersArray;
-        }
-      });
-    } else {
-      this.state.customersListOfDetails = this.state.customerArray;
-    }
+    // if (Address != "") {
+    //   const newCustomersArray = [];
+    //   this.state.customerArray.map(item => {
+    //     if (item.Address === Address) {
+    //       newCustomersArray.push(item);
+    //       this.state.customersListOfDetails = newCustomersArray;
+    //     }
+    //   });
+    // } else {
+    //   this.state.customersListOfDetails = this.state.customerArray;
+    // }
     this._hideDialog();
   }
   renderAllLocationsAsRadioButtons(customerArray) {
-    const newArray = [];
-    customerArray.forEach(obj => {
-      if (!newArray.some(o => o.Address === obj.Address)) {
-        newArray.push({ ...obj });
-      }
-    });
-    return newArray.map((val, index) => {
+    // const newArray = [];
+    // customerArray.forEach(obj => {
+    //   if (!newArray.some(o => o.Address === obj.Address)) {
+    //     newArray.push({ ...obj });
+    //   }
+    // });
+    return this.state.allAreaList.map((val, index) => {
+      // console.log("val", val);
+
       return (
         <TouchableOpacity
           key={index}
-          onPress={this.selectSingleLocation.bind(
-            this,
-            val.Address,
-            val.CustomerId
-          )}
+          onPress={this.selectSingleLocation.bind(this, val.Address, index)}
         >
           <View style={styles.radioButton}>
             {val.CustomerId == this.state.initialSelectedLocation ? (
@@ -143,65 +186,69 @@ export default class CustomersScreen extends React.Component {
   render() {
     const { checked } = this.state;
     const { visible, close } = this.props;
+    const { navigate } = this.props.navigation;
     return (
       <View style={{ flex: 1 }}>
+        <Loader loading={this.state.isLoading} />
         <View style={{ flex: 1, padding: 5 }}>
-          <View style={{ flex: 1 }}>
-            <Button
-              mode="contained"
-              style={{
-                backgroundColor: Colors.white
-              }}
-              contentStyle={{
-                height: 44
-              }}
-              labelStyle={{
-                fontSize: 18,
-                color: "#5c5c5c"
-              }}
-              onPress={this._showDialog}
-            >
-              {this.state.placeholderForSelectCity}
-            </Button>
-            <Portal>
-              <Dialog onDismiss={close} visible={this.state.visible}>
-                <Dialog.Title>Choose an option</Dialog.Title>
-                <Dialog.ScrollArea
-                  style={{ maxHeight: 450, paddingHorizontal: 0 }}
-                >
-                  <ScrollView>
-                    <View style={{ marginLeft: 20, paddingBottom: 20 }}>
-                      {this.renderAllLocationsAsRadioButtons(
-                        this.state.customerArray
-                      )}
-                    </View>
-                  </ScrollView>
-                </Dialog.ScrollArea>
-                <Dialog.Actions style={{ justifyContent: "center" }}>
-                  <Button onPress={this._hideDialog}>Cancel</Button>
-                </Dialog.Actions>
-              </Dialog>
-            </Portal>
-          </View>
-          <View style={{ flex: 1 }}>
-            <Searchbar
-              style={{
-                elevation: 1
-              }}
-              Type="flat"
-              onChangeText={text => this.onChangeText(text)}
-              value={this.state.searchBarText}
-              theme={{
-                colors: {
-                  underlineColor: "transparent",
-                  background: "transparent",
-                  placeholder: "#3498db",
-                  text: "#3498db"
-                }
-              }}
-              placeholder="SEARCH"
-              inputStyle={{ fontSize: 15 }}
-            />
+          <View style={{ flex: 2 }}>
+            <View style={{ flex: 1 }}>
+              <Button
+                mode="contained"
+                style={{
+                  backgroundColor: Colors.white
+                }}
+                contentStyle={{
+                  height: 44
+                }}
+                labelStyle={{
+                  fontSize: 18,
+                  color: "#5c5c5c"
+                }}
+                onPress={this._showDialog}
+              >
+                {this.state.placeholderForSelectCity}
+              </Button>
+              <Portal>
+                <Dialog onDismiss={close} visible={this.state.visible}>
+                  <Dialog.Title>Choose an option</Dialog.Title>
+                  <Dialog.ScrollArea
+                    style={{ maxHeight: 450, paddingHorizontal: 0 }}
+                  >
+                    <ScrollView>
+                      <View style={{ marginLeft: 20, paddingBottom: 20 }}>
+                        {this.renderAllLocationsAsRadioButtons(
+                          this.state.customerArray
+                        )}
+                      </View>
+                    </ScrollView>
+                  </Dialog.ScrollArea>
+                  <Dialog.Actions style={{ justifyContent: "center" }}>
+                    <Button onPress={this._hideDialog}>Cancel</Button>
+                  </Dialog.Actions>
+                </Dialog>
+              </Portal>
+            </View>
+            <View style={{ flex: 1 }}>
+              <Searchbar
+                style={{
+                  elevation: 1
+                }}
+                Type="flat"
+                onChangeText={text => this.onChangeText(text)}
+                value={this.state.searchBarText}
+                theme={{
+                  colors: {
+                    underlineColor: "transparent",
+                    background: "transparent",
+                    placeholder: "#3498db",
+                    text: "#3498db"
+                  }
+                }}
+                placeholder="SEARCH"
+                inputStyle={{ fontSize: 15 }}
+              />
+            </View>
           </View>
           <View style={{ flex: 8 }}>
             <DataTable>
@@ -218,10 +265,11 @@ export default class CustomersScreen extends React.Component {
                   return (
                     <DataTable.Row
                       key={customer.CustomerId} // you need a unique key per item
-                      onPress={() => {
-                        // added to illustrate how you can make the row take the onPress event and do something
-                        console.log(`selected custmer ${customer.CustomerId}`);
-                      }}
+                      onPress={() =>
+                        this.props.navigation.navigate("CustomerDetail", {
+                          text: customer
+                        })
+                      }
                     >
                       <DataTable.Cell style={styles.dataTableText}>
                         {customer.CustomerId}
