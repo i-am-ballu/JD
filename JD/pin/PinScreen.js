@@ -27,8 +27,8 @@ function validate(pin) {
 export default class PinScreen extends Component {
   constructor(props) {
     super(props);
-    let user = { Name: "Balram", Last: "patidar" };
-    let res = AsyncStorage.setItem("user", JSON.stringify(user));
+    // let user = { Name: "Balram", Last: "patidar" };
+    // let res = AsyncStorage.setItem("user", JSON.stringify(user));
     this.state = {
       pinChange: "",
       isLoading: false,
@@ -40,6 +40,13 @@ export default class PinScreen extends Component {
   handleSubmit(e) {
     e.preventDefault();
     const { pinChange } = this.state;
+    AsyncStorage.setItem(
+      "user_x_token_And_Pin",
+      JSON.stringify({
+        x_pin: pinChange
+      })
+    );
+    this.props.navigation.navigate("LoadingScreen");
     //for get the validation message
     const errors = validate(pinChange);
     if (errors.length > 0) {

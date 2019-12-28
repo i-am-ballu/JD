@@ -78,8 +78,19 @@ export default class LoginScreen extends Component {
       });
       if (response) {
         const json = await response.json();
-        AsyncStorage.setItem("user_x_token", JSON.stringify(json["x-token"]));
-        this.props.navigation.navigate("MainTabNavigator");
+        AsyncStorage.setItem(
+          "user_x_token_And_Pin",
+          JSON.stringify({
+            x_token: json["x-token"],
+            x_pin: ""
+          })
+        );
+        const userName = JSON.parse(
+          await AsyncStorage.getItem("user_x_token_And_Pin")
+        );
+        console.log(userName);
+
+        this.props.navigation.navigate("LoadingScreen");
       } else {
         this.setState({ isLoading: false });
         console.log("Error nikhil");
