@@ -78,11 +78,10 @@ export default class LoginScreen extends Component {
       });
       if (response) {
         const json = await response.json();
-        AsyncStorage.setItem(
+        await AsyncStorage.setItem(
           "user_x_token_And_Pin",
           JSON.stringify({
-            x_token: json["x-token"],
-            x_pin: ""
+            x_token: json["x-token"]
           })
         );
         const userName = JSON.parse(

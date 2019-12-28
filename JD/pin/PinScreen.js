@@ -30,7 +30,7 @@ export default class PinScreen extends Component {
     // let user = { Name: "Balram", Last: "patidar" };
     // let res = AsyncStorage.setItem("user", JSON.stringify(user));
     this.state = {
-      pinChange: "",
+      pinChange: 0,
       isLoading: false,
       errors: []
     };
@@ -40,13 +40,6 @@ export default class PinScreen extends Component {
   handleSubmit(e) {
     e.preventDefault();
     const { pinChange } = this.state;
-    AsyncStorage.setItem(
-      "user_x_token_And_Pin",
-      JSON.stringify({
-        x_pin: pinChange
-      })
-    );
-    this.props.navigation.navigate("LoadingScreen");
     //for get the validation message
     const errors = validate(pinChange);
     if (errors.length > 0) {
@@ -54,8 +47,17 @@ export default class PinScreen extends Component {
       return;
     } else {
       this.setState({ errors });
+      this.setPinForNavigateToHome(pinChange);
       return;
     }
+  }
+  async setPinForNavigateToHome(pinChange) {
+    var oldItems = JSON.parse(
+      await AsyncStorage.getItem("user_x_token_And_Pin")
+    );
+    oldItems["x_pin"] = pinChange;
+    AsyncStorage.setItem("user_x_token_And_Pin", JSON.stringify(oldItems));
+    this.props.navigation.navigate("LoadingScreen");
   }
   render() {
     const { errors } = this.state;
