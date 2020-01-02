@@ -15,10 +15,10 @@ export default class ProfileScreen extends React.Component {
       <View style={{ flex: 1 }}>
         <View
           style={{
-            flex: 1
+            flex: 8,
+            marginTop: 10
           }}
         >
-          <View style={{ flex: 0.1 }}></View>
           <View
             style={{
               flex: 1,
@@ -56,25 +56,85 @@ export default class ProfileScreen extends React.Component {
             </View>
           </View>
         </View>
-        <View style={{ flex: 2 }}>
-          <View style={{ flex: 6 }}></View>
-          <View style={{ flex: 1, alignItems: "center" }}>
-            <Button
-              mode="contained"
-              style={{ backgroundColor: Colors.lightBlueA200 }}
-              contentStyle={{
-                height: 44
-              }}
-              labelStyle={{
-                fontSize: 18,
-                color: Colors.white
-              }}
-            >
-              Submit
-            </Button>
-          </View>
+        <View
+          style={{
+            flex: 1,
+            alignItems: "center",
+            flexDirection: "row",
+            justifyContent: "center"
+          }}
+        >
+          <Button
+            mode="contained"
+            style={{
+              backgroundColor: Colors.lightGreenA100,
+              marginRight: 10
+            }}
+            contentStyle={{
+              height: 44
+            }}
+            labelStyle={{
+              fontSize: 18,
+              color: Colors.white
+            }}
+          >
+            One
+          </Button>
+
+          <Button
+            mode="contained"
+            style={{ backgroundColor: Colors.lightGreenA100, marginRight: 10 }}
+            contentStyle={{
+              height: 44
+            }}
+            labelStyle={{
+              fontSize: 18,
+              color: Colors.white
+            }}
+          >
+            Two
+          </Button>
+          <Button
+            mode="contained"
+            style={{ backgroundColor: Colors.lightGreenA100 }}
+            contentStyle={{
+              height: 44
+            }}
+            labelStyle={{
+              fontSize: 18,
+              color: Colors.white
+            }}
+            onPress={() => this.props.navigation.navigate("CustomerDetail")}
+          >
+            Three
+          </Button>
         </View>
-        <View style={{ flex: 1, alignItems: "center" }}>
+
+        <View
+          style={{
+            flex: 1,
+            alignItems: "center",
+            flexDirection: "row",
+            justifyContent: "center"
+          }}
+        >
+          <Button
+            mode="contained"
+            style={{
+              backgroundColor: Colors.lightBlueA200,
+              marginRight: 10
+            }}
+            contentStyle={{
+              height: 44
+            }}
+            labelStyle={{
+              fontSize: 18,
+              color: Colors.white
+            }}
+          >
+            Submit
+          </Button>
+
           <Button
             mode="contained"
             style={{ backgroundColor: Colors.lightBlueA200 }}

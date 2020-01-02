@@ -65,7 +65,8 @@ TransactionStack.path = "";
 
 const ProfileStack = createStackNavigator(
   {
-    Profile: ProfileScreen
+    Profile: ProfileScreen,
+    CustomerDetail: CustomerDetailsScreen
   },
   config
 );
