@@ -104,7 +104,7 @@ export default class ProfileScreen extends React.Component {
               fontSize: 18,
               color: Colors.white
             }}
-            onPress={() => this.props.navigation.navigate("CustomerDetail")}
+            onPress={() => this.props.navigation.navigate("ManageDistributor")}
           >
             Three
           </Button>

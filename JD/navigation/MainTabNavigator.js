@@ -12,6 +12,7 @@ import LinksScreen from "../screens/LinksScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import CustomerDetailsScreen from "../screens/CustomerDetailsScreen";
+import ManageDistributorScreen from "../ProfileButton/ManageDistributorScreen";
 
 const config = Platform.select({
   web: { headerMode: "screen" },
@@ -66,7 +67,7 @@ TransactionStack.path = "";
 const ProfileStack = createStackNavigator(
   {
     Profile: ProfileScreen,
-    CustomerDetail: CustomerDetailsScreen
+    ManageDistributor: ManageDistributorScreen
   },
   config
 );
