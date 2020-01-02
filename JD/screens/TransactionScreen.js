@@ -23,13 +23,11 @@ export default class TransactionScreen extends React.Component {
   componentWillMount() {}
 
   getCustomersAsync() {
-    userService.getAllRecords().then(
+    userService.getCustomerDetailsTransaction(44).then(
       data => {
-        console.log(data);
-
         this.setState({
-          customersListOfDetails: data.result,
-          customerArray: data.result,
+          customersListOfDetails: data,
+          customerArray: data,
           isLoading: false
         });
       },
@@ -100,7 +98,7 @@ export default class TransactionScreen extends React.Component {
               {this.state.customersListOfDetails.map((customer, index) => {
                 return (
                   <DataTable.Row
-                    key={customer.CustomerId} // you need a unique key per item
+                    key={index} // you need a unique key per item
                   >
                     <DataTable.Cell style={styles.dataTableText}>
                       {customer.CustomerId}

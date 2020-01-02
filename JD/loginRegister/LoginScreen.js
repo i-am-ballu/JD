@@ -84,11 +84,6 @@ export default class LoginScreen extends Component {
             x_token: json["x-token"]
           })
         );
-        const userName = JSON.parse(
-          await AsyncStorage.getItem("user_x_token_And_Pin")
-        );
-        console.log(userName);
-
         this.props.navigation.navigate("LoadingScreen");
       } else {
         this.setState({ isLoading: false });

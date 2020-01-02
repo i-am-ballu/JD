@@ -43,7 +43,6 @@ class LoadingScreen extends Component {
   }
 
   goToHome(user_x_pin) {
-    console.log("user_x_pin", user_x_pin);
     this.props.navigation.navigate("MainTabNavigator", { user_x_pin });
   }
 
