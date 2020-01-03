@@ -7,18 +7,36 @@ export default class ManageDistributorScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      distributorListOfDetails: [
-        { text: "test", toggled: false },
-        { text: "test", toggled: false },
-        { text: "test", toggled: false }
-      ]
+      // distributorListOfDetails: [
+      //   { text: "test", toggled: false },
+      //   { text: "test", toggled: false },
+      //   { text: "test", toggled: false }
+      // ]
+      distributorListOfDetails: []
     };
   }
-  toggle(index, e) {
+  componentDidMount() {
+    userService.manageDistributorGetAllUser().then(
+      data => {
+        this.setState({
+          distributorListOfDetails: data.data
+        });
+      },
+      error => {
+        console.log("error === ", error);
+      }
+    );
+  }
+  toggle(index, user_id, list, e) {
+    console.log(index);
+    console.log(user_id);
+    console.log(list);
+
     const distributorListOfDetails = [...this.state.distributorListOfDetails];
     distributorListOfDetails[index].toggled = !distributorListOfDetails[index]
       .toggled;
     this.setState({ distributorListOfDetails });
+    console.log(this.state.distributorListOfDetails);
   }
   render() {
     return (
@@ -34,25 +52,32 @@ export default class ManageDistributorScreen extends React.Component {
               </DataTable.Title>
             </DataTable.Header>
             <ScrollView>
-              {this.state.distributorListOfDetails.map((customer, index) => {
-                return (
-                  <DataTable.Row
-                    key={index} // you need a unique key per item
-                  >
-                    <View style={{ marginTop: 10 }}>
-                      <Switch
-                        trackColor={{ true: "blue", false: "grey" }}
-                        value={customer.toggled}
-                        onValueChange={this.toggle.bind(this, index)}
-                      />
-                    </View>
-                    <DataTable.Cell numeric></DataTable.Cell>
-                    <DataTable.Cell style={styles.dataTableText}>
-                      {customer.text}
-                    </DataTable.Cell>
-                  </DataTable.Row>
-                );
-              })}
+              {this.state.distributorListOfDetails.map(
+                (distributorList, index) => {
+                  return (
+                    <DataTable.Row
+                      key={index} // you need a unique key per item
+                    >
+                      <View style={{ marginTop: 10 }}>
+                        <Switch
+                          trackColor={{ true: "blue", false: "grey" }}
+                          value={distributorList.toggled}
+                          onValueChange={this.toggle.bind(
+                            this,
+                            index,
+                            distributorList.user_id,
+                            distributorList
+                          )}
+                        />
+                      </View>
+                      <DataTable.Cell numeric></DataTable.Cell>
+                      <DataTable.Cell style={styles.dataTableText}>
+                        {distributorList.Name}
+                      </DataTable.Cell>
+                    </DataTable.Row>
+                  );
+                }
+              )}
             </ScrollView>
           </DataTable>
         </View>

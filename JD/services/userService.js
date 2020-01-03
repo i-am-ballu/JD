@@ -3,10 +3,12 @@ export const userService = {
   getAllRecords,
   getAllAreaList,
   getCustomerByAreaId,
+  // for customer details screen
+  getCustomerDetailsTransaction,
   getPackageList,
   addTransaction,
-  // for customer details screen
-  getCustomerDetailsTransaction
+  // for Profile manage Distributor screen
+  manageDistributorGetAllUser
 };
 
 function getAllCustomers() {
@@ -89,6 +91,17 @@ function addTransaction(rec) {
   ).then(handleResponse);
 }
 
+// for Profile manage Distributor screen
+function manageDistributorGetAllUser(rec) {
+  const requestOptions = {
+    method: "GET",
+    headers: authHeader()
+  };
+  return fetch(
+    "https://jddev.herokuapp.com/customers/GetAllUser",
+    requestOptions
+  ).then(handleResponse);
+}
 // for handle the response as try and catch but not use try and catch
 function handleResponse(response) {
   console.log(response.ok);
