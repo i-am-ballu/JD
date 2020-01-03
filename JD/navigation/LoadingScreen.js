@@ -23,25 +23,35 @@ class LoadingScreen extends Component {
   }
 
   async checkIfLoggedInOrLogOut() {
-    // AsyncStorage.removeItem("user_x_token");
-    const user_x_token = JSON.parse(await AsyncStorage.getItem("user_x_token"));
-    if (user_x_token != null) {
-      //navigate to home screen
-      this.goToHome(user_x_token);
+    const user_details = JSON.parse(
+      await AsyncStorage.getItem("user_x_token_And_Pin")
+    );
+    if (user_details && user_details.x_token != null && !user_details.x_pin) {
+      //navigate to pin
+      this.goToPin(user_details.x_token);
+    } else if (
+      user_details &&
+      user_details.x_token != null &&
+      user_details.x_pin != null
+    ) {
+      //navigate to home
+      this.goToHome(user_details.x_pin);
     } else {
-      //navigate to login screen
-      // this.goToAuth();
-      this.goToHome(user_x_token);
+      //navigate to login
+      this.goToAuth();
     }
   }
 
-  goToHome(user_x_token) {
-    this.props.navigation.navigate("MainTabNavigator", { user_x_token });
+  goToHome(user_x_pin) {
+    this.props.navigation.navigate("MainTabNavigator", { user_x_pin });
   }
 
   goToAuth() {
     this.props.navigation.navigate("LoginScreen");
     // this.props.navigation.navigate("PinScreen");
+  }
+  goToPin(user_x_token) {
+    this.props.navigation.navigate("PinScreen", { user_x_token });
   }
 }
 
