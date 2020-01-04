@@ -8,9 +8,9 @@ export default class ManageDistributorScreen extends React.Component {
     super(props);
     this.state = {
       // distributorListOfDetails: [
-      //   { text: "test", toggled: false },
-      //   { text: "test", toggled: false },
-      //   { text: "test", toggled: false }
+      //   { text: "test", toggled: false, user_id: 1 },
+      //   { text: "test", toggled: false, user_id: 2 },
+      //   { text: "test", toggled: false, user_id: 3 }
       // ]
       distributorListOfDetails: []
     };
@@ -27,10 +27,10 @@ export default class ManageDistributorScreen extends React.Component {
       }
     );
   }
-  toggle(index, user_id, list, e) {
+  toggle(index, user_id, status) {
     console.log(index);
     console.log(user_id);
-    console.log(list);
+    console.log(status);
 
     const distributorListOfDetails = [...this.state.distributorListOfDetails];
     distributorListOfDetails[index].toggled = !distributorListOfDetails[index]
@@ -66,7 +66,7 @@ export default class ManageDistributorScreen extends React.Component {
                             this,
                             index,
                             distributorList.user_id,
-                            distributorList
+                            distributorList.toggled
                           )}
                         />
                       </View>
