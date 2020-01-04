@@ -87,7 +87,7 @@ export default class ManageDistributorScreen extends React.Component {
 }
 
 ManageDistributorScreen.navigationOptions = {
-  title: "Profile",
+  title: "Manage Distributor",
   headerTintColor: "#fff",
   headerStyle: {
     backgroundColor: "#1287A5",
