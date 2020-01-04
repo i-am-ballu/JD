@@ -9,7 +9,9 @@ export const userService = {
   addTransaction,
   // for Profile manage Distributor screen
   manageDistributorGetAllUser,
-  manageDistributorSetUserStatus
+  manageDistributorSetUserStatus,
+  // For profile add cutomers
+  addCustomer
 };
 
 function getAllCustomers() {
@@ -112,6 +114,27 @@ function manageDistributorSetUserStatus(user_id, status) {
   };
   return fetch(
     "https://jddev.herokuapp.com/customers/SetUserStatus",
+    requestOptions
+  ).then(handleResponse);
+}
+
+// for Profile add customers
+function addCustomer(Code, Name, SBTNo, CardNo, Address, MoblieNo, Agent) {
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader(),
+    body: JSON.stringify({
+      Customer_Id: Code,
+      Name: Name,
+      SBTNo: SBTNo,
+      CardNo: CardNo,
+      Address: Address,
+      MoblieNo: MoblieNo,
+      AgentId: Agent
+    })
+  };
+  return fetch(
+    "https://jddev.herokuapp.com/customers/AddCustomer",
     requestOptions
   ).then(handleResponse);
 }
