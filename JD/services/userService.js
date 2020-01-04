@@ -8,7 +8,8 @@ export const userService = {
   getPackageList,
   addTransaction,
   // for Profile manage Distributor screen
-  manageDistributorGetAllUser
+  manageDistributorGetAllUser,
+  manageDistributorSetUserStatus
 };
 
 function getAllCustomers() {
@@ -99,6 +100,18 @@ function manageDistributorGetAllUser(rec) {
   };
   return fetch(
     "https://jddev.herokuapp.com/customers/GetAllUser",
+    requestOptions
+  ).then(handleResponse);
+}
+
+function manageDistributorSetUserStatus(user_id, status) {
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader(),
+    body: JSON.stringify({ user_id: user_id, status: status })
+  };
+  return fetch(
+    "https://jddev.herokuapp.com/customers/SetUserStatus",
     requestOptions
   ).then(handleResponse);
 }

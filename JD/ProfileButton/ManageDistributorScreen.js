@@ -7,11 +7,6 @@ export default class ManageDistributorScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // distributorListOfDetails: [
-      //   { text: "test", toggled: false, user_id: 1 },
-      //   { text: "test", toggled: false, user_id: 2 },
-      //   { text: "test", toggled: false, user_id: 3 }
-      // ]
       distributorListOfDetails: []
     };
   }
@@ -28,15 +23,18 @@ export default class ManageDistributorScreen extends React.Component {
     );
   }
   toggle(index, user_id, status) {
-    console.log(index);
-    console.log(user_id);
     console.log(status);
-
-    const distributorListOfDetails = [...this.state.distributorListOfDetails];
-    distributorListOfDetails[index].toggled = !distributorListOfDetails[index]
-      .toggled;
-    this.setState({ distributorListOfDetails });
-    console.log(this.state.distributorListOfDetails);
+    let newStatus = status == 0 ? 1 : 0;
+    userService.manageDistributorSetUserStatus(user_id, newStatus).then(
+      data => {
+        let distributorListOfDetails = [...this.state.distributorListOfDetails];
+        distributorListOfDetails[index].status = newStatus;
+        this.setState({ distributorListOfDetails });
+      },
+      error => {
+        console.log("error === ", error);
+      }
+    );
   }
   render() {
     return (
@@ -61,12 +59,12 @@ export default class ManageDistributorScreen extends React.Component {
                       <View style={{ marginTop: 10 }}>
                         <Switch
                           trackColor={{ true: "blue", false: "grey" }}
-                          value={distributorList.toggled}
+                          value={distributorList.status == 1 ? true : false}
                           onValueChange={this.toggle.bind(
                             this,
                             index,
                             distributorList.user_id,
-                            distributorList.toggled
+                            distributorList.status
                           )}
                         />
                       </View>
