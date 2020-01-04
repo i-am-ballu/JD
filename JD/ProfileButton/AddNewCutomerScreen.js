@@ -1,6 +1,6 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { TextInput, Colors, Button } from "react-native-paper";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { TextInput, Colors, Button, Dialog, Portal } from "react-native-paper";
 import { userService } from "../services/userService";
 
 function validate(Code, Name, SBTNo, CardNo, Address, MoblieNo, Agent) {
@@ -45,10 +45,15 @@ export default class AddNewCutomerScreen extends React.Component {
       MoblieNo: "",
       Agent: "",
       isLoading: false,
-      errors: []
+      errors: [],
+      visible: false
     };
     this.addCustomersForm = this.addCustomersForm.bind(this);
     this.clearCustomersForm = this.clearCustomersForm.bind(this);
+    const customerDetail = this.props.navigation.getParam(
+      "object",
+      "Nothing sent From Profile"
+    );
   }
   componentDidMount() {}
   addCustomersForm(e) {
@@ -103,8 +108,11 @@ export default class AddNewCutomerScreen extends React.Component {
       text: Colors.grey700
     };
   }
+  _showDialog = () => this.setState({ visible: true });
+  _hideDialog = () => this.setState({ visible: false });
   render() {
     const { errors } = this.state;
+    const { visible, close } = this.props;
     return (
       <View style={{ flex: 1 }}>
         <View style={{ flex: 0.5, marginLeft: 10 }}>
@@ -183,8 +191,26 @@ export default class AddNewCutomerScreen extends React.Component {
             placeholder="Address"
             inputStyle={{ fontSize: 15 }}
             underlineColor={Colors.grey400}
-            onChangeText={text => this.setState({ Address: text })}
+            onFocus={() => this._showDialog()}
+            // onChangeText={text => this.setState({ Address: text })}
           />
+          <Portal>
+            <Dialog onDismiss={close} visible={this.state.visible}>
+              <Dialog.Title>Choose an option</Dialog.Title>
+              <Dialog.ScrollArea
+                style={{ maxHeight: 450, paddingHorizontal: 0 }}
+              >
+                <ScrollView>
+                  <View style={{ marginLeft: 20, paddingBottom: 20 }}>
+                    <Text>Hello</Text>
+                  </View>
+                </ScrollView>
+              </Dialog.ScrollArea>
+              <Dialog.Actions style={{ justifyContent: "center" }}>
+                <Button onPress={this._hideDialog}>Cancel</Button>
+              </Dialog.Actions>
+            </Dialog>
+          </Portal>
           <TextInput
             label="MoblieNo"
             style={{
