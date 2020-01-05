@@ -23,6 +23,8 @@ import * as ImagePicker from "expo-image-picker";
 import Constants from "expo-constants";
 import * as Permissions from "expo-permissions";
 import { userService } from "../services/userService";
+import jwt_decode from "jwt-decode";
+import Loader from "../loader/LoaderScreen";
 
 function validate(customer_Id) {
   // we are going to store errors for all fields
@@ -42,14 +44,52 @@ export default class ProfileScreen extends React.Component {
       visibleCustomerId: false,
       allAreaList: [],
       initialSelectedLocation: 1,
-      customer_Id: ""
+      customer_Id: "",
+      userInfo: {}
     };
     this._handleCustomerID = this._handleCustomerID.bind(this);
   }
-  // componentDidMount() {
-  //   this.getPermissionAsync();
-  //   console.log("hi");
-  // }
+  componentDidMount() {
+    // this.getPermissionAsync();
+    console.log("hi");
+    this.checkIfLoggedInOrLogOut();
+  }
+  async checkIfLoggedInOrLogOut() {
+    const user_details = JSON.parse(
+      await AsyncStorage.getItem("user_x_token_And_Pin")
+    );
+    console.log("user_details", user_details.x_token);
+    let tokenInfomation = this.getDecodedAccessToken(
+      String(user_details.x_token)
+    ); // decode token
+    console.log("tokenInfo ----", tokenInfomation.id);
+    if (tokenInfomation.id) {
+      this.getUserByUserId(tokenInfomation.id);
+    }
+  }
+  getDecodedAccessToken(token) {
+    try {
+      return jwt_decode(token);
+    } catch (Error) {
+      console.log("Error----", Error);
+
+      return null;
+    }
+  }
+  getUserByUserId(user_id) {
+    this.setState({
+      isLoading: true
+    });
+    userService.getUserByUserId(user_id).then(
+      data => {
+        console.log("data --- ", data.data);
+        this.setState({ userInfo: data.data, isLoading: false });
+      },
+      error => {
+        console.log("error === ", error);
+      }
+    );
+  }
   // getPermissionAsync = async () => {
   //   console.log(Constants.platform.ios);
 
@@ -157,6 +197,7 @@ export default class ProfileScreen extends React.Component {
     const { closeCustomerId } = this.props;
     return (
       <View style={{ flex: 1 }}>
+        <Loader loading={this.state.isLoading} />
         <View style={styles.header}></View>
         <TouchableOpacity onPress={source => this.openImagePicker()}>
           <Avatar.Image
@@ -168,11 +209,11 @@ export default class ProfileScreen extends React.Component {
         </TouchableOpacity>
         <View style={styles.body}>
           <View style={styles.bodyContent}>
-            <Text>John Doe</Text>
-            <Text style={styles.info}>UX Designer / Mobile developer</Text>
+            <Text>{this.state.userInfo.Name}</Text>
+            <Text style={styles.info}>{this.state.userInfo.Role}</Text>
             <Text style={styles.description}>
-              Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne assum
-              electram expetendis, omittam deseruisse consequuntur ius an,
+              {this.state.userInfo.Username} / {this.state.userInfo.MobileNo} /{" "}
+              {this.state.userInfo.AreaCode}
             </Text>
 
             <Button

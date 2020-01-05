@@ -7,6 +7,8 @@ export const userService = {
   getCustomerDetailsTransaction,
   getPackageList,
   addTransaction,
+  // for profile page
+  getUserByUserId,
   // for Profile manage Distributor screen
   manageDistributorGetAllUser,
   manageDistributorSetUserStatus,
@@ -95,7 +97,17 @@ function addTransaction(rec) {
     requestOptions
   ).then(handleResponse);
 }
-
+// for profile page
+function getUserByUserId(user_id) {
+  const requestOptions = {
+    method: "GET",
+    headers: authHeader()
+  };
+  return fetch(
+    "https://jddev.herokuapp.com/customers/GetUserByUserId/" + user_id,
+    requestOptions
+  ).then(handleResponse);
+}
 // for Profile manage Distributor screen
 function manageDistributorGetAllUser(rec) {
   const requestOptions = {
