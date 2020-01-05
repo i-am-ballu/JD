@@ -14,7 +14,8 @@ import {
   Button,
   Dialog,
   Portal,
-  TextInput
+  TextInput,
+  List
 } from "react-native-paper";
 import { MonoText } from "../components/StyledText";
 import { AsyncStorage } from "react-native";
@@ -116,24 +117,6 @@ export default class ProfileScreen extends React.Component {
   }
   renderAllLocationsAsRadioButtons() {
     return (
-      // <TouchableOpacity
-      //   key={index}
-      //   onPress={this.selectSingleLocation.bind(this, val.Address, index)}
-      // >
-      //   <View style={styles.radioButton}>
-      //     {val.CustomerId == this.state.initialSelectedLocation ? (
-      //       <View style={styles.radioButtonSelected} />
-      //     ) : null}
-      //   </View>
-      //   <Text
-      //     style={{
-      //       marginLeft: 80,
-      //       marginTop: -40
-      //     }}
-      //   >
-      //     {val.Address}
-      //   </Text>
-      // </TouchableOpacity>
       <TextInput
         label="Customer Id"
         style={{
@@ -174,171 +157,120 @@ export default class ProfileScreen extends React.Component {
     const { closeCustomerId } = this.props;
     return (
       <View style={{ flex: 1 }}>
-        <View
-          style={{
-            flex: 8,
-            marginTop: 10
-          }}
-        >
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row"
-            }}
-          >
-            <TouchableOpacity onPress={source => this.openImagePicker()}>
-              <Avatar.Image
-                size={180}
-                style={{ marginLeft: 10 }}
-                source={require("../assets/images/temp.jpg")}
-                onPress={() => this.openImagePicker()}
-              />
-            </TouchableOpacity>
-            <View
-              style={{
-                flex: 1,
-                flexDirection: "column",
-                marginLeft: 20,
-                paddingRight: 5
+        <View style={styles.header}></View>
+        <TouchableOpacity onPress={source => this.openImagePicker()}>
+          <Avatar.Image
+            size={150}
+            style={styles.avatar}
+            source={require("../assets/images/temp.jpg")}
+            onPress={() => this.openImagePicker()}
+          />
+        </TouchableOpacity>
+        <View style={styles.body}>
+          <View style={styles.bodyContent}>
+            <Text>John Doe</Text>
+            <Text style={styles.info}>UX Designer / Mobile developer</Text>
+            <Text style={styles.description}>
+              Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne assum
+              electram expetendis, omittam deseruisse consequuntur ius an,
+            </Text>
+
+            <Button
+              mode="contained"
+              style={styles.buttonContainer}
+              contentStyle={{
+                height: 40
               }}
+              labelStyle={{
+                fontSize: 13,
+                color: Colors.white
+              }}
+              onPress={this._LogoutMethod}
             >
-              <View style={{ flex: 0.3 }}></View>
-              <View style={{ flex: 1 }}>
-                <Text>999999999</Text>
-                <Text>Jain Digital</Text>
-                <Text>njain963@gmail.com</Text>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between"
-                  }}
-                >
-                  <Text>Hello1</Text>
-                  <Text>Hello2</Text>
-                </View>
-              </View>
-            </View>
+              Logout
+            </Button>
           </View>
         </View>
-        <View
-          style={{
-            flex: 1,
-            alignItems: "center",
-            flexDirection: "row",
-            justifyContent: "center"
-          }}
-        >
-          <Button
-            mode="contained"
-            style={{
-              backgroundColor: Colors.lightGreenA100,
-              marginRight: 10
-            }}
-            contentStyle={{
-              height: 44
-            }}
-            labelStyle={{
-              fontSize: 18,
-              color: Colors.white
-            }}
-            onPress={this._showEnterCustomerIdDialog}
-          >
-            One
-          </Button>
-          <Portal>
-            <Dialog
-              onDismiss={closeCustomerId}
-              visible={this.state.visibleCustomerId}
-            >
-              <Dialog.Title>Choose an option</Dialog.Title>
-              <Dialog.ScrollArea
-                style={{ maxHeight: 450, paddingHorizontal: 0 }}
+        <List.Section style={{ marginTop: -10 }}>
+          <List.Accordion title="Advance Feature">
+            <ScrollView>
+              <View
+                style={{
+                  alignItems: "flex-start",
+                  marginLeft: 20
+                }}
               >
-                <ScrollView>
-                  <View style={{ marginLeft: 20, paddingBottom: 20 }}>
-                    {this.renderAllLocationsAsRadioButtons()}
-                  </View>
-                </ScrollView>
-              </Dialog.ScrollArea>
-              <Dialog.Actions style={{ justifyContent: "center" }}>
-                <Button onPress={this._handleCustomerID}>Save</Button>
-                <Button onPress={this._showEnterCustomerIdDialog}>
-                  Cancel
+                <Button
+                  mode="contained"
+                  style={styles.buttonContainerDropdown}
+                  contentStyle={{
+                    height: 40
+                  }}
+                  labelStyle={{
+                    fontSize: 13,
+                    color: Colors.white
+                  }}
+                  onPress={this._showEnterCustomerIdDialog}
+                >
+                  Edit Customer
                 </Button>
-              </Dialog.Actions>
-            </Dialog>
-          </Portal>
-
-          <Button
-            mode="contained"
-            style={{ backgroundColor: Colors.lightGreenA100, marginRight: 10 }}
-            contentStyle={{
-              height: 44
-            }}
-            labelStyle={{
-              fontSize: 18,
-              color: Colors.white
-            }}
-            onPress={() => this.props.navigation.navigate("AddNewCutomer")}
+                <Button
+                  mode="contained"
+                  style={styles.buttonContainerDropdown}
+                  contentStyle={{
+                    height: 40
+                  }}
+                  labelStyle={{
+                    fontSize: 13,
+                    color: Colors.white
+                  }}
+                  onPress={() =>
+                    this.props.navigation.navigate("AddNewCustomer")
+                  }
+                >
+                  Add Customer
+                </Button>
+                <Button
+                  mode="contained"
+                  style={styles.buttonContainerDropdown}
+                  contentStyle={{
+                    height: 40
+                  }}
+                  labelStyle={{
+                    fontSize: 13,
+                    color: Colors.white
+                  }}
+                  onPress={() =>
+                    this.props.navigation.navigate("ManageDistributor")
+                  }
+                >
+                  Manage Distributor
+                </Button>
+              </View>
+              <List.Item title="First item" />
+              <List.Item title="Second item" />
+            </ScrollView>
+          </List.Accordion>
+        </List.Section>
+        <Portal>
+          <Dialog
+            onDismiss={closeCustomerId}
+            visible={this.state.visibleCustomerId}
           >
-            Two
-          </Button>
-          <Button
-            mode="contained"
-            style={{ backgroundColor: Colors.lightGreenA100 }}
-            contentStyle={{
-              height: 44
-            }}
-            labelStyle={{
-              fontSize: 18,
-              color: Colors.white
-            }}
-            onPress={() => this.props.navigation.navigate("ManageDistributor")}
-          >
-            Three
-          </Button>
-        </View>
-
-        <View
-          style={{
-            flex: 1,
-            alignItems: "center",
-            flexDirection: "row",
-            justifyContent: "center"
-          }}
-        >
-          <Button
-            mode="contained"
-            style={{
-              backgroundColor: Colors.lightBlueA200,
-              marginRight: 10
-            }}
-            contentStyle={{
-              height: 44
-            }}
-            labelStyle={{
-              fontSize: 18,
-              color: Colors.white
-            }}
-          >
-            Submit
-          </Button>
-
-          <Button
-            mode="contained"
-            style={{ backgroundColor: Colors.lightBlueA200 }}
-            contentStyle={{
-              height: 44
-            }}
-            labelStyle={{
-              fontSize: 18,
-              color: Colors.white
-            }}
-            onPress={this._LogoutMethod}
-          >
-            Logout
-          </Button>
-        </View>
+            <Dialog.Title>Choose an option</Dialog.Title>
+            <Dialog.ScrollArea style={{ maxHeight: 450, paddingHorizontal: 0 }}>
+              <ScrollView>
+                <View style={{ marginLeft: 20, paddingBottom: 20 }}>
+                  {this.renderAllLocationsAsRadioButtons()}
+                </View>
+              </ScrollView>
+            </Dialog.ScrollArea>
+            <Dialog.Actions style={{ justifyContent: "center" }}>
+              <Button onPress={this._handleCustomerID}>Save</Button>
+              <Button onPress={this._hideEnterCustomerIdDialog}>Cancel</Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
       </View>
     );
   }
@@ -349,37 +281,76 @@ ProfileScreen.navigationOptions = {
   headerTintColor: "#fff",
   headerStyle: {
     backgroundColor: "#1287A5",
-    fontSize: 40
+    fontSize: 40,
+    borderBottomWidth: 0
   },
   headerTitleStyle: {
     textAlign: "center",
-    flex: 1
+    flex: 1,
+    position: "absolute",
+    top: 50,
+    fontSize: 35
   }
 };
 
 const styles = StyleSheet.create({
-  dataTableText: {
-    // justifyContent: "space-evenly",
-    paddingLeft: 10,
-    paddingRight: 10
+  header: {
+    backgroundColor: "#1287A5",
+    height: 150
   },
-  dataTableTitle: {
-    fontSize: 15
+  avatar: {
+    borderColor: "white",
+    alignSelf: "center",
+    marginTop: -60
   },
-  radioButton: {
-    height: 24,
-    width: 24,
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: "#000",
+  name: {
+    fontSize: 22,
+    color: "#FFFFFF",
+    fontWeight: "600"
+  },
+  body: {
+    marginTop: 5,
+    marginBottom: 0
+  },
+  bodyContent: {
     alignItems: "center",
-    justifyContent: "center",
-    margin: 18
+    padding: 20
   },
-  radioButtonSelected: {
-    height: 12,
-    width: 12,
-    borderRadius: 6,
-    backgroundColor: "#000"
+  name: {
+    fontSize: 28,
+    color: "#696969",
+    fontWeight: "600"
+  },
+  info: {
+    fontSize: 16,
+    color: "#1287A5",
+    marginTop: 10
+  },
+  description: {
+    fontSize: 16,
+    color: "#696969",
+    marginTop: 10,
+    textAlign: "center"
+  },
+  buttonContainer: {
+    height: 45,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 20,
+    borderRadius: 30,
+    backgroundColor: "#1287A5",
+    marginRight: 10,
+    marginTop: 20
+  },
+  buttonContainerDropdown: {
+    height: 45,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 20,
+    borderRadius: 30,
+    backgroundColor: "#1287A5",
+    marginRight: 10
   }
 });

@@ -69,7 +69,7 @@ const ProfileStack = createStackNavigator(
   {
     Profile: ProfileScreen,
     ManageDistributor: ManageDistributorScreen,
-    AddNewCutomer: AddNewCutomerScreen
+    AddNewCustomer: AddNewCutomerScreen
   },
   config
 );

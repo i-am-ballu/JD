@@ -63,9 +63,9 @@ export default class AddNewCutomerScreen extends React.Component {
       "customer_Id",
       "Nothing sent From Profile"
     );
-    console.log(customer_id);
-
-    this.getCustomerByCustomerId(customer_id);
+    if (customer_id != "Nothing sent From Profile") {
+      this.getCustomerByCustomerId(customer_id);
+    }
     this.getAreaList();
   }
   async getCustomerByCustomerId(customer_id) {
@@ -74,13 +74,13 @@ export default class AddNewCutomerScreen extends React.Component {
         console.log("data", data.data);
         let details = data.data;
         this.setState({
-          Address: details.Address,
           AgentId: details.AgentId,
           CardNo: details.CardNo,
           CustomerId: details.CustomerId,
           MobileNo: details.MobileNo,
           Name: details.Name,
-          STBNo: details.STBNo
+          STBNo: details.STBNo,
+          Address: details.Address
         });
       },
       error => {

@@ -264,7 +264,7 @@ export default class CustomersScreen extends React.Component {
                 {this.state.customersListOfDetails.map((customer, index) => {
                   return (
                     <DataTable.Row
-                      key={customer.CustomerId} // you need a unique key per item
+                      key={index} // you need a unique key per item
                       onPress={() =>
                         this.props.navigation.navigate("CustomerDetail", {
                           text: customer
