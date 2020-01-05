@@ -89,24 +89,13 @@ export default class ProfileScreen extends React.Component {
         this.setState({
           placeholderForSelectCity: Address
         });
-        userService.getCustomerByAreaId(areaId, Address).then(
-          data => {
-            this.setState({
-              customerArray: data,
-              isLoading: false
-            });
-          },
-          error => {
-            console.log(error);
-          }
-        );
       },
       error => {
         console.log(error);
       }
     );
   }
-  renderAllLocationsAsRadioButtons(customerArray) {
+  renderAllLocationsAsRadioButtons() {
     return this.state.allAreaList.map((val, index) => {
       return (
         <TouchableOpacity
@@ -134,26 +123,13 @@ export default class ProfileScreen extends React.Component {
     this.setState({
       isLoading: true
     });
-    let areaId = 10;
-    userService.getCustomerByAreaId(areaId, Address).then(
-      data => {
-        this.setState({
-          customerArray: data,
-          isLoading: false
-        });
-      },
-      error => {
-        console.log("error", error);
-      }
-    );
-
     this.setState({
       initialSelectedLocation: CustomerId,
       placeholderForSelectCity: Address
     });
     this._hideDialog();
     this.props.navigation.navigate("AddNewCutomer", {
-      object: this.state.customerArray
+      object: Address
     });
   }
   render() {
@@ -240,9 +216,7 @@ export default class ProfileScreen extends React.Component {
               >
                 <ScrollView>
                   <View style={{ marginLeft: 20, paddingBottom: 20 }}>
-                    {this.renderAllLocationsAsRadioButtons(
-                      this.state.customerArray
-                    )}
+                    {this.renderAllLocationsAsRadioButtons()}
                   </View>
                 </ScrollView>
               </Dialog.ScrollArea>

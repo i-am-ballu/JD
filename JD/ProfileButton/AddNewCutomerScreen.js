@@ -1,5 +1,11 @@
 import React from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity
+} from "react-native";
 import { TextInput, Colors, Button, Dialog, Portal } from "react-native-paper";
 import { userService } from "../services/userService";
 
@@ -46,7 +52,10 @@ export default class AddNewCutomerScreen extends React.Component {
       Agent: "",
       isLoading: false,
       errors: [],
-      visible: false
+      visibleAddress: false,
+      visibleAgent: false,
+      allAreaList: [],
+      initialSelectedLocation: 1
     };
     this.addCustomersForm = this.addCustomersForm.bind(this);
     this.clearCustomersForm = this.clearCustomersForm.bind(this);
@@ -54,6 +63,57 @@ export default class AddNewCutomerScreen extends React.Component {
       "object",
       "Nothing sent From Profile"
     );
+    console.log("customerDetail", customerDetail);
+    this.getAreaList();
+  }
+  async getAreaList() {
+    console.log("called");
+
+    let areaId = "10";
+    userService.getAllAreaList(areaId).then(
+      data => {
+        this.setState({ allAreaList: data });
+      },
+      error => {
+        console.log(error);
+      }
+    );
+  }
+  renderAllLocationsAsRadioButtons() {
+    return this.state.allAreaList.map((val, index) => {
+      return (
+        <TouchableOpacity
+          key={index}
+          onPress={this.selectSingleLocation.bind(this, val.Address, index)}
+        >
+          <View style={styles.radioButton}>
+            {index == this.state.initialSelectedLocation ? (
+              <View style={styles.radioButtonSelected} />
+            ) : null}
+          </View>
+          <Text
+            style={{
+              marginLeft: 80,
+              marginTop: -40
+            }}
+          >
+            {val.Address}
+          </Text>
+        </TouchableOpacity>
+      );
+    });
+  }
+  selectSingleLocation(Address, CustomerId) {
+    console.log(Address);
+
+    this.setState({
+      isLoading: true
+    });
+    this.setState({
+      initialSelectedLocation: CustomerId,
+      Address: Address
+    });
+    this._hideAddressDialog();
   }
   componentDidMount() {}
   addCustomersForm(e) {
@@ -108,11 +168,13 @@ export default class AddNewCutomerScreen extends React.Component {
       text: Colors.grey700
     };
   }
-  _showDialog = () => this.setState({ visible: true });
-  _hideDialog = () => this.setState({ visible: false });
+  _showAddressDialog = () => this.setState({ visibleAddress: true });
+  _hideAddressDialog = () => this.setState({ visibleAddress: false });
+  _showAgentDialog = () => this.setState({ visibleAgent: true });
+  _hideAgentDialog = () => this.setState({ visibleAgent: false });
   render() {
     const { errors } = this.state;
-    const { visible, close } = this.props;
+    const { closeAddress, closeAgent } = this.props;
     return (
       <View style={{ flex: 1 }}>
         <View style={{ flex: 0.5, marginLeft: 10 }}>
@@ -191,23 +253,27 @@ export default class AddNewCutomerScreen extends React.Component {
             placeholder="Address"
             inputStyle={{ fontSize: 15 }}
             underlineColor={Colors.grey400}
-            onFocus={() => this._showDialog()}
-            // onChangeText={text => this.setState({ Address: text })}
+            onTouchStart={() => this._showAddressDialog()}
+            onChangeText={Address => this.setState({ Address: Address })}
+            value={this.state.Address}
           />
           <Portal>
-            <Dialog onDismiss={close} visible={this.state.visible}>
+            <Dialog
+              onDismiss={closeAddress}
+              visible={this.state.visibleAddress}
+            >
               <Dialog.Title>Choose an option</Dialog.Title>
               <Dialog.ScrollArea
                 style={{ maxHeight: 450, paddingHorizontal: 0 }}
               >
                 <ScrollView>
                   <View style={{ marginLeft: 20, paddingBottom: 20 }}>
-                    <Text>Hello</Text>
+                    {this.renderAllLocationsAsRadioButtons()}
                   </View>
                 </ScrollView>
               </Dialog.ScrollArea>
               <Dialog.Actions style={{ justifyContent: "center" }}>
-                <Button onPress={this._hideDialog}>Cancel</Button>
+                <Button onPress={this._hideAddressDialog}>Cancel</Button>
               </Dialog.Actions>
             </Dialog>
           </Portal>
@@ -237,8 +303,26 @@ export default class AddNewCutomerScreen extends React.Component {
             placeholder="Agent"
             inputStyle={{ fontSize: 15 }}
             underlineColor={Colors.grey400}
+            onFocus={() => this._showAgentDialog()}
             onChangeText={text => this.setState({ Agent: text })}
           />
+          <Portal>
+            <Dialog onDismiss={closeAgent} visible={this.state.visibleAgent}>
+              <Dialog.Title>Choose an option</Dialog.Title>
+              <Dialog.ScrollArea
+                style={{ maxHeight: 450, paddingHorizontal: 0 }}
+              >
+                <ScrollView>
+                  <View style={{ marginLeft: 20, paddingBottom: 20 }}>
+                    <Text>Hello</Text>
+                  </View>
+                </ScrollView>
+              </Dialog.ScrollArea>
+              <Dialog.Actions style={{ justifyContent: "center" }}>
+                <Button onPress={this._hideAgentDialog}>Cancel</Button>
+              </Dialog.Actions>
+            </Dialog>
+          </Portal>
         </View>
         <View
           style={{
@@ -294,4 +378,21 @@ AddNewCutomerScreen.navigationOptions = {
     flex: 1
   }
 };
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  radioButton: {
+    height: 24,
+    width: 24,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: "#000",
+    alignItems: "center",
+    justifyContent: "center",
+    margin: 18
+  },
+  radioButtonSelected: {
+    height: 12,
+    width: 12,
+    borderRadius: 6,
+    backgroundColor: "#000"
+  }
+});
