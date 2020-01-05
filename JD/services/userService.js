@@ -11,7 +11,9 @@ export const userService = {
   manageDistributorGetAllUser,
   manageDistributorSetUserStatus,
   // For profile add cutomers
-  addCustomer
+  addCustomer,
+  // for profile edit customer
+  getCustomerByCustomerId
 };
 
 function getAllCustomers() {
@@ -135,6 +137,20 @@ function addCustomer(Code, Name, SBTNo, CardNo, Address, MoblieNo, Agent) {
   };
   return fetch(
     "https://jddev.herokuapp.com/customers/AddCustomer",
+    requestOptions
+  ).then(handleResponse);
+}
+// for Profile Edit Customer
+function getCustomerByCustomerId(customer_id) {
+  const requestOptions = {
+    method: "GET",
+    headers: authHeader(),
+    body: JSON.stringify({
+      customer_id: customer_id
+    })
+  };
+  return fetch(
+    "https://jddev.herokuapp.com/customers/GetCustomerByCustomerId",
     requestOptions
   ).then(handleResponse);
 }

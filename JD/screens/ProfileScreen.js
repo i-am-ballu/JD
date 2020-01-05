@@ -8,7 +8,14 @@ import {
   ScrollView,
   StyleSheet
 } from "react-native";
-import { Avatar, Colors, Button, Dialog, Portal } from "react-native-paper";
+import {
+  Avatar,
+  Colors,
+  Button,
+  Dialog,
+  Portal,
+  TextInput
+} from "react-native-paper";
 import { MonoText } from "../components/StyledText";
 import { AsyncStorage } from "react-native";
 import * as ImagePicker from "expo-image-picker";
@@ -16,16 +23,27 @@ import Constants from "expo-constants";
 import * as Permissions from "expo-permissions";
 import { userService } from "../services/userService";
 
+function validate(customer_Id) {
+  // we are going to store errors for all fields
+  // in a signle array
+  const errors = [];
+  if (customer_Id.length === 0) {
+    errors.push("customer Id can't be empty");
+  }
+  return errors;
+}
+
 export default class ProfileScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       image: null,
-      visible: false,
+      visibleCustomerId: false,
       allAreaList: [],
-      initialSelectedLocation: 1
+      initialSelectedLocation: 1,
+      customer_Id: ""
     };
-    this.getAreaList();
+    this._handleCustomerID = this._handleCustomerID.bind(this);
   }
   // componentDidMount() {
   //   this.getPermissionAsync();
@@ -78,63 +96,81 @@ export default class ProfileScreen extends React.Component {
     });
     this.setState({ result });
   };
-  _showDialog = () => this.setState({ visible: true });
-  _hideDialog = () => this.setState({ visible: false });
-  async getAreaList() {
-    let areaId = "10";
-    userService.getAllAreaList(areaId).then(
-      data => {
-        this.setState({ allAreaList: data });
-        let Address = data[0].Address;
-        this.setState({
-          placeholderForSelectCity: Address
-        });
-      },
-      error => {
-        console.log(error);
-      }
-    );
+  _showEnterCustomerIdDialog = () => this.setState({ visibleCustomerId: true });
+  _hideEnterCustomerIdDialog = () =>
+    this.setState({ visibleCustomerId: false });
+  //function for handle the submitted form
+  _handleCustomerID(e) {
+    e.preventDefault();
+    const { customer_Id } = this.state;
+    //for get the validation message
+    const errors = validate(customer_Id);
+    if (errors.length > 0) {
+      this.setState({ errors });
+      return;
+    } else {
+      this.setState({ errors });
+      this.sendCustomerIdTOAddRecord(customer_Id);
+      return;
+    }
   }
   renderAllLocationsAsRadioButtons() {
-    return this.state.allAreaList.map((val, index) => {
-      return (
-        <TouchableOpacity
-          key={index}
-          onPress={this.selectSingleLocation.bind(this, val.Address, index)}
-        >
-          <View style={styles.radioButton}>
-            {val.CustomerId == this.state.initialSelectedLocation ? (
-              <View style={styles.radioButtonSelected} />
-            ) : null}
-          </View>
-          <Text
-            style={{
-              marginLeft: 80,
-              marginTop: -40
-            }}
-          >
-            {val.Address}
-          </Text>
-        </TouchableOpacity>
-      );
-    });
+    return (
+      // <TouchableOpacity
+      //   key={index}
+      //   onPress={this.selectSingleLocation.bind(this, val.Address, index)}
+      // >
+      //   <View style={styles.radioButton}>
+      //     {val.CustomerId == this.state.initialSelectedLocation ? (
+      //       <View style={styles.radioButtonSelected} />
+      //     ) : null}
+      //   </View>
+      //   <Text
+      //     style={{
+      //       marginLeft: 80,
+      //       marginTop: -40
+      //     }}
+      //   >
+      //     {val.Address}
+      //   </Text>
+      // </TouchableOpacity>
+      <TextInput
+        label="Customer Id"
+        style={{
+          elevation: 1
+        }}
+        Type="flat"
+        theme={{
+          colors: this.getConfig()
+        }}
+        placeholder="Enter Customer Id"
+        inputStyle={{ fontSize: 15 }}
+        underlineColor={Colors.grey400}
+        onChangeText={text => this.setState({ customer_Id: text })}
+      />
+    );
   }
-  selectSingleLocation(Address, CustomerId) {
+  sendCustomerIdTOAddRecord(customer_Id) {
     this.setState({
       isLoading: true
     });
-    this.setState({
-      initialSelectedLocation: CustomerId,
-      placeholderForSelectCity: Address
-    });
-    this._hideDialog();
+    this._showEnterCustomerIdDialog();
     this.props.navigation.navigate("AddNewCutomer", {
-      object: Address
+      customer_Id: customer_Id
     });
+  }
+  getConfig() {
+    return {
+      primary: Colors.lightBlueA700,
+      underlineColor: "transparent",
+      background: "transparent",
+      placeholder: Colors.grey500,
+      text: Colors.grey700
+    };
   }
   render() {
     let { image } = this.state;
-    const { visible, close } = this.props;
+    const { closeCustomerId } = this.props;
     return (
       <View style={{ flex: 1 }}>
         <View
@@ -204,12 +240,15 @@ export default class ProfileScreen extends React.Component {
               fontSize: 18,
               color: Colors.white
             }}
-            onPress={this._showDialog}
+            onPress={this._showEnterCustomerIdDialog}
           >
             One
           </Button>
           <Portal>
-            <Dialog onDismiss={close} visible={this.state.visible}>
+            <Dialog
+              onDismiss={closeCustomerId}
+              visible={this.state.visibleCustomerId}
+            >
               <Dialog.Title>Choose an option</Dialog.Title>
               <Dialog.ScrollArea
                 style={{ maxHeight: 450, paddingHorizontal: 0 }}
@@ -221,7 +260,10 @@ export default class ProfileScreen extends React.Component {
                 </ScrollView>
               </Dialog.ScrollArea>
               <Dialog.Actions style={{ justifyContent: "center" }}>
-                <Button onPress={this._hideDialog}>Cancel</Button>
+                <Button onPress={this._handleCustomerID}>Save</Button>
+                <Button onPress={this._showEnterCustomerIdDialog}>
+                  Cancel
+                </Button>
               </Dialog.Actions>
             </Dialog>
           </Portal>

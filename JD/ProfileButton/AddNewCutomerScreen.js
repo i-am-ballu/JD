@@ -59,11 +59,22 @@ export default class AddNewCutomerScreen extends React.Component {
     };
     this.addCustomersForm = this.addCustomersForm.bind(this);
     this.clearCustomersForm = this.clearCustomersForm.bind(this);
-    const customerDetail = this.props.navigation.getParam(
+    const customer_id = this.props.navigation.getParam(
       "object",
       "Nothing sent From Profile"
     );
+    this.getCustomerByCustomerId(customer_id);
     this.getAreaList();
+  }
+  async getCustomerByCustomerId(customer_id) {
+    userService.getCustomerByCustomerId(customer_id).then(
+      data => {
+        console.log(data);
+      },
+      error => {
+        console.log(error);
+      }
+    );
   }
   async getAreaList() {
     let areaId = "10";
