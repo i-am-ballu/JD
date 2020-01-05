@@ -9,18 +9,18 @@ import {
 import { TextInput, Colors, Button, Dialog, Portal } from "react-native-paper";
 import { userService } from "../services/userService";
 
-function validate(Code, Name, SBTNo, CardNo, Address, MoblieNo, Agent) {
+function validate(CustomerId, Name, STBNo, CardNo, Address, MobileNo, AgentId) {
   // we are going to store errors for all fields
   // in a signle array
   const errors = [];
 
-  if (Code.length === 0) {
-    errors.push("Code can't be empty");
+  if (CustomerId.length === 0) {
+    errors.push("Customer Id can't be empty");
   }
   if (Name.length === 0) {
     errors.push("Name can't be empty");
   }
-  if (SBTNo.length === 0) {
+  if (STBNo.length === 0) {
     errors.push("SBT No can't be empty");
   }
   if (CardNo.length === 0) {
@@ -29,11 +29,11 @@ function validate(Code, Name, SBTNo, CardNo, Address, MoblieNo, Agent) {
   if (Address.length === 0) {
     errors.push("Address can't be empty");
   }
-  if (MoblieNo.length === 0) {
-    errors.push("Moblie No can't be empty");
+  if (MobileNo.length === 0) {
+    errors.push("Mobile No can't be empty");
   }
-  if (Agent.length === 0) {
-    errors.push("Agent  can't be empty");
+  if (AgentId.length === 0) {
+    errors.push("Agent Id can't be empty");
   }
 
   return errors;
@@ -43,13 +43,13 @@ export default class AddNewCutomerScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      Code: "",
+      CustomerId: "",
       Name: "",
-      SBTNo: "",
+      STBNo: "",
       CardNo: "",
       Address: "",
-      MoblieNo: "",
-      Agent: "",
+      MobileNo: "",
+      AgentId: "",
       isLoading: false,
       errors: [],
       visibleAddress: false,
@@ -60,16 +60,28 @@ export default class AddNewCutomerScreen extends React.Component {
     this.addCustomersForm = this.addCustomersForm.bind(this);
     this.clearCustomersForm = this.clearCustomersForm.bind(this);
     const customer_id = this.props.navigation.getParam(
-      "object",
+      "customer_Id",
       "Nothing sent From Profile"
     );
+    console.log(customer_id);
+
     this.getCustomerByCustomerId(customer_id);
     this.getAreaList();
   }
   async getCustomerByCustomerId(customer_id) {
     userService.getCustomerByCustomerId(customer_id).then(
       data => {
-        console.log(data);
+        console.log("data", data.data);
+        let details = data.data;
+        this.setState({
+          Address: details.Address,
+          AgentId: details.AgentId,
+          CardNo: details.CardNo,
+          CustomerId: details.CustomerId,
+          MobileNo: details.MobileNo,
+          Name: details.Name,
+          STBNo: details.STBNo
+        });
       },
       error => {
         console.log(error);
@@ -124,16 +136,24 @@ export default class AddNewCutomerScreen extends React.Component {
   componentDidMount() {}
   addCustomersForm(e) {
     e.preventDefault();
-    const { Code, Name, SBTNo, CardNo, Address, MoblieNo, Agent } = this.state;
-    //for get the validation message
-    const errors = validate(
-      Code,
+    const {
+      CustomerId,
       Name,
-      SBTNo,
+      STBNo,
       CardNo,
       Address,
-      MoblieNo,
-      Agent
+      MobileNo,
+      AgentId
+    } = this.state;
+    //for get the validation message
+    const errors = validate(
+      CustomerId,
+      Name,
+      STBNo,
+      CardNo,
+      Address,
+      MobileNo,
+      AgentId
     );
     if (errors.length > 0) {
       this.setState({ errors });
@@ -141,21 +161,29 @@ export default class AddNewCutomerScreen extends React.Component {
     } else {
       this.setState({ errors });
       this.addCustomersMethod(
-        Code,
+        CustomerId,
         Name,
-        SBTNo,
+        STBNo,
         CardNo,
         Address,
-        MoblieNo,
-        Agent
+        MobileNo,
+        AgentId
       );
       return;
     }
   }
   clearCustomersForm(e) {}
-  addCustomersMethod(Code, Name, SBTNo, CardNo, Address, MoblieNo, Agent) {
+  addCustomersMethod(
+    CustomerId,
+    Name,
+    STBNo,
+    CardNo,
+    Address,
+    MobileNo,
+    AgentId
+  ) {
     userService
-      .addCustomer(Code, Name, SBTNo, CardNo, Address, MoblieNo, Agent)
+      .addCustomer(CustomerId, Name, STBNo, CardNo, Address, MobileNo, AgentId)
       .then(
         data => {
           console.log(data);
@@ -203,7 +231,10 @@ export default class AddNewCutomerScreen extends React.Component {
             placeholder="Code"
             inputStyle={{ fontSize: 15 }}
             underlineColor={Colors.grey400}
-            onChangeText={text => this.setState({ Code: text })}
+            onChangeText={CustomerId =>
+              this.setState({ CustomerId: CustomerId })
+            }
+            value={String(this.state.CustomerId)}
           />
           <TextInput
             label="Name"
@@ -217,10 +248,11 @@ export default class AddNewCutomerScreen extends React.Component {
             placeholder="Name"
             inputStyle={{ fontSize: 15 }}
             underlineColor={Colors.grey400}
-            onChangeText={text => this.setState({ Name: text })}
+            onChangeText={Name => this.setState({ Name: Name })}
+            value={this.state.Name}
           />
           <TextInput
-            label="SBTNo"
+            label="STBNo"
             style={{
               elevation: 1
             }}
@@ -228,10 +260,11 @@ export default class AddNewCutomerScreen extends React.Component {
             theme={{
               colors: this.getConfig()
             }}
-            placeholder="SBT No"
+            placeholder="STB No"
             inputStyle={{ fontSize: 15 }}
             underlineColor={Colors.grey400}
-            onChangeText={text => this.setState({ SBTNo: text })}
+            onChangeText={STBNo => this.setState({ STBNo: STBNo })}
+            value={this.state.STBNo}
           />
           <TextInput
             label="CardNo"
@@ -245,7 +278,8 @@ export default class AddNewCutomerScreen extends React.Component {
             placeholder="Card No"
             inputStyle={{ fontSize: 15 }}
             underlineColor={Colors.grey400}
-            onChangeText={text => this.setState({ CardNo: text })}
+            onChangeText={CardNo => this.setState({ CardNo: CardNo })}
+            value={this.state.CardNo}
           />
           <TextInput
             label="Address"
@@ -295,7 +329,8 @@ export default class AddNewCutomerScreen extends React.Component {
             placeholder="Mblie No"
             inputStyle={{ fontSize: 15 }}
             underlineColor={Colors.grey400}
-            onChangeText={text => this.setState({ MoblieNo: text })}
+            onChangeText={MobileNo => this.setState({ MobileNo: MobileNo })}
+            value={this.state.MobileNo}
           />
           <TextInput
             label="Agent"
@@ -310,7 +345,8 @@ export default class AddNewCutomerScreen extends React.Component {
             inputStyle={{ fontSize: 15 }}
             underlineColor={Colors.grey400}
             onFocus={() => this._showAgentDialog()}
-            onChangeText={text => this.setState({ Agent: text })}
+            onChangeText={AgentId => this.setState({ AgentId: AgentId })}
+            value={String(this.state.AgentId)}
           />
           <Portal>
             <Dialog onDismiss={closeAgent} visible={this.state.visibleAgent}>

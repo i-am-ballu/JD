@@ -121,18 +121,26 @@ function manageDistributorSetUserStatus(user_id, status) {
 }
 
 // for Profile add customers
-function addCustomer(Code, Name, SBTNo, CardNo, Address, MoblieNo, Agent) {
+function addCustomer(
+  CustomerId,
+  Name,
+  STBNo,
+  CardNo,
+  Address,
+  MobileNo,
+  AgentId
+) {
   const requestOptions = {
     method: "POST",
     headers: authHeader(),
     body: JSON.stringify({
-      Customer_Id: Code,
+      Customer_Id: CustomerId,
       Name: Name,
-      SBTNo: SBTNo,
+      SBTNo: STBNo,
       CardNo: CardNo,
       Address: Address,
-      MoblieNo: MoblieNo,
-      AgentId: Agent
+      MoblieNo: MobileNo,
+      AgentId: AgentId
     })
   };
   return fetch(
@@ -144,13 +152,11 @@ function addCustomer(Code, Name, SBTNo, CardNo, Address, MoblieNo, Agent) {
 function getCustomerByCustomerId(customer_id) {
   const requestOptions = {
     method: "GET",
-    headers: authHeader(),
-    body: JSON.stringify({
-      customer_id: customer_id
-    })
+    headers: authHeader()
   };
   return fetch(
-    "https://jddev.herokuapp.com/customers/GetCustomerByCustomerId",
+    "https://jddev.herokuapp.com/customers/GetCustomerByCustomerId/" +
+      customer_id,
     requestOptions
   ).then(handleResponse);
 }

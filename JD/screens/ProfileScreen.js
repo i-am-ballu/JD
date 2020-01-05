@@ -158,6 +158,7 @@ export default class ProfileScreen extends React.Component {
     this.props.navigation.navigate("AddNewCutomer", {
       customer_Id: customer_Id
     });
+    this._hideEnterCustomerIdDialog();
   }
   getConfig() {
     return {
