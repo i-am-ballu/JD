@@ -58,11 +58,9 @@ export default class ProfileScreen extends React.Component {
     const user_details = JSON.parse(
       await AsyncStorage.getItem("user_x_token_And_Pin")
     );
-    console.log("user_details", user_details.x_token);
     let tokenInfomation = this.getDecodedAccessToken(
       String(user_details.x_token)
     ); // decode token
-    console.log("tokenInfo ----", tokenInfomation.id);
     if (tokenInfomation.id) {
       this.getUserByUserId(tokenInfomation.id);
     }
@@ -82,7 +80,6 @@ export default class ProfileScreen extends React.Component {
     });
     userService.getUserByUserId(user_id).then(
       data => {
-        console.log("data --- ", data.data);
         this.setState({ userInfo: data.data, isLoading: false });
       },
       error => {
