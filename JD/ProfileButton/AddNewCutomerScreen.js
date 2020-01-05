@@ -63,12 +63,9 @@ export default class AddNewCutomerScreen extends React.Component {
       "object",
       "Nothing sent From Profile"
     );
-    console.log("customerDetail", customerDetail);
     this.getAreaList();
   }
   async getAreaList() {
-    console.log("called");
-
     let areaId = "10";
     userService.getAllAreaList(areaId).then(
       data => {
@@ -104,8 +101,6 @@ export default class AddNewCutomerScreen extends React.Component {
     });
   }
   selectSingleLocation(Address, CustomerId) {
-    console.log(Address);
-
     this.setState({
       isLoading: true
     });
