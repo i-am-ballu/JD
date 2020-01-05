@@ -285,8 +285,6 @@ export default class ProfileScreen extends React.Component {
                   Manage Distributor
                 </Button>
               </View>
-              <List.Item title="First item" />
-              <List.Item title="Second item" />
             </ScrollView>
           </List.Accordion>
         </List.Section>

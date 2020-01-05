@@ -376,13 +376,13 @@ export default class AddNewCutomerScreen extends React.Component {
         >
           <Button
             mode="contained"
-            style={{ backgroundColor: Colors.lightBlueA200, marginRight: 10 }}
+            style={styles.buttonContainerSave}
             contentStyle={{
-              height: 44
+              height: 40
             }}
             labelStyle={{
-              fontSize: 18,
-              color: "#5c5c5c"
+              fontSize: 13,
+              color: Colors.white
             }}
             onPress={this.addCustomersForm}
           >
@@ -390,13 +390,13 @@ export default class AddNewCutomerScreen extends React.Component {
           </Button>
           <Button
             mode="contained"
-            style={{ backgroundColor: Colors.lightBlueA200 }}
+            style={styles.buttonContainerDropdown}
             contentStyle={{
-              height: 44
+              height: 40
             }}
             labelStyle={{
-              fontSize: 18,
-              color: "#5c5c5c"
+              fontSize: 13,
+              color: Colors.white
             }}
             onPress={this.clearCustomersForm}
           >
@@ -436,5 +436,26 @@ const styles = StyleSheet.create({
     width: 12,
     borderRadius: 6,
     backgroundColor: "#000"
+  },
+  buttonContainerDropdown: {
+    height: 45,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 20,
+    borderRadius: 30,
+    backgroundColor: "#1287A5",
+    marginRight: 10
+  },
+  buttonContainerSave: {
+    height: 45,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 20,
+    borderRadius: 30,
+    backgroundColor: "#1287A5",
+    marginRight: 10,
+    padding: 10
   }
 });
