@@ -171,9 +171,9 @@ export default class ProfileScreen extends React.Component {
     );
   }
   sendCustomerIdTOAddRecord(customer_Id) {
-    this.setState({
-      isLoading: true
-    });
+    // this.setState({
+    //   isLoading: true
+    // });
     this._showEnterCustomerIdDialog();
     this.props.navigation.navigate("AddNewCutomer", {
       customer_Id: customer_Id

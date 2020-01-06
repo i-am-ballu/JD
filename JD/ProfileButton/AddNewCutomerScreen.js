@@ -15,25 +15,25 @@ function validate(CustomerId, Name, STBNo, CardNo, Address, MobileNo, AgentId) {
   const errors = [];
 
   if (CustomerId.length === 0) {
-    errors.push("Customer Id can't be empty");
+    errors.push({ Value: "Customer Id can't be empty", id: "Customer" });
   }
   if (Name.length === 0) {
-    errors.push("Name can't be empty");
+    errors.push({ Value: "Name can't be empty", id: "Name" });
   }
   if (STBNo.length === 0) {
-    errors.push("SBT No can't be empty");
+    errors.push({ Value: "SBT No can't be empty", id: "STBNo" });
   }
   if (CardNo.length === 0) {
-    errors.push("Card No can't be empty");
+    errors.push({ Value: "Card No can't be empty", id: "CardNo" });
   }
   if (Address.length === 0) {
-    errors.push("Address can't be empty");
+    errors.push({ Value: "Address can't be empty", id: "Address" });
   }
   if (MobileNo.length === 0) {
-    errors.push("Mobile No can't be empty");
+    errors.push({ Value: "Mobile No can't be empty", id: "MobileNo" });
   }
   if (AgentId.length === 0) {
-    errors.push("Agent Id can't be empty");
+    errors.push({ Value: "Agent Id can't be empty", id: "AgentId" });
   }
 
   return errors;
@@ -206,19 +206,23 @@ export default class AddNewCutomerScreen extends React.Component {
   _hideAddressDialog = () => this.setState({ visibleAddress: false });
   _showAgentDialog = () => this.setState({ visibleAgent: true });
   _hideAgentDialog = () => this.setState({ visibleAgent: false });
+  errorFunction(errors, id) {
+    return errors.map(function(item) {
+      if (item.id == id) {
+        return (
+          <Text key={item.id} style={{ color: "red" }}>
+            Error: {item.Value}
+          </Text>
+        );
+      }
+    });
+  }
   render() {
     const { errors } = this.state;
     const { closeAddress, closeAgent } = this.props;
     return (
       <View style={{ flex: 1 }}>
-        <View style={{ flex: 0.5, marginLeft: 10 }}>
-          {errors.map(error => (
-            <Text key={error} style={{ color: "red" }}>
-              Error: {error}
-            </Text>
-          ))}
-        </View>
-        <View style={{ flex: 2 }}>
+        <View style={{ flex: 2, padding: 5 }}>
           <TextInput
             label="Code"
             style={{
@@ -236,6 +240,9 @@ export default class AddNewCutomerScreen extends React.Component {
             }
             value={String(this.state.CustomerId)}
           />
+          <View style={styles.errorText}>
+            {this.errorFunction(errors, "Customer")}
+          </View>
           <TextInput
             label="Name"
             style={{
@@ -251,6 +258,9 @@ export default class AddNewCutomerScreen extends React.Component {
             onChangeText={Name => this.setState({ Name: Name })}
             value={this.state.Name}
           />
+          <View style={styles.errorText}>
+            {this.errorFunction(errors, "Name")}
+          </View>
           <TextInput
             label="STBNo"
             style={{
@@ -266,6 +276,9 @@ export default class AddNewCutomerScreen extends React.Component {
             onChangeText={STBNo => this.setState({ STBNo: STBNo })}
             value={this.state.STBNo}
           />
+          <View style={styles.errorText}>
+            {this.errorFunction(errors, "STBNo")}
+          </View>
           <TextInput
             label="CardNo"
             style={{
@@ -281,6 +294,9 @@ export default class AddNewCutomerScreen extends React.Component {
             onChangeText={CardNo => this.setState({ CardNo: CardNo })}
             value={this.state.CardNo}
           />
+          <View style={styles.errorText}>
+            {this.errorFunction(errors, "CardNo")}
+          </View>
           <TextInput
             label="Address"
             style={{
@@ -297,6 +313,9 @@ export default class AddNewCutomerScreen extends React.Component {
             onChangeText={Address => this.setState({ Address: Address })}
             value={this.state.Address}
           />
+          <View style={styles.errorText}>
+            {this.errorFunction(errors, "Address")}
+          </View>
           <Portal>
             <Dialog
               onDismiss={closeAddress}
@@ -332,6 +351,9 @@ export default class AddNewCutomerScreen extends React.Component {
             onChangeText={MobileNo => this.setState({ MobileNo: MobileNo })}
             value={this.state.MobileNo}
           />
+          <View style={styles.errorText}>
+            {this.errorFunction(errors, "MobileNo")}
+          </View>
           <TextInput
             label="Agent"
             style={{
@@ -348,6 +370,9 @@ export default class AddNewCutomerScreen extends React.Component {
             onChangeText={AgentId => this.setState({ AgentId: AgentId })}
             value={String(this.state.AgentId)}
           />
+          <View style={styles.errorText}>
+            {this.errorFunction(errors, "AgentId")}
+          </View>
           <Portal>
             <Dialog onDismiss={closeAgent} visible={this.state.visibleAgent}>
               <Dialog.Title>Choose an option</Dialog.Title>
@@ -457,5 +482,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#1287A5",
     marginRight: 10,
     padding: 10
+  },
+  errorText: {
+    marginBottom: -15,
+    marginTop: 5,
+    marginLeft: 10
   }
 });
