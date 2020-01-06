@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { TextInput, Colors, Button, Dialog, Portal } from "react-native-paper";
 import { userService } from "../services/userService";
+import Loader from "../loader/LoaderScreen";
 
 function validate(CustomerId, Name, STBNo, CardNo, Address, MobileNo, AgentId) {
   // we are going to store errors for all fields
@@ -50,21 +51,19 @@ export default class AddNewCutomerScreen extends React.Component {
       Address: "",
       MobileNo: "",
       AgentId: "",
-      isLoading: false,
       errors: [],
       visibleAddress: false,
       visibleAgent: false,
       allAreaList: [],
-      initialSelectedLocation: 1
+      initialSelectedLocation: 1,
+      isEditCustomer: false
     };
     this.addCustomersForm = this.addCustomersForm.bind(this);
     this.clearCustomersForm = this.clearCustomersForm.bind(this);
-    const customer_id = this.props.navigation.getParam(
-      "customer_Id",
-      "Nothing sent From Profile"
-    );
-    if (customer_id != "Nothing sent From Profile") {
-      this.getCustomerByCustomerId(customer_id);
+    const customer_id = this.props.navigation.state.params;
+    this.state.isEditCustomer = customer_id.params.isEditCustomer;
+    if (customer_id.params.customer_Id != "Nothing sent From Profile") {
+      this.getCustomerByCustomerId(customer_id.params.customer_Id);
     }
     this.getAreaList();
   }
@@ -74,6 +73,7 @@ export default class AddNewCutomerScreen extends React.Component {
         console.log("data", data.data);
         let details = data.data;
         this.setState({
+          isLoading: false,
           AgentId: details.AgentId,
           CardNo: details.CardNo,
           CustomerId: details.CustomerId,
@@ -92,7 +92,7 @@ export default class AddNewCutomerScreen extends React.Component {
     let areaId = "10";
     userService.getAllAreaList(areaId).then(
       data => {
-        this.setState({ allAreaList: data });
+        this.setState({ allAreaList: data, isLoading: false });
       },
       error => {
         console.log(error);
@@ -129,7 +129,8 @@ export default class AddNewCutomerScreen extends React.Component {
     });
     this.setState({
       initialSelectedLocation: CustomerId,
-      Address: Address
+      Address: Address,
+      isLoading: false
     });
     this._hideAddressDialog();
   }
@@ -220,8 +221,10 @@ export default class AddNewCutomerScreen extends React.Component {
   render() {
     const { errors } = this.state;
     const { closeAddress, closeAgent } = this.props;
+    const { isEditCustomer } = this.state;
     return (
       <View style={{ flex: 1 }}>
+        <Loader loading={this.state.isLoading} />
         <View style={{ flex: 2, padding: 5 }}>
           <TextInput
             label="Code"
@@ -411,7 +414,7 @@ export default class AddNewCutomerScreen extends React.Component {
             }}
             onPress={this.addCustomersForm}
           >
-            Add
+            {this.state.isEditCustomer ? "Edit" : "Add"}
           </Button>
           <Button
             mode="contained"
@@ -432,9 +435,12 @@ export default class AddNewCutomerScreen extends React.Component {
     );
   }
 }
-
-AddNewCutomerScreen.navigationOptions = {
-  title: "Add New Customer",
+AddNewCutomerScreen.navigationOptions = ({ navigation }) => ({
+  title: `${
+    navigation.state.params && navigation.state.params.params.isEditCustomer
+      ? "Edit Customer"
+      : "Add New Customer"
+  }`,
   headerTintColor: "#fff",
   headerStyle: {
     backgroundColor: "#1287A5",
@@ -444,7 +450,7 @@ AddNewCutomerScreen.navigationOptions = {
     textAlign: "center",
     flex: 1
   }
-};
+});
 const styles = StyleSheet.create({
   radioButton: {
     height: 24,

@@ -171,14 +171,16 @@ export default class ProfileScreen extends React.Component {
     );
   }
   sendCustomerIdTOAddRecord(customer_Id) {
-    // this.setState({
-    //   isLoading: true
-    // });
-    this._showEnterCustomerIdDialog();
-    this.props.navigation.navigate("AddNewCutomer", {
-      customer_Id: customer_Id
+    this.setState({
+      isLoading: true
+    });
+    this.props.navigation.navigate("AddNewCustomer", {
+      params: { customer_Id: customer_Id, isEditCustomer: true }
     });
     this._hideEnterCustomerIdDialog();
+    this.setState({
+      isLoading: false
+    });
   }
   getConfig() {
     return {
@@ -263,7 +265,12 @@ export default class ProfileScreen extends React.Component {
                     color: Colors.white
                   }}
                   onPress={() =>
-                    this.props.navigation.navigate("AddNewCustomer")
+                    this.props.navigation.navigate("AddNewCustomer", {
+                      params: {
+                        customer_Id: "Nothing sent From Profile",
+                        isEditCustomer: false
+                      }
+                    })
                   }
                 >
                   Add Customer
