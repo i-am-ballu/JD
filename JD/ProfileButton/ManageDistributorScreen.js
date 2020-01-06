@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { DataTable, Switch } from "react-native-paper";
 import { userService } from "../services/userService";
+import Loader from "../loader/LoaderScreen";
 
 export default class ManageDistributorScreen extends React.Component {
   constructor(props) {
@@ -11,10 +12,14 @@ export default class ManageDistributorScreen extends React.Component {
     };
   }
   componentDidMount() {
+    this.setState({
+      isLoading: true
+    });
     userService.manageDistributorGetAllUser().then(
       data => {
         this.setState({
-          distributorListOfDetails: data.data
+          distributorListOfDetails: data.data,
+          isLoading: false
         });
       },
       error => {
@@ -39,6 +44,7 @@ export default class ManageDistributorScreen extends React.Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
+        <Loader loading={this.state.isLoading} />
         <View style={{ flex: 8 }}>
           <DataTable>
             <DataTable.Header>

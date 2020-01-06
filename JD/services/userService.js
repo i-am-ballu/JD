@@ -15,7 +15,8 @@ export const userService = {
   // For profile add cutomers
   addCustomer,
   // for profile edit customer
-  getCustomerByCustomerId
+  getCustomerByCustomerId,
+  editCustomer
 };
 
 function getAllCustomers() {
@@ -169,6 +170,36 @@ function getCustomerByCustomerId(customer_id) {
   return fetch(
     "https://jddev.herokuapp.com/customers/GetCustomerByCustomerId/" +
       customer_id,
+    requestOptions
+  ).then(handleResponse);
+}
+// for Profile Edit customers
+function editCustomer(
+  CustomerId,
+  Name,
+  STBNo,
+  CardNo,
+  Address,
+  MobileNo,
+  AgentId
+) {
+  console.log("service edit method call---");
+
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader(),
+    body: JSON.stringify({
+      Customer_Id: CustomerId,
+      Name: Name,
+      SBTNo: STBNo,
+      CardNo: CardNo,
+      Address: Address,
+      MoblieNo: MobileNo,
+      AgentId: AgentId
+    })
+  };
+  return fetch(
+    "https://jddev.herokuapp.com/customers/EditCustomer",
     requestOptions
   ).then(handleResponse);
 }

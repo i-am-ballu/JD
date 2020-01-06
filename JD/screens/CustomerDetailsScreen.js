@@ -138,6 +138,7 @@ export default class CustomersScreen extends React.Component {
           >
             <Text>Total: {this.state.total} &nbsp;</Text>
             <Button onPress={this._hideDialog}>Apply</Button>
+            <Button onPress={this._hideDialog}>Cancel</Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>

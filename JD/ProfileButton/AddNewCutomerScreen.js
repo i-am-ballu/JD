@@ -58,7 +58,7 @@ export default class AddNewCutomerScreen extends React.Component {
       initialSelectedLocation: 1,
       isEditCustomer: false
     };
-    this.addCustomersForm = this.addCustomersForm.bind(this);
+    this.addOrEditCustomersForm = this.addOrEditCustomersForm.bind(this);
     this.clearCustomersForm = this.clearCustomersForm.bind(this);
     const customer_id = this.props.navigation.state.params;
     this.state.isEditCustomer = customer_id.params.isEditCustomer;
@@ -135,7 +135,7 @@ export default class AddNewCutomerScreen extends React.Component {
     this._hideAddressDialog();
   }
   componentDidMount() {}
-  addCustomersForm(e) {
+  addOrEditCustomersForm(e) {
     e.preventDefault();
     const {
       CustomerId,
@@ -161,15 +161,29 @@ export default class AddNewCutomerScreen extends React.Component {
       return;
     } else {
       this.setState({ errors });
-      this.addCustomersMethod(
-        CustomerId,
-        Name,
-        STBNo,
-        CardNo,
-        Address,
-        MobileNo,
-        AgentId
-      );
+      if (this.state.isEditCustomer) {
+        console.log("isEditCustomer--", this.state.isEditCustomer);
+        this.editCustomerMethod(
+          CustomerId,
+          Name,
+          STBNo,
+          CardNo,
+          Address,
+          MobileNo,
+          AgentId
+        );
+      } else {
+        console.log("isEditCustomer", this.state.isEditCustomer);
+        this.addCustomersMethod(
+          CustomerId,
+          Name,
+          STBNo,
+          CardNo,
+          Address,
+          MobileNo,
+          AgentId
+        );
+      }
       return;
     }
   }
@@ -183,11 +197,45 @@ export default class AddNewCutomerScreen extends React.Component {
     MobileNo,
     AgentId
   ) {
+    this.setState({
+      isLoading: true
+    });
     userService
       .addCustomer(CustomerId, Name, STBNo, CardNo, Address, MobileNo, AgentId)
       .then(
         data => {
           console.log(data);
+          this.setState({
+            isLoading: false
+          });
+        },
+        error => {
+          console.log("error === ", error);
+        }
+      );
+  }
+  editCustomerMethod(
+    CustomerId,
+    Name,
+    STBNo,
+    CardNo,
+    Address,
+    MobileNo,
+    AgentId
+  ) {
+    this.setState({
+      isLoading: true
+    });
+    console.log("call Edit ----");
+
+    userService
+      .editCustomer(CustomerId, Name, STBNo, CardNo, Address, MobileNo, AgentId)
+      .then(
+        data => {
+          console.log(data);
+          this.setState({
+            isLoading: false
+          });
         },
         error => {
           console.log("error === ", error);
@@ -412,7 +460,7 @@ export default class AddNewCutomerScreen extends React.Component {
               fontSize: 13,
               color: Colors.white
             }}
-            onPress={this.addCustomersForm}
+            onPress={this.addOrEditCustomersForm}
           >
             {this.state.isEditCustomer ? "Edit" : "Add"}
           </Button>

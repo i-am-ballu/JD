@@ -211,15 +211,14 @@ export default class ProfileScreen extends React.Component {
             <Text>{this.state.userInfo.Name}</Text>
             <Text style={styles.info}>{this.state.userInfo.Role}</Text>
             <Text style={styles.description}>
-              {this.state.userInfo.Username} / {this.state.userInfo.MobileNo} /{" "}
-              {this.state.userInfo.AreaCode}
+              {this.state.userInfo.Username} | {this.state.userInfo.MobileNo}
             </Text>
 
             <Button
               mode="contained"
               style={styles.buttonContainer}
               contentStyle={{
-                height: 40
+                height: 35
               }}
               labelStyle={{
                 fontSize: 13,
@@ -300,10 +299,9 @@ export default class ProfileScreen extends React.Component {
             onDismiss={closeCustomerId}
             visible={this.state.visibleCustomerId}
           >
-            <Dialog.Title>Choose an option</Dialog.Title>
             <Dialog.ScrollArea style={{ maxHeight: 450, paddingHorizontal: 0 }}>
               <ScrollView>
-                <View style={{ marginLeft: 20, paddingBottom: 20 }}>
+                <View style={{ padding: 10 }}>
                   {this.renderAllLocationsAsRadioButtons()}
                 </View>
               </ScrollView>
@@ -376,14 +374,14 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   buttonContainer: {
-    height: 45,
+    height: 35,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 20,
     borderRadius: 30,
     backgroundColor: "#1287A5",
-    marginRight: 10,
+    marginRight: 0,
     marginTop: 20
   },
   buttonContainerDropdown: {
