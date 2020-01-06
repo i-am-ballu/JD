@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, ScrollView, Platform } from "react-native";
 import { Searchbar, DataTable, Button } from "react-native-paper";
 import { userService } from "../services/userService";
 import Moment from "moment";
+import Loader from "../loader/LoaderScreen";
 
 export default class TransactionScreen extends React.Component {
   constructor(props) {
@@ -23,6 +24,9 @@ export default class TransactionScreen extends React.Component {
   componentWillMount() {}
 
   getCustomersAsync() {
+    this.setState({
+      isLoading: true
+    });
     userService.getCustomerDetailsTransaction(44).then(
       data => {
         this.setState({
@@ -56,6 +60,7 @@ export default class TransactionScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        <Loader loading={this.state.isLoading} />
         <View style={{ flex: Platform.OS === "ios" ? 0.5 : 0.8 }}>
           <View style={styles.paddingLeftTopRight}>
             <Searchbar
