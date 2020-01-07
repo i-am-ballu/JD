@@ -14,6 +14,7 @@ import ProfileScreen from "../screens/ProfileScreen";
 import CustomerDetailsScreen from "../screens/CustomerDetailsScreen";
 import ManageDistributorScreen from "../ProfileButton/ManageDistributorScreen";
 import AddNewCutomerScreen from "../ProfileButton/AddNewCutomerScreen";
+import AccountScreen from "../screens/AccountScreen";
 
 const config = Platform.select({
   web: { headerMode: "screen" },
@@ -83,16 +84,14 @@ ProfileStack.navigationOptions = {
   )
 };
 
-const LinksStack = createStackNavigator(
+const AccountStack = createStackNavigator(
   {
-    Links: LinksScreen
+    Account: AccountScreen
   },
-  { initialRouteName: "Links" },
   config
 );
-
-LinksStack.navigationOptions = {
-  tabBarLabel: "Links",
+AccountStack.navigationOptions = {
+  tabBarLabel: "Account",
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
@@ -101,32 +100,10 @@ LinksStack.navigationOptions = {
   )
 };
 
-LinksStack.path = "";
-
-const SettingsStack = createStackNavigator(
-  {
-    Settings: SettingsScreen
-  },
-  config
-);
-
-SettingsStack.navigationOptions = {
-  tabBarLabel: "Settings",
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={Platform.OS === "ios" ? "ios-options" : "md-options"}
-    />
-  )
-};
-
-SettingsStack.path = "";
-
 const tabNavigator = createBottomTabNavigator({
   CustomerStack,
   TransactionStack,
-  LinksStack,
-  SettingsStack,
+  AccountStack,
   ProfileStack
 });
 
