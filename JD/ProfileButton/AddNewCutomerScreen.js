@@ -187,7 +187,18 @@ export default class AddNewCutomerScreen extends React.Component {
       return;
     }
   }
-  clearCustomersForm(e) {}
+  clearCustomersForm(e) {
+    console.log("call clear");
+    this.setState({
+      CustomerId: "",
+      Name: "",
+      STBNo: "",
+      CardNo: "",
+      Address: "",
+      MobileNo: "",
+      AgentId: ""
+    });
+  }
   addCustomersMethod(
     CustomerId,
     Name,
@@ -208,6 +219,7 @@ export default class AddNewCutomerScreen extends React.Component {
           this.setState({
             isLoading: false
           });
+          this.clearCustomersForm();
         },
         error => {
           console.log("error === ", error);
@@ -290,6 +302,7 @@ export default class AddNewCutomerScreen extends React.Component {
               this.setState({ CustomerId: CustomerId })
             }
             value={String(this.state.CustomerId)}
+            ref={"one"}
           />
           <View style={styles.errorText}>
             {this.errorFunction(errors, "Customer")}
