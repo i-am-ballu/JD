@@ -213,8 +213,8 @@ export default class CustomersScreen extends React.Component {
             <Button
               mode="contained"
               style={{
-                backgroundColor: "lightgrey",
-                borderColor: Colors.white,
+                backgroundColor: Colors.white,
+                borderColor: "lightgrey",
                 borderWidth: 1
               }}
               contentStyle={{}}
