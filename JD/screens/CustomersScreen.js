@@ -15,7 +15,8 @@ import {
   Button,
   Dialog,
   Portal,
-  Colors
+  Colors,
+  Card
 } from "react-native-paper";
 import { MonoText } from "../components/StyledText";
 import Loader from "../loader/LoaderScreen";
@@ -176,34 +177,37 @@ export default class CustomersScreen extends React.Component {
           >
             <Searchbar
               style={{
-                elevation: 1
+                elevation: 0
               }}
               Type="flat"
               onChangeText={text => this.onChangeText(text)}
               value={this.state.searchBarText}
               theme={{
                 colors: {
-                  underlineColor: "transparent",
                   background: "transparent",
-                  placeholder: "#3498db",
-                  text: "#3498db"
+                  text: "#3498db",
+                  fontSize: 14,
+                  placeholder: "#626262"
                 }
               }}
               placeholder="Search"
-              inputStyle={{ fontSize: 13 }}
+              inputStyle={{
+                fontSize: 14,
+                fontWeight: "bold"
+              }}
               style={styles.buttonContainer}
             />
             <Button
               mode="contained"
               style={{
                 backgroundColor: Colors.white,
-                borderColor: "lightgrey",
-                borderWidth: 1
+                borderColor: "lightgrey"
               }}
-              contentStyle={{}}
               labelStyle={{
-                fontSize: 13,
-                color: "#5c5c5c"
+                fontSize: 14,
+                marginTop: 12,
+                color: "#626262",
+                fontWeight: "bold"
               }}
               onPress={this._showDialog}
               style={styles.buttonContainer}
@@ -233,37 +237,49 @@ export default class CustomersScreen extends React.Component {
             </Portal>
           </View>
           <View>
-            <DataTable>
-              <DataTable.Header>
-                <DataTable.Title style={styles.dataTableText}>
-                  <Text style={styles.dataTableTitle}>Code</Text>
-                </DataTable.Title>
-                <DataTable.Title style={styles.dataTableText}>
-                  <Text style={styles.dataTableTitle}>Name</Text>
-                </DataTable.Title>
-              </DataTable.Header>
-              <ScrollView>
-                {this.state.customersListOfDetails.map((customer, index) => {
-                  return (
-                    <DataTable.Row
-                      key={index} // you need a unique key per item
-                      onPress={() =>
-                        this.props.navigation.navigate("CustomerDetail", {
-                          text: customer
-                        })
-                      }
-                    >
-                      <DataTable.Cell style={styles.dataTableText}>
-                        {customer.CustomerId}
-                      </DataTable.Cell>
-                      <DataTable.Cell style={styles.dataTableText}>
-                        {customer.Name}
-                      </DataTable.Cell>
-                    </DataTable.Row>
-                  );
-                })}
-              </ScrollView>
-            </DataTable>
+            <Card
+              style={{
+                marginBottom: 10,
+                marginRight: 10,
+                marginLeft: 10
+              }}
+            >
+              <DataTable>
+                <DataTable.Header>
+                  <DataTable.Title style={styles.dataTableText}>
+                    <Text style={styles.dataTableTitle}>Code</Text>
+                  </DataTable.Title>
+                  <DataTable.Title style={styles.dataTableText}>
+                    <Text style={styles.dataTableTitle}>Name</Text>
+                  </DataTable.Title>
+                </DataTable.Header>
+                <ScrollView>
+                  {this.state.customersListOfDetails.map((customer, index) => {
+                    return (
+                      <DataTable.Row
+                        key={index} // you need a unique key per item
+                        onPress={() =>
+                          this.props.navigation.navigate("CustomerDetail", {
+                            text: customer
+                          })
+                        }
+                      >
+                        <DataTable.Cell style={styles.dataTableText}>
+                          <Text style={{ color: "#32325d" }}>
+                            {customer.CustomerId}
+                          </Text>
+                        </DataTable.Cell>
+                        <DataTable.Cell style={styles.dataTableText}>
+                          <Text style={{ color: "#32325d" }}>
+                            {customer.Name}
+                          </Text>
+                        </DataTable.Cell>
+                      </DataTable.Row>
+                    );
+                  })}
+                </ScrollView>
+              </DataTable>
+            </Card>
           </View>
         </View>
       </View>
@@ -290,7 +306,9 @@ const styles = StyleSheet.create({
     paddingRight: 10
   },
   dataTableTitle: {
-    fontSize: 15
+    fontSize: 14,
+    color: "#626262",
+    fontWeight: "bold"
   },
   radioButton: {
     height: 24,
