@@ -28,7 +28,7 @@ export default class CustomersScreen extends React.Component {
     this.state = {
       searchBarText: "",
       visible: false,
-      initialSelectedLocation: 1,
+      initialSelectedLocation: 0,
       customersListOfDetails: [],
       customerArray: [],
       placeholderForSelectCity: "select city",
@@ -138,6 +138,7 @@ export default class CustomersScreen extends React.Component {
       initialSelectedLocation: CustomerId,
       placeholderForSelectCity: Address
     });
+
     // if (Address != "") {
     //   const newCustomersArray = [];
     //   this.state.customerArray.map(item => {
@@ -159,15 +160,13 @@ export default class CustomersScreen extends React.Component {
     //   }
     // });
     return this.state.allAreaList.map((val, index) => {
-      // console.log("val", val);
-
       return (
         <TouchableOpacity
           key={index}
           onPress={this.selectSingleLocation.bind(this, val.Address, index)}
         >
           <View style={styles.radioButton}>
-            {val.CustomerId == this.state.initialSelectedLocation ? (
+            {index == this.state.initialSelectedLocation ? (
               <View style={styles.radioButtonSelected} />
             ) : null}
           </View>
