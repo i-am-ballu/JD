@@ -150,11 +150,12 @@ export default class CustomersScreen extends React.Component {
           </View>
           <Text
             style={{
-              marginLeft: 50,
-              marginTop: -35
+              marginLeft: 60,
+              marginTop: -33,
+              color: "#32325d"
             }}
           >
-            : <Text>{val.Address}</Text>
+            <Text>{val.Address}</Text>
           </Text>
         </TouchableOpacity>
       );
@@ -321,18 +322,19 @@ const styles = StyleSheet.create({
     fontWeight: "bold"
   },
   radioButton: {
-    height: 18,
-    width: 18,
+    height: 17,
+    width: 17,
     borderRadius: 0,
-    borderWidth: 1,
-    borderColor: "#1287A5",
+    borderWidth: 1.5,
+    borderColor: Colors.black,
     alignItems: "center",
     justifyContent: "center",
-    margin: 15
+    margin: 15,
+    marginLeft: 20
   },
   radioButtonSelected: {
-    height: 10,
-    width: 10,
+    height: 8,
+    width: 8,
     borderRadius: 0,
     backgroundColor: "#1287A5"
   },
