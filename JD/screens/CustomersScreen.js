@@ -51,10 +51,8 @@ export default class CustomersScreen extends React.Component {
     let areaId = "10";
     userService.getAllAreaList(areaId).then(
       data => {
-        // console.log(data);
         this.setState({ allAreaList: data });
         let Address = data[0].Address;
-        // console.log(Address);
         this.setState({
           placeholderForSelectCity: Address
         });
@@ -117,12 +115,9 @@ export default class CustomersScreen extends React.Component {
     this.setState({
       isLoading: true
     });
-    // console.log("Address", Address);
-    // console.log("CustomerId", CustomerId);
     let areaId = 10;
     userService.getCustomerByAreaId(areaId, Address).then(
       data => {
-        // console.log("data", data);
         this.setState({
           customersListOfDetails: data,
           customerArray: data,
@@ -138,27 +133,9 @@ export default class CustomersScreen extends React.Component {
       initialSelectedLocation: CustomerId,
       placeholderForSelectCity: Address
     });
-
-    // if (Address != "") {
-    //   const newCustomersArray = [];
-    //   this.state.customerArray.map(item => {
-    //     if (item.Address === Address) {
-    //       newCustomersArray.push(item);
-    //       this.state.customersListOfDetails = newCustomersArray;
-    //     }
-    //   });
-    // } else {
-    //   this.state.customersListOfDetails = this.state.customerArray;
-    // }
     this._hideDialog();
   }
   renderAllLocationsAsRadioButtons(customerArray) {
-    // const newArray = [];
-    // customerArray.forEach(obj => {
-    //   if (!newArray.some(o => o.Address === obj.Address)) {
-    //     newArray.push({ ...obj });
-    //   }
-    // });
     return this.state.allAreaList.map((val, index) => {
       return (
         <TouchableOpacity
@@ -190,7 +167,13 @@ export default class CustomersScreen extends React.Component {
       <View style={{ flex: 1 }}>
         <Loader loading={this.state.isLoading} />
         <View>
-          <View style={{ justifyContent: "center", textAlign: "center" }}>
+          <View
+            style={{
+              justifyContent: "center",
+              textAlign: "center",
+              marginTop: 10
+            }}
+          >
             <Searchbar
               style={{
                 elevation: 1
@@ -208,6 +191,7 @@ export default class CustomersScreen extends React.Component {
               }}
               placeholder="Search"
               inputStyle={{ fontSize: 13 }}
+              style={styles.buttonContainer}
             />
             <Button
               mode="contained"
@@ -222,12 +206,15 @@ export default class CustomersScreen extends React.Component {
                 color: "#5c5c5c"
               }}
               onPress={this._showDialog}
+              style={styles.buttonContainer}
             >
               {this.state.placeholderForSelectCity}
             </Button>
             <Portal>
               <Dialog onDismiss={close} visible={this.state.visible}>
-                <Dialog.Title>Choose an option</Dialog.Title>
+                <Dialog.Title style={{ fontSize: 14 }}>
+                  Choose an option
+                </Dialog.Title>
                 <Dialog.ScrollArea
                   style={{ maxHeight: 450, paddingHorizontal: 0 }}
                 >
@@ -310,7 +297,7 @@ const styles = StyleSheet.create({
     width: 24,
     borderRadius: 12,
     borderWidth: 2,
-    borderColor: "#000",
+    borderColor: "#1287A5",
     alignItems: "center",
     justifyContent: "center",
     margin: 18
@@ -319,6 +306,14 @@ const styles = StyleSheet.create({
     height: 12,
     width: 12,
     borderRadius: 6,
-    backgroundColor: "#000"
+    backgroundColor: "#1287A5"
+  },
+  buttonContainer: {
+    height: 40,
+    marginBottom: 10,
+    borderRadius: 30,
+    marginRight: 10,
+    marginLeft: 10,
+    backgroundColor: "#ffffff"
   }
 });
