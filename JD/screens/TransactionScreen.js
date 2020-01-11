@@ -13,7 +13,8 @@ export default class TransactionScreen extends React.Component {
       visible: false,
       customersListOfDetails: [],
       customerArray: [],
-      isLoading: true
+      isLoading: true,
+      transactiontypeCount: []
     };
   }
 
@@ -23,19 +24,56 @@ export default class TransactionScreen extends React.Component {
 
   componentWillMount() {}
 
+  changeTransactionType(id) {
+    this.setState({
+      isLoading: true
+    });
+    userService
+      .GetTransactionByAgentId({
+        agentId: 10,
+        value: id
+      })
+      .then(
+        userTransactionResponse => {
+          console.log("userTransactionResponse", userTransactionResponse);
+          this.setState({
+            customersListOfDetails: userTransactionResponse.result,
+            customerArray: userTransactionResponse,
+            isLoading: false
+          });
+        },
+        error => {
+          console.log("error === ", error);
+        }
+      );
+  }
+
   getCustomersAsync() {
     this.setState({
       isLoading: true
     });
-    userService.getCustomerDetailsTransaction(44).then(
-      data => {
-        this.setState({
-          customersListOfDetails: data,
-          customerArray: data,
-          isLoading: false
-        });
-      },
 
+    userService.getTransactionTypeCount(10).then(
+      userCountResponse => {
+        userService
+          .GetTransactionByAgentId({
+            agentId: 10,
+            value: 1
+          })
+          .then(
+            userTransactionResponse => {
+              this.setState({
+                transactiontypeCount: userCountResponse,
+                customersListOfDetails: userTransactionResponse.result,
+                customerArray: userTransactionResponse,
+                isLoading: false
+              });
+            },
+            error => {
+              console.log("error === ", error);
+            }
+          );
+      },
       error => {
         console.log("error === ", error);
       }
@@ -82,6 +120,25 @@ export default class TransactionScreen extends React.Component {
               inputStyle={{ fontSize: 15 }}
             />
           </View>
+        </View>
+        <View>
+          <Button></Button>
+          <Button
+            onPress={() => {
+              this.changeTransactionType(1);
+            }}
+          >
+            Record Added &nbsp;
+            {this.state.transactiontypeCount[0]}
+          </Button>
+          <Button onPress={() => this.changeTransactionType(2)}>
+            Record Renew &nbsp;
+            {this.state.transactiontypeCount[1]}
+          </Button>
+          <Button onPress={() => this.changeTransactionType(3)}>
+            Record Added+Renew &nbsp;
+            {this.state.transactiontypeCount[2]}
+          </Button>
         </View>
         <View style={{ flex: 7 }}>
           <DataTable style={styles.paddingLeftTopRight}>

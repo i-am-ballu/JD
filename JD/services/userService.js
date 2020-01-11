@@ -16,7 +16,10 @@ export const userService = {
   addCustomer,
   // for profile edit customer
   getCustomerByCustomerId,
-  editCustomer
+  editCustomer,
+  //Transaction
+  getTransactionTypeCount,
+  GetTransactionByAgentId
 };
 
 function getAllCustomers() {
@@ -38,6 +41,32 @@ function getAllRecords() {
   };
   return fetch(
     `https://jddev.herokuapp.com/record/getAllRecords`,
+    requestOptions
+  ).then(handleResponse);
+}
+
+function getTransactionTypeCount(user_id) {
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader(),
+    body: JSON.stringify({ SNo: user_id })
+  };
+  return fetch(
+    `https://jddev.herokuapp.com/transaction/getTransactionMenuCount`,
+    requestOptions
+  ).then(handleResponse);
+}
+
+function GetTransactionByAgentId(obj) {
+  console.log(obj);
+
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader(),
+    body: JSON.stringify(obj)
+  };
+  return fetch(
+    `https://jddev.herokuapp.com/transaction/transaction`,
     requestOptions
   ).then(handleResponse);
 }
