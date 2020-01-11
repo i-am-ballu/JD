@@ -150,11 +150,11 @@ export default class CustomersScreen extends React.Component {
           </View>
           <Text
             style={{
-              marginLeft: 80,
-              marginTop: -40
+              marginLeft: 50,
+              marginTop: -35
             }}
           >
-            {val.Address}
+            : <Text>{val.Address}</Text>
           </Text>
         </TouchableOpacity>
       );
@@ -216,14 +216,24 @@ export default class CustomersScreen extends React.Component {
             </Button>
             <Portal>
               <Dialog onDismiss={close} visible={this.state.visible}>
-                <Dialog.Title style={{ fontSize: 14 }}>
+                <Dialog.Title
+                  style={{
+                    justifyContent: "center",
+                    textAlign: "center"
+                  }}
+                >
                   Choose an option
                 </Dialog.Title>
                 <Dialog.ScrollArea
                   style={{ maxHeight: 450, paddingHorizontal: 0 }}
                 >
                   <ScrollView>
-                    <View style={{ marginLeft: 20, paddingBottom: 20 }}>
+                    <View
+                      style={{
+                        marginLeft: 20,
+                        paddingBottom: 20
+                      }}
+                    >
                       {this.renderAllLocationsAsRadioButtons(
                         this.state.customerArray
                       )}
@@ -311,19 +321,19 @@ const styles = StyleSheet.create({
     fontWeight: "bold"
   },
   radioButton: {
-    height: 24,
-    width: 24,
-    borderRadius: 12,
-    borderWidth: 2,
+    height: 18,
+    width: 18,
+    borderRadius: 0,
+    borderWidth: 1,
     borderColor: "#1287A5",
     alignItems: "center",
     justifyContent: "center",
-    margin: 18
+    margin: 15
   },
   radioButtonSelected: {
-    height: 12,
-    width: 12,
-    borderRadius: 6,
+    height: 10,
+    width: 10,
+    borderRadius: 0,
     backgroundColor: "#1287A5"
   },
   buttonContainer: {
