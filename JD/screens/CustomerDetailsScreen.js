@@ -148,11 +148,12 @@ export default class CustomersScreen extends React.Component {
                 fontSize: 13,
                 color: Colors.white
               }}
-              onPress={this._hideSelectAddRecord}
+              onPress={this._hideDialog}
             >
-              Apply
+              Cancel
             </Button>
             <Text>Total: {this.state.total} &nbsp;</Text>
+
             <Button
               mode="contained"
               style={styles.modalbuttons}
@@ -160,9 +161,9 @@ export default class CustomersScreen extends React.Component {
                 fontSize: 13,
                 color: Colors.white
               }}
-              onPress={this._hideDialog}
+              onPress={this._hideSelectAddRecord}
             >
-              Cancel
+              Apply
             </Button>
           </Dialog.Actions>
         </Dialog>
