@@ -9,10 +9,12 @@ import {
   Checkbox,
   List,
   Divider,
-  DataTable
+  DataTable,
+  Card
 } from "react-native-paper";
 import Loader from "../loader/LoaderScreen";
 import { userService } from "../services/userService";
+import Moment from "moment";
 
 export default class CustomersScreen extends React.Component {
   constructor(props) {
@@ -137,7 +139,7 @@ export default class CustomersScreen extends React.Component {
             style={{ justifyContent: "center", backgroundColor: "white" }}
           >
             <Text>Total: {this.state.total} &nbsp;</Text>
-            <Button onPress={this._hideDialog}>Apply</Button>
+            <Button onPress={this._hideSelectAddRecord}>Apply</Button>
             <Button onPress={this._hideDialog}>Cancel</Button>
           </Dialog.Actions>
         </Dialog>
@@ -172,19 +174,29 @@ export default class CustomersScreen extends React.Component {
                 key={index} // you need a unique key per item
               >
                 <DataTable.Cell style={styles.dataTableText}>
-                  {transactions.UpdatedDate}
+                  <Text style={{ color: "#32325d" }}>
+                    {Moment(transactions.UpdatedDate).format("DD/MM/YYYY")}
+                  </Text>
                 </DataTable.Cell>
                 <DataTable.Cell style={styles.dataTableText}>
-                  {transactions.Amount}
+                  <Text style={{ color: "#32325d" }}>
+                    {transactions.Amount}
+                  </Text>
                 </DataTable.Cell>
                 <DataTable.Cell style={styles.dataTableText}>
-                  {transactions.CreatedDate}
+                  <Text style={{ color: "#32325d" }}>
+                    {Moment(transactions.CreatedDate).format("DD/MM/YYYY")}
+                  </Text>
                 </DataTable.Cell>
                 <DataTable.Cell style={styles.dataTableText}>
-                  {transactions.CreatedByName}
+                  <Text style={{ color: "#32325d" }}>
+                    {transactions.CreatedByName}
+                  </Text>
                 </DataTable.Cell>
                 <DataTable.Cell style={styles.dataTableText}>
-                  {transactions.Status}
+                  <Text style={{ color: "#32325d" }}>
+                    {transactions.Status}
+                  </Text>
                 </DataTable.Cell>
               </DataTable.Row>
             );
@@ -198,8 +210,9 @@ export default class CustomersScreen extends React.Component {
     this.setState({ isLoading: true });
     this.getPackageAsync();
   };
+  _hideDialog = () => this.setState({ visible: false });
 
-  _hideDialog = () => {
+  _hideSelectAddRecord = () => {
     this.setState({ isLoading: true });
     // Apply button
     let recordObject = {};
@@ -257,16 +270,25 @@ export default class CustomersScreen extends React.Component {
             {this.state.customer.map(function(item, index) {
               return (
                 <View key={index}>
-                  <List.Item
-                    title={item.value}
-                    left={props => (
-                      <Text
-                        style={{ marginTop: 7, marginLeft: 10, fontSize: 18 }}
-                      >
-                        {item.key == "CustomerId" ? "Code" : item.key} :{" "}
-                      </Text>
-                    )}
-                  />
+                  <Card
+                    style={{
+                      marginRight: 10,
+                      marginLeft: 10,
+                      borderWidth: 0
+                    }}
+                  >
+                    <List.Item
+                      title={item.value}
+                      titleStyle={{ color: "#32325d" }}
+                      left={props => (
+                        <Text
+                          style={{ marginTop: 7, marginLeft: 10, fontSize: 14 }}
+                        >
+                          {item.key == "CustomerId" ? "Code" : item.key}
+                        </Text>
+                      )}
+                    />
+                  </Card>
                   <Divider />
                 </View>
               );
@@ -275,19 +297,18 @@ export default class CustomersScreen extends React.Component {
         </View>
         <View
           style={{
-            flex: 0.5,
             alignItems: "center"
           }}
         >
           <Button
             mode="contained"
-            style={{ backgroundColor: Colors.lightBlueA200 }}
+            style={styles.buttonContainer}
             contentStyle={{
-              height: 44
+              height: 35
             }}
             labelStyle={{
-              fontSize: 18,
-              color: "#5c5c5c"
+              fontSize: 13,
+              color: Colors.white
             }}
             onPress={this._showDialog}
           >
@@ -302,7 +323,9 @@ export default class CustomersScreen extends React.Component {
             alignItems: "center"
           }}
         >
-          <List.Subheader>Transactions</List.Subheader>
+          <List.Subheader style={{ fontWeight: "bold", fontSize: 18 }}>
+            Transactions
+          </List.Subheader>
           {this.getTransctionContainer()}
         </View>
       </View>
@@ -346,7 +369,20 @@ const styles = StyleSheet.create({
     paddingRight: 10
   },
   dataTableTitle: {
-    fontSize: 15
+    fontSize: 14,
+    color: "#626262",
+    fontWeight: "bold"
+  },
+  buttonContainer: {
+    height: 35,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 20,
+    borderRadius: 30,
+    backgroundColor: "#1287A5",
+    marginRight: 0,
+    marginTop: 20
   }
 });
 
