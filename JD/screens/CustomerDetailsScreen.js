@@ -136,11 +136,34 @@ export default class CustomersScreen extends React.Component {
             </DataTable>
           </Dialog.ScrollArea>
           <Dialog.Actions
-            style={{ justifyContent: "center", backgroundColor: "white" }}
+            style={{
+              justifyContent: "space-evenly",
+              backgroundColor: "white"
+            }}
           >
+            <Button
+              mode="contained"
+              style={styles.modalbuttons}
+              labelStyle={{
+                fontSize: 13,
+                color: Colors.white
+              }}
+              onPress={this._hideSelectAddRecord}
+            >
+              Apply
+            </Button>
             <Text>Total: {this.state.total} &nbsp;</Text>
-            <Button onPress={this._hideSelectAddRecord}>Apply</Button>
-            <Button onPress={this._hideDialog}>Cancel</Button>
+            <Button
+              mode="contained"
+              style={styles.modalbuttons}
+              labelStyle={{
+                fontSize: 13,
+                color: Colors.white
+              }}
+              onPress={this._hideDialog}
+            >
+              Cancel
+            </Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>
@@ -383,6 +406,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#1287A5",
     marginRight: 0,
     marginTop: 20
+  },
+  modalbuttons: {
+    borderRadius: 30,
+    backgroundColor: "#1287A5",
+    marginBottom: 5
   }
 });
 
