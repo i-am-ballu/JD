@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, View, Text, ScrollView, Platform } from "react-native";
-import { Searchbar, DataTable, Button } from "react-native-paper";
+import { Searchbar, DataTable, Button, Colors, Card } from "react-native-paper";
 import { userService } from "../services/userService";
 import Moment from "moment";
 import Loader from "../loader/LoaderScreen";
@@ -91,6 +91,7 @@ export default class TransactionScreen extends React.Component {
           this.setState({
             isLoading: false
           });
+          this.getCustomersAsync();
         },
         error => {
           console.log("error === ", error);
@@ -117,7 +118,7 @@ export default class TransactionScreen extends React.Component {
     return (
       <View style={styles.container}>
         <Loader loading={this.state.isLoading} />
-        <View style={{ flex: Platform.OS === "ios" ? 0.5 : 0.8 }}>
+        <View style={{ flex: Platform.OS === "ios" ? 0.5 : 0.8, marginTop: 5 }}>
           <View style={styles.paddingLeftTopRight}>
             <Searchbar
               style={{
@@ -128,20 +129,35 @@ export default class TransactionScreen extends React.Component {
               value={this.state.searchBarText}
               theme={{
                 colors: {
-                  underlineColor: "transparent",
                   background: "transparent",
-                  placeholder: "#3498db",
-                  text: "#3498db"
+                  text: "#3498db",
+                  fontSize: 14,
+                  placeholder: "#626262"
                 }
               }}
               placeholder="SEARCH"
               inputStyle={{ fontSize: 15 }}
+              style={styles.buttonContainer}
             />
           </View>
         </View>
-        <View>
-          <Button></Button>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+            marginTop: 10
+          }}
+        >
           <Button
+            mode="contained"
+            style={styles.buttonContainerDropdown}
+            contentStyle={{
+              height: 40
+            }}
+            labelStyle={{
+              fontSize: 13,
+              color: Colors.white
+            }}
             onPress={() => {
               this.changeTransactionType(1);
             }}
@@ -149,62 +165,100 @@ export default class TransactionScreen extends React.Component {
             Record Added &nbsp;
             {this.state.transactiontypeCount[0]}
           </Button>
-          <Button onPress={() => this.changeTransactionType(2)}>
+          <Button
+            mode="contained"
+            style={styles.buttonContainerDropdown}
+            contentStyle={{
+              height: 40
+            }}
+            labelStyle={{
+              fontSize: 13,
+              color: Colors.white
+            }}
+            onPress={() => this.changeTransactionType(2)}
+          >
             Record Renew &nbsp;
             {this.state.transactiontypeCount[1]}
           </Button>
-          <Button onPress={() => this.changeTransactionType(3)}>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+        >
+          <Button
+            mode="contained"
+            style={styles.buttonContainerDropdown}
+            contentStyle={{
+              height: 40
+            }}
+            labelStyle={{
+              fontSize: 13,
+              color: Colors.white
+            }}
+            onPress={() => this.changeTransactionType(3)}
+          >
             Record Added+Renew &nbsp;
             {this.state.transactiontypeCount[2]}
           </Button>
         </View>
         <View style={{ flex: 7 }}>
-          <DataTable style={styles.paddingLeftTopRight}>
-            <DataTable.Header>
-              <DataTable.Title style={styles.dataTableText}>
-                <Text style={styles.dataTableTitle}>Code</Text>
-              </DataTable.Title>
-              <DataTable.Title style={styles.dataTableText}>
-                <Text style={styles.dataTableTitle}>Date</Text>
-              </DataTable.Title>
-              <DataTable.Title style={styles.dataTableText}>
-                <Text style={styles.dataTableTitle}>Amount</Text>
-              </DataTable.Title>
-              <DataTable.Title style={styles.dataTableText}>
-                <Text style={styles.dataTableTitle}>Action</Text>
-              </DataTable.Title>
-            </DataTable.Header>
-            <ScrollView>
-              {this.state.customersListOfDetails.map((txn, index) => {
-                return (
-                  <DataTable.Row
-                    key={index} // you need a unique key per item
-                  >
-                    <DataTable.Cell style={styles.dataTableText}>
-                      {txn.CustomerId}
-                    </DataTable.Cell>
-                    <DataTable.Cell style={styles.dataTableText}>
-                      {Moment(txn.CreatedDate).format("DD/MM/YYYY")}
-                    </DataTable.Cell>
-                    <DataTable.Cell style={styles.dataTableText}>
-                      {txn.Amount}
-                    </DataTable.Cell>
-                    <View style={styles.dataTableText}>
-                      <Button
-                        // icon="camera"
-                        // style={{ width: 10 }}
-                        onPress={() => {
-                          this.ActivateRecord(`${txn.RecordId}`);
-                        }}
-                      >
-                        Activate
-                      </Button>
-                    </View>
-                  </DataTable.Row>
-                );
-              })}
-            </ScrollView>
-          </DataTable>
+          <Card
+            style={{
+              marginBottom: 10,
+              marginRight: 10,
+              marginLeft: 10
+            }}
+          >
+            <DataTable style={styles.paddingLeftTopRight}>
+              <DataTable.Header>
+                <DataTable.Title style={styles.dataTableText}>
+                  <Text style={styles.dataTableTitle}>Code</Text>
+                </DataTable.Title>
+                <DataTable.Title style={styles.dataTableText}>
+                  <Text style={styles.dataTableTitle}>Date</Text>
+                </DataTable.Title>
+                <DataTable.Title style={styles.dataTableText}>
+                  <Text style={styles.dataTableTitle}>Amount</Text>
+                </DataTable.Title>
+                <DataTable.Title style={styles.dataTableText}>
+                  <Text style={styles.dataTableTitle}>Action</Text>
+                </DataTable.Title>
+              </DataTable.Header>
+              <ScrollView>
+                {this.state.customersListOfDetails.map((txn, index) => {
+                  return (
+                    <DataTable.Row
+                      key={index} // you need a unique key per item
+                    >
+                      <DataTable.Cell style={styles.dataTableText}>
+                        {txn.CustomerId}
+                      </DataTable.Cell>
+                      <DataTable.Cell style={styles.dataTableText}>
+                        {Moment(txn.CreatedDate).format("DD/MM/YYYY")}
+                      </DataTable.Cell>
+                      <DataTable.Cell style={styles.dataTableText}>
+                        {txn.Amount}
+                      </DataTable.Cell>
+                      <View style={styles.dataTableText}>
+                        <Button
+                          // icon="camera"
+                          // style={{ width: 10 }}
+                          onPress={() => {
+                            this.ActivateRecord(`${txn.RecordId}`);
+                          }}
+                        >
+                          Activate
+                        </Button>
+                      </View>
+                    </DataTable.Row>
+                  );
+                })}
+              </ScrollView>
+            </DataTable>
+          </Card>
         </View>
       </View>
     );
@@ -257,5 +311,24 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
     paddingTop: 5,
     paddingRight: 5
+  },
+  buttonContainer: {
+    height: 40,
+    marginBottom: 10,
+    borderRadius: 30,
+    marginRight: 10,
+    marginLeft: 10,
+    backgroundColor: "#ffffff"
+  },
+  buttonContainerDropdown: {
+    height: 40,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 5,
+    borderRadius: 30,
+    backgroundColor: "#1287A5",
+    marginRight: 1,
+    marginTop: 15
   }
 });
