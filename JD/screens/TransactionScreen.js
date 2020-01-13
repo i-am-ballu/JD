@@ -122,7 +122,7 @@ export default class TransactionScreen extends React.Component {
           <View style={styles.paddingLeftTopRight}>
             <Searchbar
               style={{
-                elevation: 1
+                elevation: 0
               }}
               Type="flat"
               onChangeText={text => this.onChangeText(text)}
@@ -135,8 +135,8 @@ export default class TransactionScreen extends React.Component {
                   placeholder: "#626262"
                 }
               }}
-              placeholder="SEARCH"
-              inputStyle={{ fontSize: 15 }}
+              placeholder="Search"
+              inputStyle={{ fontSize: 14, fontWeight: "bold" }}
               style={styles.buttonContainer}
             />
           </View>
@@ -234,13 +234,17 @@ export default class TransactionScreen extends React.Component {
                       key={index} // you need a unique key per item
                     >
                       <DataTable.Cell style={styles.dataTableText}>
-                        {txn.CustomerId}
+                        <Text style={{ color: "#32325d" }}>
+                          {txn.CustomerId}
+                        </Text>
                       </DataTable.Cell>
                       <DataTable.Cell style={styles.dataTableText}>
-                        {Moment(txn.CreatedDate).format("DD/MM/YYYY")}
+                        <Text style={{ color: "#32325d" }}>
+                          {Moment(txn.CreatedDate).format("DD/MM/YYYY")}
+                        </Text>
                       </DataTable.Cell>
                       <DataTable.Cell style={styles.dataTableText}>
-                        {txn.Amount}
+                        <Text style={{ color: "#32325d" }}>{txn.Amount}</Text>
                       </DataTable.Cell>
                       <View style={styles.dataTableText}>
                         <Button
@@ -286,7 +290,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly"
   },
   dataTableTitle: {
-    fontSize: 15
+    fontSize: 14,
+    color: "#626262",
+    fontWeight: "bold"
   },
   picker: {
     width: 100
