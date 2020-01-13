@@ -248,8 +248,6 @@ export default class TransactionScreen extends React.Component {
                       </DataTable.Cell>
                       <View style={styles.dataTableText}>
                         <Button
-                          // icon="camera"
-                          // style={{ width: 10 }}
                           onPress={() => {
                             this.ActivateRecord(`${txn.RecordId}`);
                           }}

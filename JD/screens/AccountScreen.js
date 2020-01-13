@@ -13,7 +13,8 @@ import {
   Button,
   Colors,
   Dialog,
-  Portal
+  Portal,
+  Card
 } from "react-native-paper";
 import { userService } from "../services/userService";
 import Moment from "moment";
@@ -25,63 +26,47 @@ export default class AccountScreen extends React.Component {
     this.state = {
       searchBarText: "",
       visible: false,
-      customersListOfDetails: [],
-      customerArray: [],
-      allAreaList: [],
+      userTransactionListOfDetails: [],
+      userTransaction: [],
+      manageDistributorList: [],
       isLoading: true,
       visibleAgents: false,
-      initialSelectedLocation: 1
+      initialSelectedLocation: 0
     };
   }
 
   componentDidMount() {
-    this.getCustomersAsync();
-    this.getAreaList();
+    this.getAllManageDistributor();
   }
 
   componentWillMount() {}
 
-  getCustomersAsync() {
-    this.setState({
-      isLoading: true
-    });
-    userService.getCustomerDetailsTransaction(44).then(
-      data => {
+  async getAllManageDistributor() {
+    userService.manageDistributorGetAllUser().then(
+      distributorData => {
+        this.setState({ manageDistributorList: distributorData.data });
+        let Name = distributorData.data[0].Name;
+        let user_id = distributorData.data[0].status;
         this.setState({
-          customersListOfDetails: data,
-          customerArray: data,
-          isLoading: false
+          placeholderForSelectCity: Name
         });
-      },
-
-      error => {
-        console.log("error === ", error);
-      }
-    );
-  }
-  async getAreaList() {
-    let areaId = "10";
-    userService.getAllAreaList(areaId).then(
-      data => {
-        // console.log(data);
-        this.setState({ allAreaList: data });
-        let Address = data[0].Address;
-        // console.log(Address);
-        this.setState({
-          placeholderForSelectCity: Address
-        });
-        userService.getCustomerByAreaId(areaId, Address).then(
-          data => {
-            this.setState({
-              customersListOfDetails: data,
-              customerArray: data,
-              isLoading: false
-            });
-          },
-          error => {
-            console.log(error);
-          }
-        );
+        userService
+          .GetTransactionByAgentId({
+            agentId: 10,
+            value: user_id
+          })
+          .then(
+            userTransactionResponse => {
+              this.setState({
+                userTransactionListOfDetails: userTransactionResponse.result,
+                userTransaction: userTransactionResponse.result,
+                isLoading: false
+              });
+            },
+            error => {
+              console.log(error);
+            }
+          );
       },
       error => {
         console.log(error);
@@ -91,74 +76,71 @@ export default class AccountScreen extends React.Component {
   onChangeText(text) {
     //for update the view when we search
     if (text != "") {
-      this.state.customerArray.filter(item => {
+      this.state.userTransaction.filter(item => {
         if (item.CustomerId == text) {
           this.setState({
-            customersListOfDetails: [item]
+            userTransactionListOfDetails: [item]
           });
         }
       });
     } else {
-      this.state.customersListOfDetails = this.state.customerArray;
+      this.state.userTransactionListOfDetails = this.state.userTransaction;
     }
     this.setState({ searchBarText: text });
   }
-  renderAllLocationsAsRadioButtons(customerArray) {
-    // const newArray = [];
-    // customerArray.forEach(obj => {
-    //   if (!newArray.some(o => o.Address === obj.Address)) {
-    //     newArray.push({ ...obj });
-    //   }
-    // });
-    return this.state.allAreaList.map((val, index) => {
-      // console.log("val", val);
+  renderAllLocationsAsRadioButtons(userTransaction) {
+    return this.state.manageDistributorList.map((val, index) => {
+      console.log("val", val);
 
       return (
         <TouchableOpacity
           key={index}
-          onPress={this.selectSingleLocation.bind(this, val.Address, index)}
+          onPress={this.selectSingleLocation.bind(this, val.Name, val.status)}
         >
           <View style={styles.radioButton}>
-            {val.CustomerId == this.state.initialSelectedLocation ? (
+            {index == this.state.initialSelectedLocation ? (
               <View style={styles.radioButtonSelected} />
             ) : null}
           </View>
           <Text
             style={{
-              marginLeft: 80,
-              marginTop: -40
+              marginLeft: 60,
+              marginTop: -33,
+              color: "#32325d"
             }}
           >
-            {val.Address}
+            {val.Name}
           </Text>
         </TouchableOpacity>
       );
     });
   }
-  selectSingleLocation(Address, CustomerId) {
+  selectSingleLocation(name, user_id) {
     this.setState({
       isLoading: true
     });
     // console.log("Address", Address);
-    // console.log("CustomerId", CustomerId);
-    let areaId = 10;
-    userService.getCustomerByAreaId(areaId, Address).then(
-      data => {
-        // console.log("data", data);
-        this.setState({
-          customersListOfDetails: data,
-          customerArray: data,
-          isLoading: false
-        });
-      },
-      error => {
-        console.log("error", error);
-      }
-    );
+    userService
+      .GetTransactionByAgentId({
+        agentId: 10,
+        value: user_id
+      })
+      .then(
+        userTransactionResponse => {
+          this.setState({
+            userTransactionListOfDetails: userTransactionResponse.result,
+            userTransaction: userTransactionResponse.result,
+            isLoading: false
+          });
+        },
+        error => {
+          console.log("error", error);
+        }
+      );
 
     this.setState({
-      initialSelectedLocation: CustomerId,
-      placeholderForSelectCity: Address
+      initialSelectedLocation: user_id,
+      placeholderForSelectCity: name
     });
     this._hideDialog();
   }
@@ -170,113 +152,141 @@ export default class AccountScreen extends React.Component {
     return (
       <View style={styles.container}>
         <Loader loading={this.state.isLoading} />
-        <View style={{ flex: 1 }}>
-          <Button
-            mode="contained"
+        <View>
+          <View
             style={{
-              backgroundColor: Colors.white
+              justifyContent: "center",
+              textAlign: "center",
+              marginTop: 10
             }}
-            contentStyle={{
-              height: 44
-            }}
-            labelStyle={{
-              fontSize: 18,
-              color: "#5c5c5c"
-            }}
-            onPress={this._showDialog}
           >
-            {this.state.placeholderForSelectCity}
-          </Button>
-          <Portal>
-            <Dialog onDismiss={closeAgents} visible={this.state.visibleAgents}>
-              <Dialog.Title>Choose an option</Dialog.Title>
-              <Dialog.ScrollArea
-                style={{ maxHeight: 450, paddingHorizontal: 0 }}
-              >
-                <ScrollView>
-                  <View style={{ marginLeft: 20, paddingBottom: 20 }}>
-                    {this.renderAllLocationsAsRadioButtons(
-                      this.state.customerArray
-                    )}
-                  </View>
-                </ScrollView>
-              </Dialog.ScrollArea>
-              <Dialog.Actions style={{ justifyContent: "center" }}>
-                <Button onPress={this._hideDialog}>Cancel</Button>
-              </Dialog.Actions>
-            </Dialog>
-          </Portal>
-        </View>
-        <View style={{ flex: Platform.OS === "ios" ? 0.5 : 0.8 }}>
-          <View style={styles.paddingLeftTopRight}>
             <Searchbar
               style={{
-                elevation: 1
+                elevation: 0
               }}
               Type="flat"
               onChangeText={text => this.onChangeText(text)}
               value={this.state.searchBarText}
               theme={{
                 colors: {
-                  underlineColor: "transparent",
                   background: "transparent",
-                  placeholder: "#3498db",
-                  text: "#3498db"
+                  text: "#3498db",
+                  fontSize: 14,
+                  placeholder: "#626262"
                 }
               }}
-              placeholder="SEARCH"
-              inputStyle={{ fontSize: 15 }}
+              placeholder="Search"
+              inputStyle={{
+                fontSize: 14,
+                fontWeight: "bold"
+              }}
+              style={styles.buttonContainer}
             />
-          </View>
-        </View>
-        <View style={{ flex: 7 }}>
-          <DataTable style={styles.paddingLeftTopRight}>
-            <DataTable.Header>
-              <DataTable.Title style={styles.dataTableText}>
-                <Text style={styles.dataTableTitle}>Code</Text>
-              </DataTable.Title>
-              <DataTable.Title style={styles.dataTableText}>
-                <Text style={styles.dataTableTitle}>Date</Text>
-              </DataTable.Title>
-              <DataTable.Title style={styles.dataTableText}>
-                <Text style={styles.dataTableTitle}>Amount</Text>
-              </DataTable.Title>
-              <DataTable.Title style={styles.dataTableText}>
-                <Text style={styles.dataTableTitle}>Action</Text>
-              </DataTable.Title>
-            </DataTable.Header>
-            <ScrollView>
-              {this.state.customersListOfDetails.map((customer, index) => {
-                return (
-                  <DataTable.Row
-                    key={index} // you need a unique key per item
-                  >
-                    <DataTable.Cell style={styles.dataTableText}>
-                      {customer.CustomerId}
-                    </DataTable.Cell>
-                    <DataTable.Cell style={styles.dataTableText}>
-                      {Moment(customer.CreatedDate).format("DD/MM/YYYY")}
-                    </DataTable.Cell>
-                    <DataTable.Cell style={styles.dataTableText}>
-                      {customer.Amount}
-                    </DataTable.Cell>
-                    <View style={styles.dataTableText}>
-                      <Button
-                        icon="camera"
-                        style={{ width: 10 }}
-                        onPress={() => {
-                          // added to illustrate how you can make the row take the onPress event and do something
-                          console.log(
-                            `selected account ${customer.CustomerId}`
-                          );
-                        }}
-                      ></Button>
+            <Button
+              mode="contained"
+              style={{
+                backgroundColor: Colors.white,
+                borderColor: "lightgrey"
+              }}
+              labelStyle={{
+                fontSize: 14,
+                marginTop: 12,
+                color: "#626262",
+                fontWeight: "bold"
+              }}
+              onPress={this._showDialog}
+              style={styles.buttonContainer}
+            >
+              {this.state.placeholderForSelectCity}
+            </Button>
+            <Portal>
+              <Dialog
+                onDismiss={closeAgents}
+                visible={this.state.visibleAgents}
+              >
+                <Dialog.Title
+                  style={{
+                    justifyContent: "center",
+                    textAlign: "center"
+                  }}
+                >
+                  Choose an option
+                </Dialog.Title>
+                <Dialog.ScrollArea
+                  style={{ maxHeight: 450, paddingHorizontal: 0 }}
+                >
+                  <ScrollView>
+                    <View style={{ marginLeft: 20, paddingBottom: 20 }}>
+                      {this.renderAllLocationsAsRadioButtons(
+                        this.state.userTransaction
+                      )}
                     </View>
-                  </DataTable.Row>
-                );
-              })}
-            </ScrollView>
-          </DataTable>
+                  </ScrollView>
+                </Dialog.ScrollArea>
+                <Dialog.Actions style={{ justifyContent: "center" }}>
+                  <Button onPress={this._hideDialog}>Cancel</Button>
+                </Dialog.Actions>
+              </Dialog>
+            </Portal>
+          </View>
+          <View>
+            <Card
+              style={{
+                marginBottom: 10,
+                marginRight: 10,
+                marginLeft: 10
+              }}
+            >
+              <DataTable style={styles.paddingLeftTopRight}>
+                <DataTable.Header>
+                  <DataTable.Title style={styles.dataTableText}>
+                    <Text style={styles.dataTableTitle}>Code</Text>
+                  </DataTable.Title>
+                  <DataTable.Title style={styles.dataTableText}>
+                    <Text style={styles.dataTableTitle}>Date</Text>
+                  </DataTable.Title>
+                  <DataTable.Title style={styles.dataTableText}>
+                    <Text style={styles.dataTableTitle}>Amount</Text>
+                  </DataTable.Title>
+                  <DataTable.Title style={styles.dataTableText}>
+                    <Text style={styles.dataTableTitle}>Action</Text>
+                  </DataTable.Title>
+                </DataTable.Header>
+                <ScrollView>
+                  {this.state.userTransactionListOfDetails.map((txn, index) => {
+                    return (
+                      <DataTable.Row
+                        key={index} // you need a unique key per item
+                      >
+                        <DataTable.Cell style={styles.dataTableText}>
+                          <Text style={{ color: "#32325d" }}>
+                            {txn.CustomerId}
+                          </Text>
+                        </DataTable.Cell>
+                        <DataTable.Cell style={styles.dataTableText}>
+                          <Text style={{ color: "#32325d" }}>
+                            {Moment(txn.CreatedDate).format("DD/MM/YYYY")}
+                          </Text>
+                        </DataTable.Cell>
+                        <DataTable.Cell style={styles.dataTableText}>
+                          <Text style={{ color: "#32325d" }}>{txn.Amount}</Text>
+                        </DataTable.Cell>
+                        <View style={styles.dataTableText}>
+                          <Button
+                            onPress={() => {
+                              this.ActivateRecord(`${txn.RecordId}`);
+                            }}
+                          >
+                            Activate
+                          </Button>
+                        </View>
+                      </DataTable.Row>
+                    );
+                  })}
+                </ScrollView>
+              </DataTable>
+            </Card>
+          </View>
         </View>
       </View>
     );
@@ -304,30 +314,41 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly"
   },
   dataTableTitle: {
-    fontSize: 15
+    fontSize: 14,
+    color: "#626262",
+    fontWeight: "bold"
   },
   picker: {
     width: 100
   },
   radioButton: {
-    height: 24,
-    width: 24,
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: "#000",
+    height: 17,
+    width: 17,
+    borderRadius: 0,
+    borderWidth: 1.5,
+    borderColor: Colors.black,
     alignItems: "center",
     justifyContent: "center",
-    margin: 18
+    margin: 15,
+    marginLeft: 20
   },
   radioButtonSelected: {
-    height: 12,
-    width: 12,
-    borderRadius: 6,
-    backgroundColor: "#000"
+    height: 8,
+    width: 8,
+    borderRadius: 0,
+    backgroundColor: "#1287A5"
   },
   paddingLeftTopRight: {
     paddingLeft: 5,
     paddingTop: 5,
     paddingRight: 5
+  },
+  buttonContainer: {
+    height: 40,
+    marginBottom: 10,
+    borderRadius: 30,
+    marginRight: 10,
+    marginLeft: 10,
+    backgroundColor: "#ffffff"
   }
 });
