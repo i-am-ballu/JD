@@ -237,7 +237,11 @@ export default class AccountScreen extends React.Component {
                 marginLeft: 10
               }}
             >
-              <DataTable style={styles.paddingLeftTopRight}>
+              <DataTable
+                style={{
+                  justifyContent: "flex-start"
+                }}
+              >
                 <DataTable.Header>
                   <DataTable.Title style={styles.dataTableText}>
                     <Text style={styles.dataTableTitle}>Code</Text>
@@ -259,7 +263,12 @@ export default class AccountScreen extends React.Component {
                         key={index} // you need a unique key per item
                       >
                         <DataTable.Cell style={styles.dataTableText}>
-                          <Text style={{ color: "#32325d" }}>
+                          <Text
+                            style={{
+                              color: "#32325d",
+                              justifyContent: "flex-start"
+                            }}
+                          >
                             {txn.CustomerId}
                           </Text>
                         </DataTable.Cell>
