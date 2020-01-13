@@ -19,7 +19,8 @@ export const userService = {
   editCustomer,
   //Transaction
   getTransactionTypeCount,
-  GetTransactionByAgentId
+  GetTransactionByAgentId,
+  ActivateRecord
 };
 
 function getAllCustomers() {
@@ -67,6 +68,18 @@ function GetTransactionByAgentId(obj) {
   };
   return fetch(
     `https://jddev.herokuapp.com/transaction/transaction`,
+    requestOptions
+  ).then(handleResponse);
+}
+
+function ActivateRecord(obj) {
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader(),
+    body: JSON.stringify(obj)
+  };
+  return fetch(
+    `https://jddev.herokuapp.com/ActivateRecord`,
     requestOptions
   ).then(handleResponse);
 }

@@ -80,6 +80,24 @@ export default class TransactionScreen extends React.Component {
     );
   }
 
+  ActivateRecord(recordId) {
+    userService
+      .ActivateRecord({
+        Id: recordId,
+        menuId: 1
+      })
+      .then(
+        ActivateRecordResponse => {
+          this.setState({
+            isLoading: false
+          });
+        },
+        error => {
+          console.log("error === ", error);
+        }
+      );
+  }
+
   onChangeText(text) {
     //for update the view when we search
     if (text != "") {
@@ -157,31 +175,30 @@ export default class TransactionScreen extends React.Component {
               </DataTable.Title>
             </DataTable.Header>
             <ScrollView>
-              {this.state.customersListOfDetails.map((customer, index) => {
+              {this.state.customersListOfDetails.map((txn, index) => {
                 return (
                   <DataTable.Row
                     key={index} // you need a unique key per item
                   >
                     <DataTable.Cell style={styles.dataTableText}>
-                      {customer.CustomerId}
+                      {txn.CustomerId}
                     </DataTable.Cell>
                     <DataTable.Cell style={styles.dataTableText}>
-                      {Moment(customer.CreatedDate).format("DD/MM/YYYY")}
+                      {Moment(txn.CreatedDate).format("DD/MM/YYYY")}
                     </DataTable.Cell>
                     <DataTable.Cell style={styles.dataTableText}>
-                      {customer.Amount}
+                      {txn.Amount}
                     </DataTable.Cell>
                     <View style={styles.dataTableText}>
                       <Button
-                        icon="camera"
-                        style={{ width: 10 }}
+                        // icon="camera"
+                        // style={{ width: 10 }}
                         onPress={() => {
-                          // added to illustrate how you can make the row take the onPress event and do something
-                          console.log(
-                            `selected account ${customer.CustomerId}`
-                          );
+                          this.ActivateRecord(`${txn.RecordId}`);
                         }}
-                      ></Button>
+                      >
+                        Activate
+                      </Button>
                     </View>
                   </DataTable.Row>
                 );
