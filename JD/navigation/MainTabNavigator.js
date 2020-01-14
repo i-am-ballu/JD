@@ -101,9 +101,9 @@ AccountStack.navigationOptions = {
 };
 
 const tabNavigator = createBottomTabNavigator({
-  AccountStack,
   CustomerStack,
   TransactionStack,
+  AccountStack,
   ProfileStack
 });
 
