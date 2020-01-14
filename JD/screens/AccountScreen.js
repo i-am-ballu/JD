@@ -30,7 +30,8 @@ export default class AccountScreen extends React.Component {
       accountByUserIdCopy: [],
       userList: [],
       isLoading: true,
-      showModal: false
+      showModal: false,
+      placeholderForSelectUser: ""
     };
   }
 
@@ -47,7 +48,7 @@ export default class AccountScreen extends React.Component {
         let Name = distributorData.data[0].Name;
         let user_id = distributorData.data[0].user_id;
         this.setState({
-          placeholderForSelectCity: Name
+          placeholderForSelectUser: Name
         });
         userService.GetAccountStatement(user_id).then(
           accountByUserIdCopyResponse => {
@@ -90,7 +91,7 @@ export default class AccountScreen extends React.Component {
           onPress={this.selectSingleLocation.bind(this, val.Name, val.user_id)}
         >
           <View style={styles.radioButton}>
-            {val.Name == this.state.placeholderForSelectCity ? (
+            {val.Name == this.state.placeholderForSelectUser ? (
               <View style={styles.radioButtonSelected} />
             ) : null}
           </View>
@@ -114,7 +115,7 @@ export default class AccountScreen extends React.Component {
     userService.GetAccountStatement(user_id).then(
       accountByUserIdCopyResponse => {
         this.setState({
-          placeholderForSelectCity: name,
+          placeholderForSelectUser: name,
           accountByUserId: accountByUserIdCopyResponse.result,
           accountByUserIdCopy: accountByUserIdCopyResponse.result,
           isLoading: false
@@ -179,7 +180,7 @@ export default class AccountScreen extends React.Component {
               onPress={this._showDialog}
               style={styles.buttonContainer}
             >
-              {this.state.placeholderForSelectCity}
+              {this.state.placeholderForSelectUser}
             </Button>
             <Portal>
               <Dialog onDismiss={closeAgents} visible={this.state.showModal}>
