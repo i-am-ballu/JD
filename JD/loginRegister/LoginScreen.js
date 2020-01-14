@@ -131,8 +131,8 @@ export default class LoginScreen extends Component {
                     primary: Colors.lightBlueA700,
                     underlineColor: "transparent",
                     background: "transparent",
-                    placeholder: Colors.grey500,
-                    text: Colors.grey700
+                    placeholder: "#626262",
+                    text: "#3498db"
                   }
                 }}
                 placeholder="Username/Mobile"
@@ -152,8 +152,8 @@ export default class LoginScreen extends Component {
                     primary: Colors.lightBlueA700,
                     underlineColor: "transparent",
                     background: "transparent",
-                    placeholder: Colors.grey500,
-                    text: Colors.grey700
+                    placeholder: "#626262",
+                    text: "#3498db"
                   }
                 }}
                 placeholder="Password"

@@ -95,8 +95,8 @@ export default class PinScreen extends Component {
                     primary: Colors.lightBlueA700,
                     underlineColor: "transparent",
                     background: "transparent",
-                    placeholder: Colors.grey500,
-                    text: Colors.grey700
+                    placeholder: "#626262",
+                    text: "#3498db"
                   }
                 }}
                 placeholder="Enter Pin"
@@ -121,12 +121,12 @@ export default class PinScreen extends Component {
           >
             <Button
               mode="contained"
-              style={{ backgroundColor: Colors.lightBlueA200 }}
+              style={styles.pinButtonContainer}
               contentStyle={{
-                height: 44
+                height: 40
               }}
               labelStyle={{
-                fontSize: 18,
+                fontSize: 13,
                 color: Colors.white
               }}
               onPress={this.handleSubmit}
@@ -151,5 +151,16 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingTop: 10,
     paddingRight: 10
+  },
+  pinButtonContainer: {
+    height: 40,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 5,
+    borderRadius: 30,
+    backgroundColor: "#1287A5",
+    marginRight: 1,
+    marginTop: 15
   }
 });
