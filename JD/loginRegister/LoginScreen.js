@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { AsyncStorage } from "react-native";
+import { AsyncStorage, ImageBackground } from "react-native";
 import { TextInput, Colors, Button } from "react-native-paper";
 import {
   View,
@@ -94,30 +94,32 @@ export default class LoginScreen extends Component {
       console.log("Error catch", error);
     }
   }
-
   render() {
     const { errors } = this.state;
     return (
       <View style={{ flex: 1 }}>
-        <Loader loading={this.state.isLoading} />
-        <View style={{ flex: 1, backgroundColor: Colors.white }}>
+        <ImageBackground
+          style={{ flex: 1 }}
+          source={require("../assets/images/back.png")}
+        >
+          <Loader loading={this.state.isLoading} />
           <View
             style={{
-              flex: 5,
               alignItems: "center",
-              justifyContent: "center"
+              justifyContent: "center",
+              marginTop: 20
             }}
           >
             <Text style={styles.loginHeader}>Jain Digital</Text>
           </View>
-          <View style={{ flex: 1, marginLeft: 10 }}>
+          <View style={{ marginLeft: 10 }}>
             {errors.map(error => (
               <Text key={error} style={{ color: "red" }}>
                 Error: {error}
               </Text>
             ))}
           </View>
-          <View style={{ flex: 5 }}>
+          <View>
             <View style={styles.paddingLeftTopRight}>
               <TextInput
                 style={{
@@ -163,18 +165,17 @@ export default class LoginScreen extends Component {
           </View>
           <View
             style={{
-              flex: 2.5,
               alignItems: "center"
             }}
           >
             <Button
               mode="contained"
-              style={{ backgroundColor: Colors.lightBlueA200 }}
+              style={styles.loginButtonContainer}
               contentStyle={{
-                height: 44
+                height: 40
               }}
               labelStyle={{
-                fontSize: 18,
+                fontSize: 13,
                 color: Colors.white
               }}
               onPress={this.handleSubmit}
@@ -182,16 +183,7 @@ export default class LoginScreen extends Component {
               Login
             </Button>
           </View>
-        </View>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: Colors.white,
-            alignItems: "center"
-          }}
-        >
-          <Text>Imgae with logo</Text>
-        </View>
+        </ImageBackground>
       </View>
     );
   }
@@ -227,5 +219,16 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingTop: 10,
     paddingRight: 10
+  },
+  loginButtonContainer: {
+    height: 40,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 5,
+    borderRadius: 30,
+    backgroundColor: "#1287A5",
+    marginRight: 1,
+    marginTop: 15
   }
 });
