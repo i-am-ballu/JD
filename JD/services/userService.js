@@ -20,7 +20,8 @@ export const userService = {
   //Transaction
   getTransactionTypeCount,
   GetTransactionByAgentId,
-  ActivateRecord
+  ActivateRecord,
+  GetAccountStatement
 };
 
 function getAllCustomers() {
@@ -59,8 +60,6 @@ function getTransactionTypeCount(user_id) {
 }
 
 function GetTransactionByAgentId(obj) {
-  console.log(obj);
-
   const requestOptions = {
     method: "POST",
     headers: authHeader(),
@@ -68,6 +67,17 @@ function GetTransactionByAgentId(obj) {
   };
   return fetch(
     `https://jddev.herokuapp.com/transaction/transaction`,
+    requestOptions
+  ).then(handleResponse);
+}
+
+function GetAccountStatement(sNo) {
+  const requestOptions = {
+    method: "GET",
+    headers: authHeader()
+  };
+  return fetch(
+    `https://jddev.herokuapp.com/transaction/account/` + sNo,
     requestOptions
   ).then(handleResponse);
 }
@@ -225,8 +235,6 @@ function editCustomer(
   MobileNo,
   AgentId
 ) {
-  console.log("service edit method call---");
-
   const requestOptions = {
     method: "POST",
     headers: authHeader(),
@@ -247,8 +255,6 @@ function editCustomer(
 }
 // for handle the response as try and catch but not use try and catch
 function handleResponse(response) {
-  console.log(response.ok);
-
   return response.text().then(text => {
     const data = text && JSON.parse(text);
     if (!response.ok) {

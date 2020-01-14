@@ -35,7 +35,6 @@ export default class TransactionScreen extends React.Component {
       })
       .then(
         userTransactionResponse => {
-          console.log("userTransactionResponse", userTransactionResponse);
           this.setState({
             customersListOfDetails: userTransactionResponse.result,
             customerArray: userTransactionResponse,

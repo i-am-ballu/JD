@@ -30,8 +30,7 @@ export default class AccountScreen extends React.Component {
       userTransaction: [],
       manageDistributorList: [],
       isLoading: true,
-      visibleAgents: false,
-      initialSelectedLocation: 0
+      showModal: false
     };
   }
 
@@ -46,27 +45,22 @@ export default class AccountScreen extends React.Component {
       distributorData => {
         this.setState({ manageDistributorList: distributorData.data });
         let Name = distributorData.data[0].Name;
-        let user_id = distributorData.data[0].status;
+        let user_id = distributorData.data[0].user_id;
         this.setState({
           placeholderForSelectCity: Name
         });
-        userService
-          .GetTransactionByAgentId({
-            agentId: 10,
-            value: user_id
-          })
-          .then(
-            userTransactionResponse => {
-              this.setState({
-                userTransactionListOfDetails: userTransactionResponse.result,
-                userTransaction: userTransactionResponse.result,
-                isLoading: false
-              });
-            },
-            error => {
-              console.log(error);
-            }
-          );
+        userService.GetAccountStatement(user_id).then(
+          userTransactionResponse => {
+            this.setState({
+              userTransactionListOfDetails: userTransactionResponse.result,
+              userTransaction: userTransactionResponse.result,
+              isLoading: false
+            });
+          },
+          error => {
+            console.log(error);
+          }
+        );
       },
       error => {
         console.log(error);
@@ -90,15 +84,13 @@ export default class AccountScreen extends React.Component {
   }
   renderAllLocationsAsRadioButtons(userTransaction) {
     return this.state.manageDistributorList.map((val, index) => {
-      console.log("val", val);
-
       return (
         <TouchableOpacity
           key={index}
-          onPress={this.selectSingleLocation.bind(this, val.Name, val.status)}
+          onPress={this.selectSingleLocation.bind(this, val.Name, val.user_id)}
         >
           <View style={styles.radioButton}>
-            {index == this.state.initialSelectedLocation ? (
+            {val.Name == this.state.placeholderForSelectCity ? (
               <View style={styles.radioButtonSelected} />
             ) : null}
           </View>
@@ -119,34 +111,24 @@ export default class AccountScreen extends React.Component {
     this.setState({
       isLoading: true
     });
-    // console.log("Address", Address);
-    userService
-      .GetTransactionByAgentId({
-        agentId: 10,
-        value: user_id
-      })
-      .then(
-        userTransactionResponse => {
-          this.setState({
-            userTransactionListOfDetails: userTransactionResponse.result,
-            userTransaction: userTransactionResponse.result,
-            isLoading: false
-          });
-        },
-        error => {
-          console.log("error", error);
-        }
-      );
-
-    this.setState({
-      initialSelectedLocation: user_id,
-      placeholderForSelectCity: name
-    });
+    userService.GetAccountStatement(user_id).then(
+      userTransactionResponse => {
+        this.setState({
+          placeholderForSelectCity: name,
+          userTransactionListOfDetails: userTransactionResponse.result,
+          userTransaction: userTransactionResponse.result,
+          isLoading: false
+        });
+      },
+      error => {
+        console.log("error", error);
+      }
+    );
     this._hideDialog();
   }
-  _showDialog = () => this.setState({ visibleAgents: true });
+  _showDialog = () => this.setState({ showModal: true });
 
-  _hideDialog = () => this.setState({ visibleAgents: false });
+  _hideDialog = () => this.setState({ showModal: false });
   render() {
     const { visible, closeAgents } = this.props;
     return (
@@ -200,10 +182,7 @@ export default class AccountScreen extends React.Component {
               {this.state.placeholderForSelectCity}
             </Button>
             <Portal>
-              <Dialog
-                onDismiss={closeAgents}
-                visible={this.state.visibleAgents}
-              >
+              <Dialog onDismiss={closeAgents} visible={this.state.showModal}>
                 <Dialog.Title
                   style={{
                     justifyContent: "center",
@@ -252,9 +231,6 @@ export default class AccountScreen extends React.Component {
                   <DataTable.Title style={styles.dataTableText}>
                     <Text style={styles.dataTableTitle}>Amount</Text>
                   </DataTable.Title>
-                  <DataTable.Title style={styles.dataTableText}>
-                    <Text style={styles.dataTableTitle}>Action</Text>
-                  </DataTable.Title>
                 </DataTable.Header>
                 <ScrollView>
                   {this.state.userTransactionListOfDetails.map((txn, index) => {
@@ -280,15 +256,6 @@ export default class AccountScreen extends React.Component {
                         <DataTable.Cell style={styles.dataTableText}>
                           <Text style={{ color: "#32325d" }}>{txn.Amount}</Text>
                         </DataTable.Cell>
-                        <View style={styles.dataTableText}>
-                          <Button
-                            onPress={() => {
-                              this.ActivateRecord(`${txn.RecordId}`);
-                            }}
-                          >
-                            Activate
-                          </Button>
-                        </View>
                       </DataTable.Row>
                     );
                   })}
