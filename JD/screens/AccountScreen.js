@@ -26,9 +26,9 @@ export default class AccountScreen extends React.Component {
     this.state = {
       searchBarText: "",
       visible: false,
-      userTransactionListOfDetails: [],
-      userTransaction: [],
-      manageDistributorList: [],
+      accountByUserId: [],
+      accountByUserIdCopy: [],
+      userList: [],
       isLoading: true,
       showModal: false
     };
@@ -43,17 +43,17 @@ export default class AccountScreen extends React.Component {
   async getAllManageDistributor() {
     userService.manageDistributorGetAllUser().then(
       distributorData => {
-        this.setState({ manageDistributorList: distributorData.data });
+        this.setState({ userList: distributorData.data });
         let Name = distributorData.data[0].Name;
         let user_id = distributorData.data[0].user_id;
         this.setState({
           placeholderForSelectCity: Name
         });
         userService.GetAccountStatement(user_id).then(
-          userTransactionResponse => {
+          accountByUserIdCopyResponse => {
             this.setState({
-              userTransactionListOfDetails: userTransactionResponse.result,
-              userTransaction: userTransactionResponse.result,
+              accountByUserId: accountByUserIdCopyResponse.result,
+              accountByUserIdCopy: accountByUserIdCopyResponse.result,
               isLoading: false
             });
           },
@@ -70,20 +70,20 @@ export default class AccountScreen extends React.Component {
   onChangeText(text) {
     //for update the view when we search
     if (text != "") {
-      this.state.userTransaction.filter(item => {
+      this.state.accountByUserIdCopy.filter(item => {
         if (item.CustomerId == text) {
           this.setState({
-            userTransactionListOfDetails: [item]
+            accountByUserId: [item]
           });
         }
       });
     } else {
-      this.state.userTransactionListOfDetails = this.state.userTransaction;
+      this.state.accountByUserId = this.state.accountByUserIdCopy;
     }
     this.setState({ searchBarText: text });
   }
-  renderAllLocationsAsRadioButtons(userTransaction) {
-    return this.state.manageDistributorList.map((val, index) => {
+  renderAllLocationsAsRadioButtons(accountByUserIdCopy) {
+    return this.state.userList.map((val, index) => {
       return (
         <TouchableOpacity
           key={index}
@@ -112,11 +112,11 @@ export default class AccountScreen extends React.Component {
       isLoading: true
     });
     userService.GetAccountStatement(user_id).then(
-      userTransactionResponse => {
+      accountByUserIdCopyResponse => {
         this.setState({
           placeholderForSelectCity: name,
-          userTransactionListOfDetails: userTransactionResponse.result,
-          userTransaction: userTransactionResponse.result,
+          accountByUserId: accountByUserIdCopyResponse.result,
+          accountByUserIdCopy: accountByUserIdCopyResponse.result,
           isLoading: false
         });
       },
@@ -197,7 +197,7 @@ export default class AccountScreen extends React.Component {
                   <ScrollView>
                     <View style={{ marginLeft: 20, paddingBottom: 20 }}>
                       {this.renderAllLocationsAsRadioButtons(
-                        this.state.userTransaction
+                        this.state.accountByUserIdCopy
                       )}
                     </View>
                   </ScrollView>
@@ -233,7 +233,7 @@ export default class AccountScreen extends React.Component {
                   </DataTable.Title>
                 </DataTable.Header>
                 <ScrollView>
-                  {this.state.userTransactionListOfDetails.map((txn, index) => {
+                  {this.state.accountByUserId.map((txn, index) => {
                     return (
                       <DataTable.Row
                         key={index} // you need a unique key per item
