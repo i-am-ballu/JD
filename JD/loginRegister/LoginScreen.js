@@ -100,7 +100,7 @@ export default class LoginScreen extends Component {
       <View style={{ flex: 1 }}>
         <ImageBackground
           style={{ flex: 1 }}
-          source={require("../assets/images/back.png")}
+          source={require("../assets/images/cable4.jpg")}
         >
           <Loader loading={this.state.isLoading} />
           <View
